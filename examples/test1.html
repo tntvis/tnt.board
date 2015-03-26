@@ -7,36 +7,5 @@
 
 <body>
   <div id="mydiv"></div>
-  <script>
-    var myBoard = board().from(20).to(500)
-    myBoard(document.getElementById("mydiv"));
-
-    myBoard.right (1000);
-    var block_track = board.track()
-    .height(30)
-    .background_color("#FFCFDD")
-    .data(board.track.data()
-    .update(
-    board.track.data.retriever.sync()
-    .retriever (function () {
-    return [
-    {
-    start : 20,
-    end   : 100
-    }
-    ]
-    })
-    )
-    )
-    .display(board.track.feature.block()
-    .foreground_color("blue")
-    .index(function (d) {
-    return d.start;
-    }));
-
-    myBoard
-    .add_track(block_track);
-    myBoard.start();
-    
-  </script>
+  <script src="test1.js"></script>
 </body>

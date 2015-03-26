@@ -1,5 +1,5 @@
 var apijs = require ("tnt.api");
-var ensemblRestAPI = require("tnt.ensembl");
+// var ensemblRestAPI = require("tnt.ensembl");
 
 // var board = {};
 // board.track = {};
@@ -15,83 +15,43 @@ var data = function() {
 	.getset ('elements', [])
 	.getset ('update', function () {});
 
-
-    // The retrievers. They need to access 'elements'
-    data.retriever = {};
-
-    data.retriever.sync = function() {
-	var update_track = function(obj) {
-        // Object has a location and a plug-in defined callback
-            _.elements(update_track.retriever()(obj.loc));
-            obj.on_success();
-	};
-
-	apijs (update_track)
-	    .getset ('retriever', function () {})
-
-	return update_track;
-    };
-
-    data.retriever.async = function () {
-	var url = '';
-
-	var update_track = function (obj) {
-	    d3.json(url, function (err, resp) {
-		_.elements(resp);
-		obj.on_success();
-	    }); 
-	};
-
-	apijs (update_track)
-	    .getset ('url', '');
-
-	return update_track;
-    };
-
-    data.retriever.ensembl = function() {
-    	var success = [function () {}];
-    	var endpoint;
-    	var eRest = ensemblRestAPI();
-    	var update_track = function(obj) {
-            // Object has loc and a plug-in defined callback
-            var loc         = obj.loc;
-            var plugin_cbak = obj.on_success;
-            eRest.call({url     : eRest.url[update_track.endpoint()](loc),
-    			success : function (resp) {
-                            _.elements(resp);
-
-                        // User-defined
-                            for (var i=0; i<success.length; i++) {
-    				success[i](resp);
-                            };
-
-                        // Plug-in defined
-                            plugin_cbak();
-    			}
-                       });
-
-    	};
-
-    	apijs(update_track)
-    	    .getset('endpoint');
-
-    // TODO: We don't have a way of resetting the success array
-    // TODO: Should this also be included in the sync retriever?
-    // Still not sure this is the best option to support more than one callback
-    	update_track.success = function (callback) {
-            if (!arguments.length) {
-    		return success;
-            }
-            success.push(callback);
-            return update_track;
-    	};
-
-    	return update_track;
-    };
-
-
     return _;
 };
+
+// The retrievers. They need to access 'elements'
+data.retriever = {};
+
+data.retriever.sync = function() {
+    var update_track = function(obj) {
+	// "this" is set to the data obj
+        this.elements(update_track.retriever()(obj.loc));
+        obj.on_success();
+    };
+
+    apijs (update_track)
+	.getset ('retriever', function () {})
+
+    return update_track;
+};
+
+data.retriever.async = function () {
+    var url = '';
+
+    // "this" is set to the data obj
+    var data_obj = this;
+    var update_track = function (obj) {
+	d3.json(url, function (err, resp) {
+	    data_obj.elements(resp);
+	    obj.on_success();
+	}); 
+    };
+
+    apijs (update_track)
+	.getset ('url', '');
+
+    return update_track;
+};
+
 
 
 // A predefined track for genes

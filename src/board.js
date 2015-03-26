@@ -190,8 +190,10 @@ var board = function() {
 
     var _update_track = function (track, where) {
 	if (track.data()) {
-	    var data_updater = track.data().update();
-	    data_updater({
+	    var track_data = track.data();
+	    var data_updater = track_data.update();
+	    //var data_updater = track.data().update();
+	    data_updater.call(track_data, {
 		'loc' : where,
 		'on_success' : function () {
 		    track.display().update.call(track, xScale);

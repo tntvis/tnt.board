@@ -5,4 +5,4 @@
 // tnt.tooltip = require("tnt.tooltip");
 // tnt.board = require("./src/index.js");
 
-module.exports = board = require("./src/index");
+module.exports = require("./src/index");
