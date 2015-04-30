@@ -1,7 +1,7 @@
+@import url(./node_modules/tnt.tooltip/src/scss/tooltip.css);
 /* body { */
 /*     font-size : 100%; */
 /* } */
-@import url(./node_modules/tnt.tooltip/src/scss/tooltip.css);
 svg text {
   -webkit-user-select: none;
   /* Chrome/Safari */
@@ -41,8 +41,7 @@ text.tnt_tooWide_text {
   opacity: 1; }
 
 .tnt_gene {
-  filter: alpha(opacity=0.6);
-  #    opacity: 0.6; }
+  opacity: 0.6; }
 
 div .tnt_tooltip {
   display: block;
@@ -97,4 +96,3 @@ div .tnt_tooltip_active {
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px; }
 
-/*# sourceMappingURL=index.css.map */

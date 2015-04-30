@@ -1,4 +1,4 @@
-@import "./_main.scss";
+@import "main";
 
 // Genes
 $gene-opacity : 0.6;
@@ -56,8 +56,7 @@ text {
 }
 
 .tnt_gene {
-    filter: alpha(opacity=$gene-opacity);
-#    opacity: $gene-opacity;
+    opacity: $gene-opacity;
 }
 
 
