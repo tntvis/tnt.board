@@ -105,11 +105,18 @@ var tnt_feature = function () {
 	exports.mover.call(this, elems, xScale);
     };
 
+    var mtf = function (elem) {
+	elem.parentNode.appendChild(elem);
+    };
+    
     var move_to_front = function (field) {
 	if (field !== undefined) {
 	    var track = this;
 	    var svg_g = track.g;
-	    svg_g.selectAll(".tnt_elem_" + field).move_to_front();
+	    svg_g.selectAll(".tnt_elem_" + field)
+	        .each( function () {
+		    mtf(this);
+		});
 	}
     };
 
