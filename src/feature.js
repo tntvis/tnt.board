@@ -7,8 +7,8 @@ var layout = require("./layout.js");
 var tnt_feature = function () {
     ////// Vars exposed in the API
     var exports = {
-	create   : function () {throw "create_elem is not defined in the base feature object"},
-	mover    : function () {throw "move_elem is not defined in the base feature object"},
+	create   : function () {throw "create_elem is not defined in the base feature object";},
+	mover    : function () {throw "move_elem is not defined in the base feature object";},
 	updater  : function () {},
 	on_click : function () {},
 	on_mouseover : function () {},
@@ -68,10 +68,10 @@ var tnt_feature = function () {
 		    if (d !== undefined) {
 			return exports.index(d);
 		    }
-		})
+		});
 	} else { // Indexing by position in array
 	    vis_elems = vis_sel
-		.data(data_elems)
+		.data(data_elems);
 	}
 
 	exports.updater.call(track, vis_elems, xScale);
@@ -185,6 +185,15 @@ tnt_feature.composite = function () {
 	return features;
     };
 
+    var on_click = function (cbak) {
+	for (var display in displays) {
+	    if (displays.hasOwnProperty(display)) {
+		displays[display].on_click(cbak);
+	    }
+	}
+	return features;
+    };
+    
     // API
     apijs (features)
 	.method ({
@@ -192,7 +201,8 @@ tnt_feature.composite = function () {
 	    update : update,
 	    move   : move,
 	    init   : init,
-	    add    : add
+	    add    : add,
+	    on_click : on_click
 	});
 
 
@@ -206,7 +216,7 @@ tnt_feature.sequence = function () {
     var config = {
 	fontsize : 10,
 	sequence : function (d) {
-	    return d.sequence
+	    return d.sequence;
 	}
     };
 
@@ -355,8 +365,12 @@ tnt_feature.line = function () {
 
 	line
 	    .tension(tension)
-	    .x(function (d) {return xScale(x(d))})
-	    .y(function (d) {return track.height() - yScale(y(d))})
+	    .x(function (d) {
+		return xScale(x(d));
+	    })
+	    .y(function (d) {
+		return track.height() - yScale(y(d));
+	    })
 
 	data_points = points.data();
 	points.remove();
@@ -414,7 +428,7 @@ tnt_feature.ensembl = function () {
 
     feature.guider (function (width) {
 	var track = this;
-	var height_offset = ~~(track.height() - (track.height()  * .8)) / 2;
+	var height_offset = ~~(track.height() - (track.height()  * 0.8)) / 2;
 
 	track.g
 	    .append("line")
@@ -441,7 +455,7 @@ tnt_feature.ensembl = function () {
     feature.create (function (new_elems, xScale) {
 	var track = this;
 
-	var height_offset = ~~(track.height() - (track.height()  * .8)) / 2;
+	var height_offset = ~~(track.height() - (track.height()  * 0.8)) / 2;
 
 	new_elems
 	    .append("rect")
