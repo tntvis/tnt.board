@@ -1,0 +1,4 @@
+0.0.3
+	- Added 'on_click' method to composite features to set on_click callbacks on all the feature's display
+0.0.4
+	- Added 'displays' method to composite features to get all the displays in order

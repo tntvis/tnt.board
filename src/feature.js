@@ -193,6 +193,14 @@ tnt_feature.composite = function () {
 	}
 	return features;
     };
+
+    var get_displays = function () {
+	var ds = [];
+	for (var i=0; i<display_order.length; i++) {
+	    ds.push(displays[display_order[i]]);
+	}
+	return ds;
+    };
     
     // API
     apijs (features)
@@ -202,9 +210,9 @@ tnt_feature.composite = function () {
 	    move   : move,
 	    init   : init,
 	    add    : add,
-	    on_click : on_click
+	    on_click : on_click,
+	    displays : get_displays
 	});
-
 
     return features;
 };
