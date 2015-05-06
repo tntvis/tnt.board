@@ -358,10 +358,10 @@ var board = function() {
 		track.g
 		    .transition()
 		    .duration(dur)
-		    .attr("transform", "translate(0," + h + ")");
+		    .attr("transform", "translate(" + exports.extend_canvas.left + "," + h + ")");
 	    } else {
 		track.g
-		    .attr("transform", "translate(0," + h + ")");
+		    .attr("transform", "translate(" + exports.extend_canvas.left + "," + h + ")");
 	    }
 
 	    h += track.height();

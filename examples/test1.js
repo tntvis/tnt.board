@@ -32,6 +32,10 @@ var block_track = tnt.board.track()
 	     }));
 
 myBoard
+    .extend_canvas({
+	right: 20,
+	left: 20
+    })
     .add_track(location_track)
     .add_track(block_track);
 myBoard.start();

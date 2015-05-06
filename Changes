@@ -2,3 +2,5 @@
 	- Added 'on_click' method to composite features to set on_click callbacks on all the feature's display
 0.0.4
 	- Added 'displays' method to composite features to get all the displays in order
+0.0.5
+	- bugfix: extend_canvas was not setting the left margin correctly
