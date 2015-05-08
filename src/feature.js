@@ -217,50 +217,6 @@ tnt_feature.composite = function () {
     return features;
 };
 
-tnt_feature.sequence = function () {
-    // 'Inherit' from tnt.track.feature
-    var feature = tnt_feature();
-
-    var config = {
-	fontsize : 10,
-	sequence : function (d) {
-	    return d.sequence;
-	}
-    };
-
-    var api = apijs (feature)
-	.getset (config);
-
-
-    feature.create (function (new_nts, xScale) {
-	var track = this;
-
-	new_nts
-	    .append("text")
-	    .attr("fill", track.background_color())
-	    .style('font-size', config.fontsize + "px")
-	    .attr("x", function (d) {
-		return xScale (d.pos);
-	    })
-	    .attr("y", function (d) {
-		return ~~(track.height() / 2) + 5; 
-	    })
-	    .text(config.sequence)
-	    .transition()
-	    .duration(500)
-	    .attr('fill', feature.foreground_color());
-    });
-
-    feature.mover (function (nts, xScale) {
-	nts.select ("text")
-	    .attr("x", function (d) {
-		return xScale(d.pos);
-	    });
-    });
-
-    return feature;
-};
-
 tnt_feature.area = function () {
     var feature = tnt_feature.line();
     var line = tnt_feature.line();

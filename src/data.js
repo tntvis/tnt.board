@@ -11,6 +11,7 @@ var data = function() {
 
     // Getters / Setters
     apijs (_)
+    // label is not used at the moment
 	.getset ('label', "")
 	.getset ('elements', [])
 	.getset ('update', function () {});
