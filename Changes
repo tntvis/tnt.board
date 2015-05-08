@@ -6,3 +6,5 @@
 	- bugfix: extend_canvas was not setting the left margin correctly
 0.0.6
 	- sequence feature moved to tnt.genome
+0.0.7
+	- Added pin feature (+ example)

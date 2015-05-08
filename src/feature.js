@@ -521,10 +521,107 @@ tnt_feature.vline = function () {
 
 };
 
-tnt_feature.block = function () {
+tnt_feature.pin = function () {
     // 'Inherit' from board.track.feature
     var feature = tnt_feature();
 
+    var yScale = d3.scale.linear()
+	.domain([0,0])
+	.range([0,0]);
+
+    var opts = {
+	pos : d3.functor("pos"),
+	val : d3.functor("val"),
+	domain : [0,0]
+    };
+    
+    apijs(feature)
+	.getset(opts);
+
+    
+    feature.create (function (new_pins, xScale) {
+	var track = this;
+	yScale
+	    .domain(feature.domain())
+	    .range([0, track.height()]);
+	
+	// pins are composed of lines and circles
+	new_pins
+	    .append("line")
+	    .attr("x1", function (d, i) {
+	    	return xScale(d[opts.pos(d, i)])
+	    })
+	    .attr("y1", function (d) {
+	    	return track.height();
+	    })
+	    .attr("x2", function (d,i) {
+	    	return xScale(d[opts.pos(d, i)]);
+	    })
+	    .attr("y2", function (d, i) {
+	    	return track.height() - yScale(d[opts.val(d, i)]);
+	    })
+	    .attr("stroke", feature.foreground_color());
+
+	new_pins
+	    .append("circle")
+	    .attr("cx", function (d, i) {
+		return xScale(d[opts.pos(d, i)]);
+	    })
+	    .attr("cy", function (d, i) {
+		return track.height() - yScale(d[opts.val(d, i)]);
+	    })
+	    .attr("r", 5)
+	    .attr("fill", feature.foreground_color());
+    });
+
+    feature.mover(function (pins, xScale) {
+	var track = this;
+	pins
+	    //.each(position_pin_line)
+	    .select("line")
+	    .attr("x1", function (d, i) {
+		return xScale(d[opts.pos(d, i)])
+	    })
+	    .attr("y1", function (d) {
+		return track.height();
+	    })
+	    .attr("x2", function (d,i) {
+		return xScale(d[opts.pos(d, i)]);
+	    })
+	    .attr("y2", function (d, i) {
+		return track.height() - yScale(d[opts.val(d, i)]);
+	    });
+
+	pins
+	    .select("circle")
+	    .attr("cx", function (d, i) {
+		return xScale(d[opts.pos(d, i)]);
+	    })
+	    .attr("cy", function (d, i) {
+		return track.height() - yScale(d[opts.val(d, i)]);
+	    });
+
+    });
+
+    feature.guider (function (width) {
+	var track = this;
+	track.g
+	    .append("line")
+	    .attr("x1", 0)
+	    .attr("x2", width)
+	    .attr("y1", track.height())
+	    .attr("y2", track.height())
+	    .style("stroke", "black")
+	    .style("stroke-with", "1px");
+    });
+
+    return feature;
+};
+
+tnt_feature.block = function () {
+    // 'Inherit' from board.track.feature
+    var feature = tnt_feature();
+    
     apijs(feature)
 	.getset('from', function (d) {
 	    return d.start;
