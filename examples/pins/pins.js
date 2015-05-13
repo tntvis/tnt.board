@@ -8,10 +8,10 @@ var pins_theme = function () {
 		     .orientation("top")
 		    );
 	var pin_track = tnt.board.track()
-	    .height(40)
+	    .height(60)
 	    .background_color("white")
 	    .display(tnt.board.track.feature.pin()
-		     .domain([0, 100])
+		     .domain([0.3, 1.2])
 		     .foreground_color("red")
 		     .on_click(function (d) {
 			 console.log(d);
@@ -22,28 +22,29 @@ var pins_theme = function () {
 		      tnt.board.track.data.retriever.sync()
 			  .retriever (function () {
 			      return [
+				  
 				  {
 				      pos : 200,
-				      val : 50
+				      val : 0.5
 				  },
 				  {
 				      pos : 355,
-				      val : 80
+				      val : 0.8
 				  },
 				  {
 				      pos : 100,
-				      val : 100
+				      val : 0.3
 				  },
 				  {
 				      pos : 400,
-				      val : 0
+				      val : 1
 				  }
 			      ]
 			  })
 		  )
 		 );
 	board
-	    .add_track(location_track)
+	    .add_track(axis_track)
 	    .add_track(pin_track);
 	board(div);
 	board.start();
