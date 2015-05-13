@@ -534,6 +534,8 @@ tnt_feature.pin = function () {
 	val : d3.functor("val"),
 	domain : [0,0]
     };
+
+    var pin_ball_r = 5; // the radius of the circle in the pin
     
     apijs(feature)
 	.getset(opts);
@@ -543,7 +545,7 @@ tnt_feature.pin = function () {
 	var track = this;
 	yScale
 	    .domain(feature.domain())
-	    .range([0, track.height()]);
+	    .range([pin_ball_r, track.height()-pin_ball_r]);
 	
 	// pins are composed of lines and circles
 	new_pins
@@ -570,7 +572,7 @@ tnt_feature.pin = function () {
 	    .attr("cy", function (d, i) {
 		return track.height() - yScale(d[opts.val(d, i)]);
 	    })
-	    .attr("r", 5)
+	    .attr("r", pin_ball_r)
 	    .attr("fill", feature.foreground_color());
     });
 
