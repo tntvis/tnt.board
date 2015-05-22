@@ -11,3 +11,5 @@
 0.0.8
         - Pin feature domain now adjusts the size of the pin better
 	- Added pin example
+0.0.9
+	- foreground_color converts the color to rgb format automatically
