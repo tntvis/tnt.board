@@ -31,10 +31,6 @@ var block_track = tnt.board.track()
 		 return d.start;
 	     }));
 
-// var f = tnt.board.track.feature.block()
-//     .foreground_color("blue");
-// console.log(f.foreground_color());
-
 myBoard
     .extend_canvas({
 	right: 20,

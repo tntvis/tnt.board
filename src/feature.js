@@ -15,7 +15,7 @@ var tnt_feature = function () {
 	guider   : function () {},
 	index    : undefined,
 	layout   : layout.identity(),
-	foreground_color : d3.rgb('#000')
+	foreground_color : '#000'
     };
 
 
@@ -131,10 +131,6 @@ var tnt_feature = function () {
 	    init   : init,
 	    move_to_front : move_to_front
 	});
-    feature.foreground_color
-        .transform (function (col) {
-            return d3.rgb(col);
-        })
 
     return feature;
 };

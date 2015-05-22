@@ -13,3 +13,5 @@
 	- Added pin example
 0.0.9
 	- foreground_color converts the color to rgb format automatically
+0.0.10
+	- revert foreground_color conversion to rgb (using the string instead)
