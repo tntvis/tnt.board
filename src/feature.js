@@ -15,7 +15,7 @@ var tnt_feature = function () {
 	guider   : function () {},
 	index    : undefined,
 	layout   : layout.identity(),
-	foreground_color : '#000'
+	foreground_color : d3.rgb('#000')
     };
 
 
@@ -108,7 +108,7 @@ var tnt_feature = function () {
     var mtf = function (elem) {
 	elem.parentNode.appendChild(elem);
     };
-    
+
     var move_to_front = function (field) {
 	if (field !== undefined) {
 	    var track = this;
@@ -131,6 +131,10 @@ var tnt_feature = function () {
 	    init   : init,
 	    move_to_front : move_to_front
 	});
+    feature.foreground_color
+        .transform (function (col) {
+            return d3.rgb(col);
+        })
 
     return feature;
 };
@@ -201,7 +205,7 @@ tnt_feature.composite = function () {
 	}
 	return ds;
     };
-    
+
     // API
     apijs (features)
 	.method ({
@@ -253,7 +257,7 @@ tnt_feature.area = function () {
 	    .datum(data_points)
 	    .attr("d", area)
 	    .attr("fill", d3.rgb(feature.foreground_color()).brighter());
-	
+
     });
 
     var line_mover = feature.mover();
@@ -345,7 +349,7 @@ tnt_feature.line = function () {
 	    // 	return y(d);
 	    // })])
 	    .range([0, track.height() - 2]);
-	
+
 	track.g
 	    .append("path")
 	    .attr("class", "tnt_elem")
@@ -436,7 +440,7 @@ tnt_feature.ensembl = function () {
 	    .attr("fill", track.background_color())
 	    .transition()
 	    .duration(500)
-	    .attr("fill", function (d) { 
+	    .attr("fill", function (d) {
 		if (d.type === 'high') {
 		    return d3.rgb(feature.foreground_color());
 		}
@@ -536,17 +540,17 @@ tnt_feature.pin = function () {
     };
 
     var pin_ball_r = 5; // the radius of the circle in the pin
-    
+
     apijs(feature)
 	.getset(opts);
 
-    
+
     feature.create (function (new_pins, xScale) {
 	var track = this;
 	yScale
 	    .domain(feature.domain())
 	    .range([pin_ball_r, track.height()-pin_ball_r]);
-	
+
 	// pins are composed of lines and circles
 	new_pins
 	    .append("line")
@@ -623,7 +627,7 @@ tnt_feature.pin = function () {
 tnt_feature.block = function () {
     // 'Inherit' from board.track.feature
     var feature = tnt_feature();
-    
+
     apijs(feature)
 	.getset('from', function (d) {
 	    return d.start;
@@ -698,7 +702,7 @@ tnt_feature.axis = function () {
 	var svg_g = track.g;
 	svg_g.call(xAxis);
     }
-    
+
     feature.init = function () {};
 
     feature.update = function (xScale) {
