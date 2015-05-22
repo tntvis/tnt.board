@@ -1,6 +1,6 @@
 {
   "name": "tnt.board",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "TnT track-based board display",
   "main": "index.js",
   "directories": {
