@@ -30,6 +30,15 @@ var tnt_feature = function () {
 
     var init = function (width) {
 	var track = this;
+
+    track.g
+        .append ("text")
+        .attr ("x", 5)
+        .attr ("y", 12)
+        .attr ("font-size", 11)
+        .attr ("fill", "grey")
+        .text (track.label());
+
 	exports.guider.call(track, width);
     };
 

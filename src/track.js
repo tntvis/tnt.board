@@ -18,7 +18,8 @@ var track = function () {
 	background_color : d3.rgb('#CCCCCC'),
 	height           : 250,
 	// data is the object (normally a tnt.track.data object) used to retrieve and update data for the track
-	data             : track.data.empty()
+	data             : track.data.empty(),
+    label             : ""
     };
 
     // The returned object / closure
@@ -38,7 +39,7 @@ var track = function () {
 	}
 	display = new_plotter;
 	if (typeof (display) === 'function') {
-	    display.layout && display.layout().height(conf.height);	    
+	    display.layout && display.layout().height(conf.height);
 	} else {
 	    for (var key in display) {
 		if (display.hasOwnProperty(key)) {

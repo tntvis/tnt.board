@@ -10,6 +10,7 @@ var location_track = tnt.board.track()
 	    );
 
 var block_track = tnt.board.track()
+    .label("my track")
     .height(30)
     .background_color("#FFCFDD")
     .data(tnt.board.track.data()
