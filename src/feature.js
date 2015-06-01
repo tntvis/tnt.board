@@ -53,6 +53,9 @@ var tnt_feature = function () {
 	var track = this;
 	var svg_g = track.g;
 	var layout = exports.layout;
+    if (layout.height) {
+        layout.height(track.height());
+    }
 
 	var elements = track.data().elements();
 

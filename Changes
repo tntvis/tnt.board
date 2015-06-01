@@ -17,3 +17,5 @@
 	- revert foreground_color conversion to rgb (using the string instead)
 0.0.11
 	- added label to tracks
+0.0.12
+	- Bugfix: track height is now passed to layout
