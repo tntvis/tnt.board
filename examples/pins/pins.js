@@ -13,16 +13,19 @@ var pins_theme = function () {
 	    .display(tnt.board.track.feature.pin()
 		     .domain([0.3, 1.2])
 		     .foreground_color("red")
-		     .on_click(function (d) {
-			 console.log(d);
-		     })
+		     .on("click", function (d) {
+                 console.log(d);
+                 })
+             .on("mouseover", function (d) {
+                 console.log("mouseover");
+             })
 		    )
 	    .data(tnt.board.track.data()
 		  .update(
 		      tnt.board.track.data.retriever.sync()
 			  .retriever (function () {
 			      return [
-				  
+
 				  {
 				      pos : 200,
 				      val : 0.5

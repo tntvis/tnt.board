@@ -46,7 +46,7 @@ gulp.task('test', function () {
 });
 
 gulp.task('watch', function() {
-    gulp.watch(['./src/**/*.js','./lib/**/*.js', './test/**/*.js'], ['test', 'lint', 'build-browser']);
+    gulp.watch(['./src/**/*.js','./src/scss/*.scss','./lib/**/*.js', './test/**/*.js'], ['test', 'lint', 'build-browser']);
 });
 
 

@@ -1,6 +1,8 @@
 var apijs = require ("tnt.api");
 var layout = require("./layout.js");
 
+var dispatch = d3.dispatch ("click", "dblclick", "mouseover", "mouseout");
+
 // FEATURE VIS
 // var board = {};
 // board.track = {};
@@ -10,8 +12,6 @@ var tnt_feature = function () {
 	create   : function () {throw "create_elem is not defined in the base feature object";},
 	mover    : function () {throw "move_elem is not defined in the base feature object";},
 	updater  : function () {},
-	on_click : function () {},
-	on_mouseover : function () {},
 	guider   : function () {},
 	index    : undefined,
 	layout   : layout.identity(),
@@ -25,7 +25,7 @@ var tnt_feature = function () {
     var reset = function () {
     	var track = this;
     	track.g.selectAll(".tnt_elem").remove();
-	track.g.selectAll(".tnt_guider").remove();
+        track.g.selectAll(".tnt_guider").remove();
     };
 
     var init = function (width) {
@@ -43,10 +43,12 @@ var tnt_feature = function () {
     };
 
     var plot = function (new_elems, track, xScale) {
-	new_elems.on("click", exports.on_click);
-	new_elems.on("mouseover", exports.on_mouseover);
-	// new_elem is a g element where the feature is inserted
-	exports.create.call(track, new_elems, xScale);
+        new_elems.on("click", dispatch.click);
+        new_elems.on("mouseover", dispatch.mouseover);
+        new_elems.on("dblclick", dispatch.dblclick);
+        new_elems.on("mouseout", dispatch.mouseout);
+        // new_elem is a g element where the feature is inserted
+        exports.create.call(track, new_elems, xScale);
     };
 
     var update = function (xScale, field) {
@@ -144,7 +146,7 @@ var tnt_feature = function () {
 	    move_to_front : move_to_front
 	});
 
-    return feature;
+    return d3.rebind(feature, dispatch, "on");
 };
 
 tnt_feature.composite = function () {
@@ -198,12 +200,12 @@ tnt_feature.composite = function () {
     };
 
     var on_click = function (cbak) {
-	for (var display in displays) {
-	    if (displays.hasOwnProperty(display)) {
-		displays[display].on_click(cbak);
-	    }
-	}
-	return features;
+        for (var display in displays) {
+            if (displays.hasOwnProperty(display)) {
+                displays[display].on("click",cbak);
+            }
+        }
+        return features;
     };
 
     var get_displays = function () {
