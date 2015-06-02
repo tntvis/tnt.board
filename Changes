@@ -24,3 +24,5 @@
 	- Added optional labels to pins
 0.0.14
 	- bugfix: d3.dispatch moved inside of the lib
+0.0.15
+	- bugfix: avoid duplication of tracks (tracks are now removed on "start")

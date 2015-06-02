@@ -3,7 +3,7 @@ var deferCancel = require ("tnt.utils").defer_cancel;
 
 var board = function() {
     "use strict";
-    
+
     //// Private vars
     var svg;
     var div_id;
@@ -43,7 +43,7 @@ var board = function() {
 	    right : 0
 	},
 	show_frame : true
-	// limits        : function () {throw "The limits method should be defined"}	
+	// limits        : function () {throw "The limits method should be defined"}
     };
 
     // The returned closure / object
@@ -142,7 +142,8 @@ var board = function() {
 	// Reset the tracks
 	for (var i=0; i<tracks.length; i++) {
 	    if (tracks[i].g) {
-		tracks[i].display().reset.call(tracks[i]);
+        //    tracks[i].display().reset.call(tracks[i]);
+            tracks[i].g.remove();
 	    }
 	    _init_track(tracks[i]);
 	}
@@ -294,7 +295,7 @@ var board = function() {
 	return track_vis;
     });
 
-    // 
+    //
     api.method ('width', function (w) {
 	// TODO: Allow suffixes like "1000px"?
 	// TODO: Test wrong formats
@@ -321,11 +322,11 @@ var board = function() {
 		tracks[i].display().reset.call(tracks[i]);
 		tracks[i].display().update.call(tracks[i],xScale);
 	    }
-	    
+
 	} else {
 	    width = w;
 	}
-	
+
 	return track_vis;
     });
 
@@ -387,7 +388,7 @@ var board = function() {
 	    .each (function (d) {
 		move_to_front(this);
 	    });
-	
+
 
 	// pane
 	pane
@@ -421,7 +422,7 @@ var board = function() {
 	if (track.display()) {
 	    track.display().init.call(track, width);
 	}
-	
+
 	return track_vis;
     };
 
@@ -542,7 +543,7 @@ var board = function() {
     function move_to_front (elem) {
 	elem.parentNode.appendChild(elem);
     }
-    
+
     return track_vis;
 };
 
