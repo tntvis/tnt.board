@@ -593,7 +593,7 @@ tnt_feature.pin = function () {
         .append("text")
         .attr("font-size", "13")
         .attr("x", function (d, i) {
-            return xScale(d[opts.pos(d, i)]-2);
+            return xScale(d[opts.pos(d, i)])-2;
         })
         .attr("y", function (d, i) {
             return 10;
