@@ -28,19 +28,23 @@ var pins_theme = function () {
 
 				  {
 				      pos : 200,
-				      val : 0.5
+				      val : 0.5,
+                      label : "1"
 				  },
 				  {
 				      pos : 355,
-				      val : 0.8
+				      val : 0.8,
+                      label : "2"
 				  },
 				  {
 				      pos : 100,
-				      val : 0.3
+				      val : 0.3,
+                      label : "3"
 				  },
 				  {
 				      pos : 400,
-				      val : 1
+				      val : 1,
+                      label : "4"
 				  }
 			      ]
 			  })

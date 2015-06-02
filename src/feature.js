@@ -150,6 +150,7 @@ var tnt_feature = function () {
 };
 
 tnt_feature.composite = function () {
+    var dispatch = d3.dispatch ("click", "dblclick", "mouseover", "mouseout");
     var displays = {};
     var display_order = [];
 
@@ -199,14 +200,22 @@ tnt_feature.composite = function () {
 	return features;
     };
 
-    var on_click = function (cbak) {
+    var on = function (cbak) {
         for (var display in displays) {
             if (displays.hasOwnProperty(display)) {
-                displays[display].on("click",cbak);
+                displays[display].on("click", cbak);
             }
         }
-        return features;
     };
+
+    // var on_click = function (cbak) {
+    //     for (var display in displays) {
+    //         if (displays.hasOwnProperty(display)) {
+    //             displays[display].on("click",cbak);
+    //         }
+    //     }
+    //     return features;
+    // };
 
     var get_displays = function () {
 	var ds = [];
@@ -224,9 +233,11 @@ tnt_feature.composite = function () {
 	    move   : move,
 	    init   : init,
 	    add    : add,
-	    on_click : on_click,
+//	    on_click : on_click,
 	    displays : get_displays
 	});
+
+
 
     return features;
 };
@@ -544,24 +555,24 @@ tnt_feature.pin = function () {
 	.range([0,0]);
 
     var opts = {
-	pos : d3.functor("pos"),
-	val : d3.functor("val"),
-	domain : [0,0]
+        pos : d3.functor("pos"),
+        val : d3.functor("val"),
+        domain : [0,0]
     };
 
     var pin_ball_r = 5; // the radius of the circle in the pin
 
     apijs(feature)
-	.getset(opts);
+        .getset(opts);
 
 
     feature.create (function (new_pins, xScale) {
 	var track = this;
 	yScale
 	    .domain(feature.domain())
-	    .range([pin_ball_r, track.height()-pin_ball_r]);
+	    .range([pin_ball_r, track.height()-pin_ball_r-10]); // 10 for labelling
 
-	// pins are composed of lines and circles
+	// pins are composed of lines, circles and labels
 	new_pins
 	    .append("line")
 	    .attr("x1", function (d, i) {
@@ -581,13 +592,27 @@ tnt_feature.pin = function () {
 	new_pins
 	    .append("circle")
 	    .attr("cx", function (d, i) {
-		return xScale(d[opts.pos(d, i)]);
+            return xScale(d[opts.pos(d, i)]);
 	    })
 	    .attr("cy", function (d, i) {
-		return track.height() - yScale(d[opts.val(d, i)]);
+            return track.height() - yScale(d[opts.val(d, i)]);
 	    })
 	    .attr("r", pin_ball_r)
 	    .attr("fill", feature.foreground_color());
+
+    new_pins
+        .append("text")
+        .attr("font-size", "13")
+        .attr("x", function (d, i) {
+            return xScale(d[opts.pos(d, i)]-2);
+        })
+        .attr("y", function (d, i) {
+            return 10;
+        })
+        .text(function (d) {
+            return d.label || "";
+        })
+
     });
 
     feature.mover(function (pins, xScale) {
@@ -611,11 +636,17 @@ tnt_feature.pin = function () {
 	pins
 	    .select("circle")
 	    .attr("cx", function (d, i) {
-		return xScale(d[opts.pos(d, i)]);
+            return xScale(d[opts.pos(d, i)]);
 	    })
 	    .attr("cy", function (d, i) {
-		return track.height() - yScale(d[opts.val(d, i)]);
+            return track.height() - yScale(d[opts.val(d, i)]);
 	    });
+
+    pins
+        .select("text")
+        .attr("x", function (d, i) {
+            return xScale(d[opts.pos(d, i)]);
+        });
 
     });
 

@@ -19,3 +19,7 @@
 	- added label to tracks
 0.0.12
 	- Bugfix: track height is now passed to layout
+0.0.13
+	- Generalized events (on) with "click", "dblclick", "mouseover" and "mouseout"
+	- Added optional labels to pins
+
