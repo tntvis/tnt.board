@@ -1,12 +1,12 @@
 var apijs = require ("tnt.api");
 var layout = require("./layout.js");
 
-var dispatch = d3.dispatch ("click", "dblclick", "mouseover", "mouseout");
-
 // FEATURE VIS
 // var board = {};
 // board.track = {};
 var tnt_feature = function () {
+    var dispatch = d3.dispatch ("click", "dblclick", "mouseover", "mouseout");
+
     ////// Vars exposed in the API
     var exports = {
 	create   : function () {throw "create_elem is not defined in the base feature object";},
@@ -150,7 +150,6 @@ var tnt_feature = function () {
 };
 
 tnt_feature.composite = function () {
-    var dispatch = d3.dispatch ("click", "dblclick", "mouseover", "mouseout");
     var displays = {};
     var display_order = [];
 
@@ -200,14 +199,6 @@ tnt_feature.composite = function () {
 	return features;
     };
 
-    var on = function (cbak) {
-        for (var display in displays) {
-            if (displays.hasOwnProperty(display)) {
-                displays[display].on("click", cbak);
-            }
-        }
-    };
-
     // var on_click = function (cbak) {
     //     for (var display in displays) {
     //         if (displays.hasOwnProperty(display)) {
@@ -236,8 +227,6 @@ tnt_feature.composite = function () {
 //	    on_click : on_click,
 	    displays : get_displays
 	});
-
-
 
     return features;
 };
