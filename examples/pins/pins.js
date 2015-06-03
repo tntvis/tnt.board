@@ -7,6 +7,7 @@ var pins_theme = function () {
 	    .display(tnt.board.track.feature.axis()
 		     .orientation("top")
 		    );
+
 	var pin_track = tnt.board.track()
 	    .height(60)
 	    .background_color("white")
@@ -19,7 +20,13 @@ var pins_theme = function () {
              .on("mouseover", function (d) {
                  console.log("mouseover");
              })
-		    )
+             .layout(tnt.board.track.layout()
+                .elements (function (elems, xScale) {
+                    joinClose (elems, xScale);
+                })
+            )
+
+         )
 	    .data(tnt.board.track.data()
 		  .update(
 		      tnt.board.track.data.retriever.sync()
@@ -28,24 +35,24 @@ var pins_theme = function () {
 
 				  {
 				      pos : 200,
-				      val : 0.5,
-                      label : "1"
+				      val : 0.5
 				  },
 				  {
 				      pos : 355,
-				      val : 0.8,
-                      label : "2"
+				      val : 0.8
 				  },
 				  {
 				      pos : 100,
-				      val : 0.3,
-                      label : "3"
+				      val : 0.3
 				  },
 				  {
 				      pos : 400,
-				      val : 1,
-                      label : "4"
-				  }
+				      val : 1
+				  },
+                  {
+                      pos : 401,
+                      val : 1
+                  }
 			      ]
 			  })
 		  )
@@ -56,6 +63,36 @@ var pins_theme = function () {
 	board(div);
 	board.start();
     };
+
+    function joinClose (arr, xScale) {
+        var lim = 2;
+        arr.map (function (d) {
+            d._px = xScale(d.pos);
+        });
+        arr.sort (function (a, b) {
+            return a.pos > b.pos;
+        });
+        var groups = [];
+        var currGroup = [arr[0]];
+        var curr = arr[0];
+        for (var i=1; i<arr.length; i++) {
+            if ((arr[i]._px - curr. _px) < lim) {
+                currGroup.push(arr[i]);
+            } else {
+                groups.push (currGroup);
+                currGroup = [arr[i]];
+                curr = arr[i];
+            }
+        }
+        groups.push (currGroup);
+        console.log(groups);
+        for (var g=0; g<groups.length; g++) {
+            if (groups[g].length > 1) {
+                var med = groups[g][~~(groups[g].length / 2)];
+                med.label = groups[g].length
+            }
+        }
+    }
 
     return theme;
 };

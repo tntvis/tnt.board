@@ -26,3 +26,6 @@
 	- bugfix: d3.dispatch moved inside of the lib
 0.0.15
 	- bugfix: avoid duplication of tracks (tracks are now removed on "start")
+0.0.16
+	- Better labeling of pin features
+	- layout reworked. Allow custom layouts (and transformation)

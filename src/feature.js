@@ -9,13 +9,14 @@ var tnt_feature = function () {
 
     ////// Vars exposed in the API
     var exports = {
-	create   : function () {throw "create_elem is not defined in the base feature object";},
-	mover    : function () {throw "move_elem is not defined in the base feature object";},
-	updater  : function () {},
-	guider   : function () {},
-	index    : undefined,
-	layout   : layout.identity(),
-	foreground_color : '#000'
+        create   : function () {throw "create_elem is not defined in the base feature object";},
+        mover    : function () {throw "move_elem is not defined in the base feature object";},
+        updater  : function () {},
+        guider   : function () {},
+        //layout   : function () {},
+        index    : undefined,
+        layout   : layout.identity(),
+        foreground_color : '#000'
     };
 
 
@@ -29,17 +30,17 @@ var tnt_feature = function () {
     };
 
     var init = function (width) {
-	var track = this;
+        var track = this;
 
-    track.g
-        .append ("text")
-        .attr ("x", 5)
-        .attr ("y", 12)
-        .attr ("font-size", 11)
-        .attr ("fill", "grey")
-        .text (track.label());
+        track.g
+            .append ("text")
+            .attr ("x", 5)
+            .attr ("y", 12)
+            .attr ("font-size", 11)
+            .attr ("fill", "grey")
+            .text (track.label());
 
-	exports.guider.call(track, width);
+        exports.guider.call(track, width);
     };
 
     var plot = function (new_elems, track, xScale) {
@@ -52,41 +53,41 @@ var tnt_feature = function () {
     };
 
     var update = function (xScale, field) {
-	var track = this;
-	var svg_g = track.g;
-	var layout = exports.layout;
-    if (layout.height) {
-        layout.height(track.height());
-    }
+        var track = this;
+        var svg_g = track.g;
+        // var layout = exports.layout;
+        // if (layout.height) {
+        //     layout.height(track.height());
+        // }
 
-	var elements = track.data().elements();
+        var elements = track.data().elements();
 
-	if (field !== undefined) {
-	    elements = elements[field];
-	}
+        if (field !== undefined) {
+            elements = elements[field];
+        }
 
-	layout(elements, xScale);
-	var data_elems = layout.elements();
+        var data_elems = exports.layout.call(track, elements, xScale);
+        //var data_elems = layout.elements();
 
-	var vis_sel;
-	var vis_elems;
-	if (field !== undefined) {
-	    vis_sel = svg_g.selectAll(".tnt_elem_" + field);
-	} else {
-	    vis_sel = svg_g.selectAll(".tnt_elem");
-	}
+        var vis_sel;
+        var vis_elems;
+        if (field !== undefined) {
+            vis_sel = svg_g.selectAll(".tnt_elem_" + field);
+        } else {
+            vis_sel = svg_g.selectAll(".tnt_elem");
+        }
 
-	if (exports.index) { // Indexing by field
-	    vis_elems = vis_sel
-		.data(data_elems, function (d) {
-		    if (d !== undefined) {
-			return exports.index(d);
-		    }
-		});
-	} else { // Indexing by position in array
-	    vis_elems = vis_sel
-		.data(data_elems);
-	}
+        if (exports.index) { // Indexing by field
+            vis_elems = vis_sel
+                .data(data_elems, function (d) {
+                    if (d !== undefined) {
+                        return exports.index(d);
+                    }
+                });
+        } else { // Indexing by position in array
+            vis_elems = vis_sel
+                .data(data_elems);
+        }
 
 	exports.updater.call(track, vis_elems, xScale);
 
@@ -593,11 +594,12 @@ tnt_feature.pin = function () {
         .append("text")
         .attr("font-size", "13")
         .attr("x", function (d, i) {
-            return xScale(d[opts.pos(d, i)])-2;
+            return xScale(d[opts.pos(d, i)]);
         })
         .attr("y", function (d, i) {
             return 10;
         })
+        .style("text-anchor", "middle")
         .text(function (d) {
             return d.label || "";
         })
@@ -635,7 +637,10 @@ tnt_feature.pin = function () {
         .select("text")
         .attr("x", function (d, i) {
             return xScale(d[opts.pos(d, i)]);
-        });
+        })
+        .text(function (d) {
+            return d.label || "";
+        })
 
     });
 

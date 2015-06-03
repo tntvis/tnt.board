@@ -2,26 +2,29 @@ var apijs = require ("tnt.api");
 
 // var board = {};
 // board.track = {};
-layout = {};
-
-layout.identity = function () {
-    // vars exposed in the API:
-    var elements;
+var layout = function () {
 
     // The returned closure / object
-    var l = function (new_elements) {
-	elements = new_elements;
-    }
+    var l = function (new_elems, xScale)  {
+        var track = this;
+        l.elements().call(track, new_elems, xScale);
+        return new_elems;
+    };
 
-    var api = apijs (l)
-	.method ({
-	    height   : function () {},
-	    elements : function () {
-		return elements;
-	    }
-	});
+    var api = apijs(l)
+        .getset ('elements', function () {})
+        .method ({
+            height : function () {}
+        });
 
     return l;
+};
+
+layout.identity = function () {
+    return layout()
+        .elements (function (e) {
+            return e;
+        });
 };
 
 module.exports = exports = layout;

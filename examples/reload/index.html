@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+<head>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="../../build/tnt.board.js"></script>
+  <script src="reload.js"></script>
+</head>
+
+<body>
+  <div id="mydiv"></div>
+  <script>
+    var myBoard = tnt.board().from(20).to(500);
+    var theme = reload_theme();
+    theme(myBoard, document.getElementById("mydiv"));
+  </script>
+</body>
