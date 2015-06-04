@@ -29,3 +29,5 @@
 0.0.16
 	- Better labeling of pin features
 	- layout reworked. Allow custom layouts (and transformation)
+0.0.17
+	- Added updater to pin feature

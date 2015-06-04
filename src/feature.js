@@ -67,7 +67,6 @@ var tnt_feature = function () {
         }
 
         var data_elems = exports.layout.call(track, elements, xScale);
-        //var data_elems = layout.elements();
 
         var vis_sel;
         var vis_elems;
@@ -604,6 +603,14 @@ tnt_feature.pin = function () {
             return d.label || "";
         })
 
+    });
+
+    feature.updater (function (pins, xScale){
+        pins
+            .select("text")
+            .text(function (d) {
+                return d.label || "";
+            })
     });
 
     feature.mover(function (pins, xScale) {
