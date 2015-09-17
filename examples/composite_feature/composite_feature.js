@@ -14,27 +14,27 @@ var composite_feature = function() {
 		      tnt.board.track.data.retriever.sync()
 			  .retriever (function () {
 			      return {
-				  'blocks2' : [
-				      {
-					  start : 130,
-					  end   : 140
-				      }
-				  ],
-				  'blocks' : [
-				      {
-					  start : 20,
-					  end   : 100
-				      }
-				  ],
-				  'lines'  : [
-				      {
-					  pos : 120
-				      },
-				      {
-					  pos : 150
-				      }
-				  ]
-			      }
+    				  'blocks2' : [
+    				      {
+                              start : 130,
+                              end   : 140
+    				      }
+    				  ],
+    				  'blocks' : [
+                          {
+                              start : 20,
+                              end   : 100
+    				      }
+    				  ],
+    				  'lines'  : [
+    				      {
+                              pos : 120
+    				      },
+    				      {
+                              pos : 150
+    				      }
+    				  ]
+			      };
 			  })
 		  )
 		 )

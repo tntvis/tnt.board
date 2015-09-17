@@ -27,23 +27,23 @@ var board = function() {
     var xScale;
     var zoomEventHandler = d3.behavior.zoom();
     var limits = {
-	left : 0,
-	right : 1000,
-	zoom_out : 1000,
-	zoom_in  : 100
+        left : 0,
+        right : 1000,
+        zoom_out : 1000,
+        zoom_in  : 100
     };
     var cap_width = 3;
     var dur = 500;
     var drag_allowed = true;
 
     var exports = {
-	ease          : d3.ease("cubic-in-out"),
-	extend_canvas : {
-	    left : 0,
-	    right : 0
-	},
-	show_frame : true
-	// limits        : function () {throw "The limits method should be defined"}
+        ease          : d3.ease("cubic-in-out"),
+        extend_canvas : {
+            left : 0,
+            right : 0
+        },
+        show_frame : true
+        // limits        : function () {throw "The limits method should be defined"}
     };
 
     // The returned closure / object
@@ -125,15 +125,15 @@ var board = function() {
 
     // API
     var api = apijs (track_vis)
-	.getset (exports)
-	.getset (limits)
-	.getset (loc);
+    	.getset (exports)
+    	.getset (limits)
+    	.getset (loc);
 
     api.transform (track_vis.extend_canvas, function (val) {
-	var prev_val = track_vis.extend_canvas();
-	val.left = val.left || prev_val.left;
-	val.right = val.right || prev_val.right;
-	return val;
+    	var prev_val = track_vis.extend_canvas();
+    	val.left = val.left || prev_val.left;
+    	val.right = val.right || prev_val.right;
+    	return val;
     });
 
     // track_vis always starts on loc.from & loc.to
@@ -142,7 +142,7 @@ var board = function() {
 	// Reset the tracks
 	for (var i=0; i<tracks.length; i++) {
 	    if (tracks[i].g) {
-        //    tracks[i].display().reset.call(tracks[i]);
+            //    tracks[i].display().reset.call(tracks[i]);
             tracks[i].g.remove();
 	    }
 	    _init_track(tracks[i]);
@@ -197,7 +197,7 @@ var board = function() {
 	    data_updater.call(track_data, {
 		'loc' : where,
 		'on_success' : function () {
-		    track.display().update.call(track, xScale);
+		    track.display().update.call(track, xScale, where);
 		}
 	    });
 	}

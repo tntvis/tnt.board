@@ -52,7 +52,7 @@ var tnt_feature = function () {
         exports.create.call(track, new_elems, xScale);
     };
 
-    var update = function (xScale, field) {
+    var update = function (xScale, where, field) {
         var track = this;
         var svg_g = track.g;
         // var layout = exports.layout;
@@ -174,7 +174,7 @@ tnt_feature.composite = function () {
     var update = function (xScale) {
 	var track = this;
 	for (var i=0; i<display_order.length; i++) {
-	    displays[display_order[i]].update.call(track, xScale, display_order[i]);
+	    displays[display_order[i]].update.call(track, xScale, undefined, display_order[i]);
 	    displays[display_order[i]].move_to_front.call(track, display_order[i]);
 	}
 	// for (var display in displays) {
@@ -267,7 +267,6 @@ tnt_feature.area = function () {
 	    .datum(data_points)
 	    .attr("d", area)
 	    .attr("fill", d3.rgb(feature.foreground_color()).brighter());
-
     });
 
     var line_mover = feature.mover();
@@ -733,39 +732,41 @@ tnt_feature.axis = function () {
     // Axis doesn't inherit from feature
     var feature = {};
     feature.reset = function () {
-	xAxis = undefined;
-	var track = this;
-	track.g.selectAll("rect").remove();
-	track.g.selectAll(".tick").remove();
+    	xAxis = undefined;
+    	var track = this;
+    	track.g.selectAll("rect").remove();
+    	track.g.selectAll(".tick").remove();
     };
     feature.plot = function () {};
     feature.move = function () {
-	var track = this;
-	var svg_g = track.g;
-	svg_g.call(xAxis);
-    }
+    	var track = this;
+    	var svg_g = track.g;
+    	svg_g.call(xAxis);
+    };
 
-    feature.init = function () {};
+    feature.init = function () {
+        xAxis = undefined;
+    };
 
     feature.update = function (xScale) {
-	// Create Axis if it doesn't exist
-	if (xAxis === undefined) {
-	    xAxis = d3.svg.axis()
-		.scale(xScale)
-		.orient(orientation);
-	}
+    	// Create Axis if it doesn't exist
+    	if (xAxis === undefined) {
+    	    xAxis = d3.svg.axis()
+    		.scale(xScale)
+    		.orient(orientation);
+    	}
 
-	var track = this;
-	var svg_g = track.g;
-	svg_g.call(xAxis);
+    	var track = this;
+    	var svg_g = track.g;
+    	svg_g.call(xAxis);
     };
 
     feature.orientation = function (pos) {
-	if (!arguments.length) {
-	    return orientation;
-	}
-	orientation = pos;
-	return feature;
+    	if (!arguments.length) {
+    	    return orientation;
+    	}
+    	orientation = pos;
+    	return feature;
     };
 
     return feature;
@@ -775,9 +776,13 @@ tnt_feature.location = function () {
     var row;
 
     var feature = {};
-    feature.reset = function () {};
+    feature.reset = function () {
+        row = undefined;
+    };
     feature.plot = function () {};
-    feature.init = function () {};
+    feature.init = function () {
+        row = undefined;
+    };
     feature.move = function(xScale) {
 	var domain = xScale.domain();
 	row.select("text")
