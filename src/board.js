@@ -156,7 +156,7 @@ var board = function() {
 
 	    // zoomEventHandler.xExtent([limits.left, limits.right]);
 	    if ((loc.to - loc.from) < limits.zoom_in) {
-		if ((loc.from + limits.zoom_in) > limits.zoom_in) {
+		if ((loc.from + limits.zoom_in) > limits.right) {
 		    loc.to = limits.right;
 		} else {
 		    loc.to = loc.from + limits.zoom_in;
