@@ -31,3 +31,7 @@
 	- layout reworked. Allow custom layouts (and transformation)
 0.0.17
 	- Added updater to pin feature
+0.0.18
+	- fixed axis and location features on reload
+0.0.19
+	- bugfix, do not set loc.to to limits.right if the region is too small
