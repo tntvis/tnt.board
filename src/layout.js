@@ -12,10 +12,7 @@ var layout = function () {
     };
 
     var api = apijs(l)
-        .getset ('elements', function () {})
-        .method ({
-            height : function () {}
-        });
+        .getset ('elements', function () {});
 
     return l;
 };

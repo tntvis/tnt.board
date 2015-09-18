@@ -88,63 +88,63 @@ var tnt_feature = function () {
                 .data(data_elems);
         }
 
-	exports.updater.call(track, vis_elems, xScale);
+        exports.updater.call(track, vis_elems, xScale);
 
-	var new_elem = vis_elems
-	    .enter();
+    	var new_elem = vis_elems
+    	    .enter();
 
-	new_elem
-	    .append("g")
-	    .attr("class", "tnt_elem")
-	    .classed("tnt_elem_" + field, field)
-	    .call(feature.plot, track, xScale);
+    	new_elem
+    	    .append("g")
+    	    .attr("class", "tnt_elem")
+    	    .classed("tnt_elem_" + field, field)
+    	    .call(feature.plot, track, xScale);
 
-	vis_elems
-	    .exit()
-	    .remove();
+    	vis_elems
+    	    .exit()
+    	    .remove();
     };
 
     var move = function (xScale, field) {
-	var track = this;
-	var svg_g = track.g;
-	var elems;
-	// TODO: Is selecting the elements to move too slow?
-	// It would be nice to profile
-	if (field !== undefined) {
-	    elems = svg_g.selectAll(".tnt_elem_" + field);
-	} else {
-	    elems = svg_g.selectAll(".tnt_elem");
-	}
+    	var track = this;
+    	var svg_g = track.g;
+    	var elems;
+    	// TODO: Is selecting the elements to move too slow?
+    	// It would be nice to profile
+    	if (field !== undefined) {
+    	    elems = svg_g.selectAll(".tnt_elem_" + field);
+    	} else {
+    	    elems = svg_g.selectAll(".tnt_elem");
+    	}
 
-	exports.mover.call(this, elems, xScale);
+    	exports.mover.call(this, elems, xScale);
     };
 
     var mtf = function (elem) {
-	elem.parentNode.appendChild(elem);
+        elem.parentNode.appendChild(elem);
     };
 
     var move_to_front = function (field) {
-	if (field !== undefined) {
-	    var track = this;
-	    var svg_g = track.g;
-	    svg_g.selectAll(".tnt_elem_" + field)
-	        .each( function () {
-		    mtf(this);
-		});
-	}
+        if (field !== undefined) {
+            var track = this;
+            var svg_g = track.g;
+            svg_g.selectAll(".tnt_elem_" + field)
+                .each( function () {
+                    mtf(this);
+                });
+        }
     };
 
     // API
     apijs (feature)
-	.getset (exports)
-	.method ({
-	    reset  : reset,
-	    plot   : plot,
-	    update : update,
-	    move   : move,
-	    init   : init,
-	    move_to_front : move_to_front
-	});
+    	.getset (exports)
+    	.method ({
+    	    reset  : reset,
+    	    plot   : plot,
+    	    update : update,
+    	    move   : move,
+    	    init   : init,
+    	    move_to_front : move_to_front
+    	});
 
     return d3.rebind(feature, dispatch, "on");
 };
@@ -156,47 +156,47 @@ tnt_feature.composite = function () {
     var features = {};
 
     var reset = function () {
-	var track = this;
-	for (var i=0; i<displays.length; i++) {
-	    displays[i].reset.call(track);
-	}
+    	var track = this;
+    	for (var i=0; i<displays.length; i++) {
+    	    displays[i].reset.call(track);
+    	}
     };
 
     var init = function (width) {
-	var track = this;
- 	for (var display in displays) {
-	    if (displays.hasOwnProperty(display)) {
-		displays[display].init.call(track, width);
-	    }
-	}
+    	var track = this;
+     	for (var display in displays) {
+    	    if (displays.hasOwnProperty(display)) {
+    		displays[display].init.call(track, width);
+    	    }
+    	}
     };
 
     var update = function (xScale) {
-	var track = this;
-	for (var i=0; i<display_order.length; i++) {
-	    displays[display_order[i]].update.call(track, xScale, undefined, display_order[i]);
-	    displays[display_order[i]].move_to_front.call(track, display_order[i]);
-	}
-	// for (var display in displays) {
-	//     if (displays.hasOwnProperty(display)) {
-	// 	displays[display].update.call(track, xScale, display);
-	//     }
-	// }
+    	var track = this;
+    	for (var i=0; i<display_order.length; i++) {
+    	    displays[display_order[i]].update.call(track, xScale, undefined, display_order[i]);
+    	    displays[display_order[i]].move_to_front.call(track, display_order[i]);
+    	}
+    	// for (var display in displays) {
+    	//     if (displays.hasOwnProperty(display)) {
+    	// 	displays[display].update.call(track, xScale, display);
+    	//     }
+    	// }
     };
 
     var move = function (xScale) {
-	var track = this;
-	for (var display in displays) {
-	    if (displays.hasOwnProperty(display)) {
-		displays[display].move.call(track, xScale, display);
-	    }
-	}
+    	var track = this;
+    	for (var display in displays) {
+    	    if (displays.hasOwnProperty(display)) {
+    		displays[display].move.call(track, xScale, display);
+    	    }
+    	}
     };
 
     var add = function (key, display) {
-	displays[key] = display;
-	display_order.push(key);
-	return features;
+    	displays[key] = display;
+    	display_order.push(key);
+    	return features;
     };
 
     // var on_click = function (cbak) {
@@ -209,11 +209,11 @@ tnt_feature.composite = function () {
     // };
 
     var get_displays = function () {
-	var ds = [];
-	for (var i=0; i<display_order.length; i++) {
-	    ds.push(displays[display_order[i]]);
-	}
-	return ds;
+    	var ds = [];
+    	for (var i=0; i<display_order.length; i++) {
+    	    ds.push(displays[display_order[i]]);
+    	}
+    	return ds;
     };
 
     // API
@@ -224,7 +224,6 @@ tnt_feature.composite = function () {
 	    move   : move,
 	    init   : init,
 	    add    : add,
-//	    on_click : on_click,
 	    displays : get_displays
 	});
 
@@ -236,49 +235,49 @@ tnt_feature.area = function () {
     var line = tnt_feature.line();
 
     var area = d3.svg.area()
-	.interpolate(line.interpolate())
-	.tension(feature.tension());
+    	.interpolate(line.interpolate())
+    	.tension(feature.tension());
 
     var data_points;
 
     var line_create = feature.create(); // We 'save' line creation
     feature.create (function (points, xScale) {
-	var track = this;
+    	var track = this;
 
-	if (data_points !== undefined) {
-//	     return;
-	    track.g.select("path").remove();
-	}
+    	if (data_points !== undefined) {
+    //	     return;
+    	    track.g.select("path").remove();
+    	}
 
-	line_create.call(track, points, xScale);
+    	line_create.call(track, points, xScale);
 
-	area
-	    .x(line.x())
-	    .y1(line.y())
-	    .y0(track.height());
+    	area
+    	    .x(line.x())
+    	    .y1(line.y())
+    	    .y0(track.height());
 
-	data_points = points.data();
-	points.remove();
+    	data_points = points.data();
+    	points.remove();
 
-	track.g
-	    .append("path")
-	    .attr("class", "tnt_area")
-	    .classed("tnt_elem", true)
-	    .datum(data_points)
-	    .attr("d", area)
-	    .attr("fill", d3.rgb(feature.foreground_color()).brighter());
+    	track.g
+    	    .append("path")
+    	    .attr("class", "tnt_area")
+    	    .classed("tnt_elem", true)
+    	    .datum(data_points)
+    	    .attr("d", area)
+    	    .attr("fill", d3.rgb(feature.foreground_color()).brighter());
     });
 
     var line_mover = feature.mover();
     feature.mover (function (path, xScale) {
-	var track = this;
-	line_mover.call(track, path, xScale);
+    	var track = this;
+    	line_mover.call(track, path, xScale);
 
-	area.x(line.x());
-	track.g
-	    .select(".tnt_area")
-	    .datum(data_points)
-	    .attr("d", area);
+    	area.x(line.x());
+    	track.g
+    	    .select(".tnt_area")
+    	    .datum(data_points)
+    	    .attr("d", area);
     });
 
     return feature;
@@ -289,43 +288,43 @@ tnt_feature.line = function () {
     var feature = tnt_feature();
 
     var x = function (d) {
-	return d.pos;
+        return d.pos;
     };
     var y = function (d) {
-	return d.val;
+        return d.val;
     };
     var tension = 0.7;
     var yScale = d3.scale.linear();
     var line = d3.svg.line()
-	.interpolate("basis");
+        .interpolate("basis");
 
     // line getter. TODO: Setter?
     feature.line = function () {
-	return line;
+        return line;
     };
 
     feature.x = function (cbak) {
-	if (!arguments.length) {
-	    return x;
-	}
-	x = cbak;
-	return feature;
+    	if (!arguments.length) {
+    	    return x;
+    	}
+    	x = cbak;
+    	return feature;
     };
 
     feature.y = function (cbak) {
-	if (!arguments.length) {
-	    return y;
-	}
-	y = cbak;
-	return feature;
+    	if (!arguments.length) {
+    	    return y;
+    	}
+    	y = cbak;
+    	return feature;
     };
 
     feature.tension = function (t) {
-	if (!arguments.length) {
-	    return tension;
-	}
-	tension = t;
-	return feature;
+    	if (!arguments.length) {
+    	    return tension;
+    	}
+    	tension = t;
+    	return feature;
     };
 
     var data_points;
@@ -343,11 +342,11 @@ tnt_feature.line = function () {
 	line
 	    .tension(tension)
 	    .x(function (d) {
-		return xScale(x(d));
+            return xScale(x(d));
 	    })
 	    .y(function (d) {
-		return track.height() - yScale(y(d));
-	    })
+            return track.height() - yScale(y(d));
+	    });
 
 	data_points = points.data();
 	points.remove();
@@ -370,28 +369,28 @@ tnt_feature.line = function () {
     });
 
     feature.mover (function (path, xScale) {
-	var track = this;
+    	var track = this;
 
-	line.x(function (d) {
-	    return xScale(x(d))
-	});
-	track.g.select("path")
-	    .attr("d", line(data_points));
+    	line.x(function (d) {
+    	    return xScale(x(d))
+    	});
+    	track.g.select("path")
+    	    .attr("d", line(data_points));
     });
 
     return feature;
 };
 
 tnt_feature.conservation = function () {
-    // 'Inherit' from feature.area
-    var feature = tnt_feature.area();
+        // 'Inherit' from feature.area
+        var feature = tnt_feature.area();
 
-    var area_create = feature.create(); // We 'save' area creation
-    feature.create  (function (points, xScale) {
-	var track = this;
+        var area_create = feature.create(); // We 'save' area creation
+        feature.create  (function (points, xScale) {
+    	var track = this;
 
-	area_create.call(track, d3.select(points[0][0]), xScale)
-    });
+    	area_create.call(track, d3.select(points[0][0]), xScale);
+        });
 
     return feature;
 };
@@ -437,26 +436,26 @@ tnt_feature.ensembl = function () {
 	new_elems
 	    .append("rect")
 	    .attr("x", function (d) {
-		return xScale (d.start);
+            return xScale (d.start);
 	    })
 	    .attr("y", height_offset)
 // 	    .attr("rx", 3)
 // 	    .attr("ry", 3)
 	    .attr("width", function (d) {
-		return (xScale(d.end) - xScale(d.start));
+            return (xScale(d.end) - xScale(d.start));
 	    })
 	    .attr("height", track.height() - ~~(height_offset * 2))
 	    .attr("fill", track.background_color())
 	    .transition()
 	    .duration(500)
 	    .attr("fill", function (d) {
-		if (d.type === 'high') {
-		    return d3.rgb(feature.foreground_color());
-		}
-		if (d.type === 'low') {
-		    return d3.rgb(feature.foreground_color2());
-		}
-		return d3.rgb(feature.foreground_color3());
+    		if (d.type === 'high') {
+    		    return d3.rgb(feature.foreground_color());
+    		}
+    		if (d.type === 'low') {
+    		    return d3.rgb(feature.foreground_color2());
+    		}
+    		return d3.rgb(feature.foreground_color3());
 	    });
     });
 
@@ -464,7 +463,7 @@ tnt_feature.ensembl = function () {
 	blocks
 	    .select("rect")
 	    .attr("width", function (d) {
-		return (xScale(d.end) - xScale(d.start))
+            return (xScale(d.end) - xScale(d.start));
 	    });
     });
 
@@ -472,27 +471,27 @@ tnt_feature.ensembl = function () {
 	blocks
 	    .select("rect")
 	    .attr("x", function (d) {
-		return xScale(d.start);
+            return xScale(d.start);
 	    })
 	    .attr("width", function (d) {
-		return (xScale(d.end) - xScale(d.start));
+            return (xScale(d.end) - xScale(d.start));
 	    });
     });
 
     feature.foreground_color2 = function (col) {
-	if (!arguments.length) {
-	    return foreground_color2;
-	}
-	foreground_color2 = col;
-	return feature;
+    	if (!arguments.length) {
+    	    return foreground_color2;
+    	}
+    	foreground_color2 = col;
+    	return feature;
     };
 
     feature.foreground_color3 = function (col) {
-	if (!arguments.length) {
-	    return foreground_color3;
-	}
-	foreground_color3 = col;
-	return feature;
+    	if (!arguments.length) {
+    	    return foreground_color3;
+    	}
+    	foreground_color3 = col;
+    	return feature;
     };
 
     return feature;
@@ -503,31 +502,31 @@ tnt_feature.vline = function () {
     var feature = tnt_feature();
 
     feature.create (function (new_elems, xScale) {
-	var track = this;
-	new_elems
-	    .append ("line")
-	    .attr("x1", function (d) {
-		// TODO: Should use the index value?
-		return xScale(feature.index()(d))
-	    })
-	    .attr("x2", function (d) {
-		return xScale(feature.index()(d))
-	    })
-	    .attr("y1", 0)
-	    .attr("y2", track.height())
-	    .attr("stroke", feature.foreground_color())
-	    .attr("stroke-width", 1);
+    	var track = this;
+    	new_elems
+    	    .append ("line")
+    	    .attr("x1", function (d) {
+                // TODO: Should use the index value?
+                return xScale(feature.index()(d));
+    	    })
+    	    .attr("x2", function (d) {
+                return xScale(feature.index()(d));
+    	    })
+    	    .attr("y1", 0)
+    	    .attr("y2", track.height())
+    	    .attr("stroke", feature.foreground_color())
+    	    .attr("stroke-width", 1);
     });
 
     feature.mover (function (vlines, xScale) {
-	vlines
-	    .select("line")
-	    .attr("x1", function (d) {
-		return xScale(feature.index()(d));
-	    })
-	    .attr("x2", function (d) {
-		return xScale(feature.index()(d));
-	    });
+    	vlines
+    	    .select("line")
+    	    .attr("x1", function (d) {
+                return xScale(feature.index()(d));
+    	    })
+    	    .attr("x2", function (d) {
+                return xScale(feature.index()(d));
+    	    });
     });
 
     return feature;
@@ -539,8 +538,8 @@ tnt_feature.pin = function () {
     var feature = tnt_feature();
 
     var yScale = d3.scale.linear()
-	.domain([0,0])
-	.range([0,0]);
+    	.domain([0,0])
+    	.range([0,0]);
 
     var opts = {
         pos : d3.functor("pos"),
@@ -555,52 +554,52 @@ tnt_feature.pin = function () {
 
 
     feature.create (function (new_pins, xScale) {
-	var track = this;
-	yScale
-	    .domain(feature.domain())
-	    .range([pin_ball_r, track.height()-pin_ball_r-10]); // 10 for labelling
+    	var track = this;
+    	yScale
+    	    .domain(feature.domain())
+    	    .range([pin_ball_r, track.height()-pin_ball_r-10]); // 10 for labelling
 
-	// pins are composed of lines, circles and labels
-	new_pins
-	    .append("line")
-	    .attr("x1", function (d, i) {
-	    	return xScale(d[opts.pos(d, i)])
-	    })
-	    .attr("y1", function (d) {
-	    	return track.height();
-	    })
-	    .attr("x2", function (d,i) {
-	    	return xScale(d[opts.pos(d, i)]);
-	    })
-	    .attr("y2", function (d, i) {
-	    	return track.height() - yScale(d[opts.val(d, i)]);
-	    })
-	    .attr("stroke", feature.foreground_color());
+    	// pins are composed of lines, circles and labels
+    	new_pins
+    	    .append("line")
+    	    .attr("x1", function (d, i) {
+    	    	return xScale(d[opts.pos(d, i)]);
+    	    })
+    	    .attr("y1", function (d) {
+                return track.height();
+    	    })
+    	    .attr("x2", function (d,i) {
+    	    	return xScale(d[opts.pos(d, i)]);
+    	    })
+    	    .attr("y2", function (d, i) {
+    	    	return track.height() - yScale(d[opts.val(d, i)]);
+    	    })
+    	    .attr("stroke", feature.foreground_color());
 
-	new_pins
-	    .append("circle")
-	    .attr("cx", function (d, i) {
-            return xScale(d[opts.pos(d, i)]);
-	    })
-	    .attr("cy", function (d, i) {
-            return track.height() - yScale(d[opts.val(d, i)]);
-	    })
-	    .attr("r", pin_ball_r)
-	    .attr("fill", feature.foreground_color());
+    	new_pins
+    	    .append("circle")
+    	    .attr("cx", function (d, i) {
+                return xScale(d[opts.pos(d, i)]);
+    	    })
+    	    .attr("cy", function (d, i) {
+                return track.height() - yScale(d[opts.val(d, i)]);
+    	    })
+    	    .attr("r", pin_ball_r)
+    	    .attr("fill", feature.foreground_color());
 
-    new_pins
-        .append("text")
-        .attr("font-size", "13")
-        .attr("x", function (d, i) {
-            return xScale(d[opts.pos(d, i)]);
-        })
-        .attr("y", function (d, i) {
-            return 10;
-        })
-        .style("text-anchor", "middle")
-        .text(function (d) {
-            return d.label || "";
-        })
+        new_pins
+            .append("text")
+            .attr("font-size", "13")
+            .attr("x", function (d, i) {
+                return xScale(d[opts.pos(d, i)]);
+            })
+            .attr("y", function (d, i) {
+                return 10;
+            })
+            .style("text-anchor", "middle")
+            .text(function (d) {
+                return d.label || "";
+            });
 
     });
 
@@ -609,7 +608,7 @@ tnt_feature.pin = function () {
             .select("text")
             .text(function (d) {
                 return d.label || "";
-            })
+            });
     });
 
     feature.mover(function (pins, xScale) {
@@ -618,16 +617,16 @@ tnt_feature.pin = function () {
 	    //.each(position_pin_line)
 	    .select("line")
 	    .attr("x1", function (d, i) {
-		return xScale(d[opts.pos(d, i)])
+            return xScale(d[opts.pos(d, i)]);
 	    })
 	    .attr("y1", function (d) {
-		return track.height();
+    		return track.height();
 	    })
 	    .attr("x2", function (d,i) {
-		return xScale(d[opts.pos(d, i)]);
+    		return xScale(d[opts.pos(d, i)]);
 	    })
 	    .attr("y2", function (d, i) {
-		return track.height() - yScale(d[opts.val(d, i)]);
+    		return track.height() - yScale(d[opts.val(d, i)]);
 	    });
 
 	pins
@@ -646,7 +645,7 @@ tnt_feature.pin = function () {
         })
         .text(function (d) {
             return d.label || "";
-        })
+        });
 
     });
 
@@ -670,55 +669,55 @@ tnt_feature.block = function () {
     var feature = tnt_feature();
 
     apijs(feature)
-	.getset('from', function (d) {
-	    return d.start;
-	})
-	.getset('to', function (d) {
-	    return d.end;
-	});
+    	.getset('from', function (d) {
+    	    return d.start;
+    	})
+    	.getset('to', function (d) {
+    	    return d.end;
+    	});
 
     feature.create(function (new_elems, xScale) {
-	var track = this;
-	new_elems
-	    .append("rect")
-	    .attr("x", function (d, i) {
-		// TODO: start, end should be adjustable via the tracks API
-		return xScale(feature.from()(d, i));
-	    })
-	    .attr("y", 0)
-	    .attr("width", function (d, i) {
-		return (xScale(feature.to()(d, i)) - xScale(feature.from()(d, i)));
-	    })
-	    .attr("height", track.height())
-	    .attr("fill", track.background_color())
-	    .transition()
-	    .duration(500)
-	    .attr("fill", function (d) {
-		if (d.color === undefined) {
-		    return feature.foreground_color();
-		} else {
-		    return d.color;
-		}
-	    });
+    	var track = this;
+    	new_elems
+    	    .append("rect")
+    	    .attr("x", function (d, i) {
+        		// TODO: start, end should be adjustable via the tracks API
+        		return xScale(feature.from()(d, i));
+    	    })
+    	    .attr("y", 0)
+    	    .attr("width", function (d, i) {
+        		return (xScale(feature.to()(d, i)) - xScale(feature.from()(d, i)));
+    	    })
+    	    .attr("height", track.height())
+    	    .attr("fill", track.background_color())
+    	    .transition()
+    	    .duration(500)
+    	    .attr("fill", function (d) {
+        		if (d.color === undefined) {
+        		    return feature.foreground_color();
+        		} else {
+        		    return d.color;
+        		}
+    	    });
     });
 
     feature.updater(function (elems, xScale) {
-	elems
-	    .select("rect")
-	    .attr("width", function (d) {
-		return (xScale(d.end) - xScale(d.start));
-	    });
+    	elems
+    	    .select("rect")
+    	    .attr("width", function (d) {
+        		return (xScale(d.end) - xScale(d.start));
+    	    });
     });
 
     feature.mover(function (blocks, xScale) {
-	blocks
-	    .select("rect")
-	    .attr("x", function (d) {
-		return xScale(d.start);
-	    })
-	    .attr("width", function (d) {
-		return (xScale(d.end) - xScale(d.start));
-	    });
+    	blocks
+    	    .select("rect")
+    	    .attr("x", function (d) {
+        		return xScale(d.start);
+    	    })
+    	    .attr("width", function (d) {
+        		return (xScale(d.end) - xScale(d.start));
+    	    });
     });
 
     return feature;
@@ -784,21 +783,21 @@ tnt_feature.location = function () {
         row = undefined;
     };
     feature.move = function(xScale) {
-	var domain = xScale.domain();
-	row.select("text")
-	    .text("Location: " + ~~domain[0] + "-" + ~~domain[1]);
+    	var domain = xScale.domain();
+    	row.select("text")
+    	    .text("Location: " + ~~domain[0] + "-" + ~~domain[1]);
     };
 
     feature.update = function (xScale) {
-	var track = this;
-	var svg_g = track.g;
-	var domain = xScale.domain();
-	if (row === undefined) {
-	    row = svg_g;
-	    row
-		.append("text")
-		.text("Location: " + ~~domain[0] + "-" + ~~domain[1]);
-	}
+    	var track = this;
+    	var svg_g = track.g;
+    	var domain = xScale.domain();
+    	if (row === undefined) {
+    	    row = svg_g;
+    	    row
+        		.append("text")
+        		.text("Location: " + ~~domain[0] + "-" + ~~domain[1]);
+    	}
     };
 
     return feature;

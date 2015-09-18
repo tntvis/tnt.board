@@ -6,8 +6,7 @@ var apijs = require ("tnt.api");
 
 var data = function() {
     "use strict";
-    var _ = function () {
-    };
+    var _ = function () {};
 
     // Getters / Setters
     apijs (_)
@@ -30,7 +29,7 @@ data.retriever.sync = function() {
     };
 
     apijs (update_track)
-	.getset ('retriever', function () {})
+	   .getset ('retriever', function () {});
 
     return update_track;
 };
@@ -41,10 +40,10 @@ data.retriever.async = function () {
     // "this" is set to the data obj
     var data_obj = this;
     var update_track = function (obj) {
-	d3.json(url, function (err, resp) {
-	    data_obj.elements(resp);
-	    obj.on_success();
-	}); 
+    	d3.json(url, function (err, resp) {
+    	    data_obj.elements(resp);
+    	    obj.on_success();
+    	});
     };
 
     apijs (update_track)
@@ -53,30 +52,6 @@ data.retriever.async = function () {
     return update_track;
 };
 
-
-
-// A predefined track for genes
-// tnt.track.data.gene = function () {
-//     var track = tnt.track.data();
-// 	// .index("ID");
-
-//     var updater = tnt.track.retriever.ensembl()
-// 	.endpoint("region")
-//     // TODO: If success is defined here, means that it can't be user-defined
-//     // is that good? enough? API?
-//     // UPDATE: Now success is backed up by an array. Still don't know if this is the best option
-// 	.success(function(genes) {
-// 	    for (var i = 0; i < genes.length; i++) {
-// 		if (genes[i].strand === -1) {  
-// 		    genes[i].display_label = "<" + genes[i].external_name;
-// 		} else {
-// 		    genes[i].display_label = genes[i].external_name + ">";
-// 		}
-// 	    }
-// 	});
-
-//     return track.update(updater);
-// }
 
 // A predefined track displaying no external data
 // it is used for location and axis tracks for example
