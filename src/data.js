@@ -10,10 +10,10 @@ var data = function() {
 
     // Getters / Setters
     apijs (_)
-    // label is not used at the moment
-	.getset ('label', "")
-	.getset ('elements', [])
-	.getset ('update', function () {});
+        // label is not used at the moment
+        .getset ('label', "")
+        .getset ('elements', [])
+        .getset ('update', function () {});
 
     return _;
 };
@@ -47,7 +47,7 @@ data.retriever.async = function () {
     };
 
     apijs (update_track)
-	.getset ('url', '');
+        .getset ('url', '');
 
     return update_track;
 };
