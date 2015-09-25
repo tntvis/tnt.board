@@ -35,19 +35,32 @@ data.retriever.sync = function() {
 };
 
 data.retriever.async = function () {
-    var url = '';
 
     // "this" is set to the data obj
-    var data_obj = this;
+    // var data_obj = this;
+    // var update_track = function (obj) {
+    // 	d3.json(url, function (err, resp) {
+    // 	    data_obj.elements(resp);
+    // 	    obj.on_success();
+    // 	});
+    // };
+
     var update_track = function (obj) {
-    	d3.json(url, function (err, resp) {
-    	    data_obj.elements(resp);
-    	    obj.on_success();
-    	});
+        var data_obj = this;
+        update_track.retriever()(obj.loc)
+            .then (function (resp) {
+                console.log(resp);
+                data_obj.elements(resp);
+                obj.on_success();
+            });
     };
 
-    apijs (update_track)
-        .getset ('url', '');
+    var api = apijs (update_track)
+        .getset ('retriever');
+        // .getset (success, function (resp) {
+        //     return resp;
+        // });
+        //.getset ('url', '');
 
     return update_track;
 };

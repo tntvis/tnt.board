@@ -37,4 +37,5 @@
 	- bugfix, do not set loc.to to limits.right if the region is too small
 0.0.20
 	- Improvements in the 'reorder' method (not altering the passed array of new tracks)
-	
+0.0.21
+	- Fix in data.retriever.async to use promises
