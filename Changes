@@ -39,3 +39,5 @@
 	- Improvements in the 'reorder' method (not altering the passed array of new tracks)
 0.0.21
 	- Fix in data.retriever.async to use promises
+0.0.22
+	- updated tnt.utils
