@@ -574,7 +574,9 @@ tnt_feature.pin = function () {
     	    .attr("y2", function (d, i) {
     	    	return track.height() - yScale(d[opts.val(d, i)]);
     	    })
-    	    .attr("stroke", feature.foreground_color());
+    	    .attr("stroke", function (d) {
+                return d3.functor(feature.foreground_color())(d);
+            });
 
     	new_pins
     	    .append("circle")
@@ -585,7 +587,9 @@ tnt_feature.pin = function () {
                 return track.height() - yScale(d[opts.val(d, i)]);
     	    })
     	    .attr("r", pin_ball_r)
-    	    .attr("fill", feature.foreground_color());
+    	    .attr("fill", function (d) {
+                return d3.functor(feature.foreground_color())(d);
+            });
 
         new_pins
             .append("text")
