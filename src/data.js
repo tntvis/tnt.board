@@ -49,7 +49,6 @@ data.retriever.async = function () {
         var data_obj = this;
         update_track.retriever()(obj.loc)
             .then (function (resp) {
-                console.log(resp);
                 data_obj.elements(resp);
                 obj.on_success();
             });

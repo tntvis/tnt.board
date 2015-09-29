@@ -43,3 +43,5 @@
 	- updated tnt.utils
 0.0.23
 	- foreground_color in pins feature expects a functor (at some point all the features will behave like this)
+0.0.24
+	- removed console message
