@@ -49,3 +49,5 @@
 	- updated version of tnt.api
 0.0.26
 	- updated dependencies
+0.0.27
+	- fixed line definition in area feature
