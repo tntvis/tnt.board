@@ -232,7 +232,7 @@ tnt_feature.composite = function () {
 
 tnt_feature.area = function () {
     var feature = tnt_feature.line();
-    var line = tnt_feature.line();
+    var line = feature.line();
 
     var area = d3.svg.area()
     	.interpolate(line.interpolate())
@@ -332,47 +332,46 @@ tnt_feature.line = function () {
     // For now, create is a one-off event
     // TODO: Make it work with partial paths, ie. creating and displaying only the path that is being displayed
     feature.create (function (points, xScale) {
-	var track = this;
+    	var track = this;
 
-	if (data_points !== undefined) {
-	    // return;
-	    track.g.select("path").remove();
-	}
+    	if (data_points !== undefined) {
+    	    // return;
+    	    track.g.select("path").remove();
+    	}
 
-	line
-	    .tension(tension)
-	    .x(function (d) {
-            return xScale(x(d));
-	    })
-	    .y(function (d) {
-            return track.height() - yScale(y(d));
-	    });
+    	line
+    	    .tension(tension)
+    	    .x(function (d) {
+                return xScale(x(d));
+    	    })
+    	    .y(function (d) {
+                return track.height() - yScale(y(d));
+    	    });
 
-	data_points = points.data();
-	points.remove();
+    	data_points = points.data();
+    	points.remove();
 
-	yScale
-	    .domain([0, 1])
-	    // .domain([0, d3.max(data_points, function (d) {
-	    // 	return y(d);
-	    // })])
-	    .range([0, track.height() - 2]);
+    	yScale
+    	    .domain([0, 1])
+    	    // .domain([0, d3.max(data_points, function (d) {
+    	    // 	return y(d);
+    	    // })])
+    	    .range([0, track.height() - 2]);
 
-	track.g
-	    .append("path")
-	    .attr("class", "tnt_elem")
-	    .attr("d", line(data_points))
-	    .style("stroke", feature.foreground_color())
-	    .style("stroke-width", 4)
-	    .style("fill", "none");
-
+    	track.g
+    	    .append("path")
+    	    .attr("class", "tnt_elem")
+    	    .attr("d", line(data_points))
+    	    .style("stroke", feature.foreground_color())
+    	    .style("stroke-width", 4)
+    	    .style("fill", "none");
     });
 
     feature.mover (function (path, xScale) {
     	var track = this;
 
     	line.x(function (d) {
-    	    return xScale(x(d))
+    	    return xScale(x(d));
     	});
     	track.g.select("path")
     	    .attr("d", line(data_points));
@@ -387,9 +386,8 @@ tnt_feature.conservation = function () {
 
         var area_create = feature.create(); // We 'save' area creation
         feature.create  (function (points, xScale) {
-    	var track = this;
-
-    	area_create.call(track, d3.select(points[0][0]), xScale);
+        	var track = this;
+        	area_create.call(track, d3.select(points[0][0]), xScale);
         });
 
     return feature;
@@ -403,79 +401,79 @@ tnt_feature.ensembl = function () {
     var foreground_color3 = "#00BB00";
 
     feature.guider (function (width) {
-	var track = this;
-	var height_offset = ~~(track.height() - (track.height()  * 0.8)) / 2;
+    	var track = this;
+    	var height_offset = ~~(track.height() - (track.height()  * 0.8)) / 2;
 
-	track.g
-	    .append("line")
-	    .attr("class", "tnt_guider")
-	    .attr("x1", 0)
-	    .attr("x2", width)
-	    .attr("y1", height_offset)
-	    .attr("y2", height_offset)
-	    .style("stroke", feature.foreground_color())
-	    .style("stroke-width", 1);
+    	track.g
+    	    .append("line")
+    	    .attr("class", "tnt_guider")
+    	    .attr("x1", 0)
+    	    .attr("x2", width)
+    	    .attr("y1", height_offset)
+    	    .attr("y2", height_offset)
+    	    .style("stroke", feature.foreground_color())
+    	    .style("stroke-width", 1);
 
-	track.g
-	    .append("line")
-	    .attr("class", "tnt_guider")
-	    .attr("x1", 0)
-	    .attr("x2", width)
-	    .attr("y1", track.height() - height_offset)
-	    .attr("y2", track.height() - height_offset)
-	    .style("stroke", feature.foreground_color())
-	    .style("stroke-width", 1);
+    	track.g
+    	    .append("line")
+    	    .attr("class", "tnt_guider")
+    	    .attr("x1", 0)
+    	    .attr("x2", width)
+    	    .attr("y1", track.height() - height_offset)
+    	    .attr("y2", track.height() - height_offset)
+    	    .style("stroke", feature.foreground_color())
+    	    .style("stroke-width", 1);
 
     });
 
     feature.create (function (new_elems, xScale) {
-	var track = this;
+    	var track = this;
 
-	var height_offset = ~~(track.height() - (track.height()  * 0.8)) / 2;
+    	var height_offset = ~~(track.height() - (track.height()  * 0.8)) / 2;
 
-	new_elems
-	    .append("rect")
-	    .attr("x", function (d) {
-            return xScale (d.start);
-	    })
-	    .attr("y", height_offset)
-// 	    .attr("rx", 3)
-// 	    .attr("ry", 3)
-	    .attr("width", function (d) {
-            return (xScale(d.end) - xScale(d.start));
-	    })
-	    .attr("height", track.height() - ~~(height_offset * 2))
-	    .attr("fill", track.background_color())
-	    .transition()
-	    .duration(500)
-	    .attr("fill", function (d) {
-    		if (d.type === 'high') {
-    		    return d3.rgb(feature.foreground_color());
-    		}
-    		if (d.type === 'low') {
-    		    return d3.rgb(feature.foreground_color2());
-    		}
-    		return d3.rgb(feature.foreground_color3());
-	    });
+    	new_elems
+    	    .append("rect")
+    	    .attr("x", function (d) {
+                return xScale (d.start);
+    	    })
+    	    .attr("y", height_offset)
+    // 	    .attr("rx", 3)
+    // 	    .attr("ry", 3)
+    	    .attr("width", function (d) {
+                return (xScale(d.end) - xScale(d.start));
+    	    })
+    	    .attr("height", track.height() - ~~(height_offset * 2))
+    	    .attr("fill", track.background_color())
+    	    .transition()
+    	    .duration(500)
+    	    .attr("fill", function (d) {
+        		if (d.type === 'high') {
+        		    return d3.rgb(feature.foreground_color());
+        		}
+        		if (d.type === 'low') {
+        		    return d3.rgb(feature.foreground_color2());
+        		}
+        		return d3.rgb(feature.foreground_color3());
+    	    });
     });
 
     feature.updater (function (blocks, xScale) {
-	blocks
-	    .select("rect")
-	    .attr("width", function (d) {
-            return (xScale(d.end) - xScale(d.start));
-	    });
+    	blocks
+    	    .select("rect")
+    	    .attr("width", function (d) {
+                return (xScale(d.end) - xScale(d.start));
+    	    });
     });
 
     feature.mover (function (blocks, xScale) {
-	blocks
-	    .select("rect")
-	    .attr("x", function (d) {
-            return xScale(d.start);
-	    })
-	    .attr("width", function (d) {
-            return (xScale(d.end) - xScale(d.start));
-	    });
+    	blocks
+    	    .select("rect")
+    	    .attr("x", function (d) {
+                return xScale(d.start);
+    	    })
+    	    .attr("width", function (d) {
+                return (xScale(d.end) - xScale(d.start));
+    	    });
     });
 
     feature.foreground_color2 = function (col) {
