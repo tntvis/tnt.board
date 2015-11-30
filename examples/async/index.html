@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<head>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/3.0.2/es6-promise.js"></script>
+  <script src="../../build/tnt.board.js"></script>
+  <script src="async.js"></script>
+</head>
+
+<body>
+  <div id="mydiv"></div>
+  <script>
+    var myBoard = tnt.board().from(20).to(500);
+    var theme = async_theme();
+    theme(myBoard, document.getElementById("mydiv"));
+  </script>
+</body>
