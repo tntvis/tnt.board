@@ -23,8 +23,8 @@ data.retriever = {};
 
 data.retriever.sync = function() {
     var update_track = function(obj) {
-	// "this" is set to the data obj
-        this.elements(update_track.retriever()(obj.loc));
+        var track = this;
+        track.data().elements(update_track.retriever()(obj.loc));
         obj.on_success();
     };
 
@@ -46,10 +46,10 @@ data.retriever.async = function () {
     // };
 
     var update_track = function (obj) {
-        var data_obj = this;
+        var track = this;
         update_track.retriever()(obj.loc)
             .then (function (resp) {
-                data_obj.elements(resp);
+                track.data().elements(resp);
                 obj.on_success();
             });
     };
