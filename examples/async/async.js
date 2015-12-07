@@ -58,7 +58,6 @@ var async_theme = function () {
                       ];
 
                       return new Promise (function (resolve, reject) {
-                         console.log("BEfore");
                          d3.select("#spinner")
                             .attr("r", 15);
                          resolve(1);
@@ -71,13 +70,10 @@ var async_theme = function () {
                           });
                       })
                       .then (function () {
-                          console.log("AFTER");
                           d3.select("#spinner")
                             .attr("r", 3);
                           return arr;
                       });
-
-
     			  })
     		  )
     		 );

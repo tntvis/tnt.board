@@ -53,3 +53,5 @@
 	- fixed line definition in area feature
 0.0.28
 	- data updater is now pass the track as 'this' (instead of the updater itself)
+0.0.29
+	- added spinner to the async data retriever
