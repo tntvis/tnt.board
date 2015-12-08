@@ -41,7 +41,9 @@ var spinner = function () {
         } else if (track.spinner>0){
             // Move the spinner to front
             var node = sp_elem.node();
-            node.parentNode.appendChild(node);
+            if (node.parentNode) {
+                node.parentNode.appendChild(node);    
+            }
         }
     };
 

@@ -55,3 +55,5 @@
 	- data updater is now pass the track as 'this' (instead of the updater itself)
 0.0.29
 	- added spinner to the async data retriever
+0.0.30
+	- bugfix: spinner not always attached
