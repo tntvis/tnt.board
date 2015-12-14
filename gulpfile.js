@@ -68,6 +68,7 @@ gulp.task('sass', function () {
 	.pipe(sass({
 	    errLogToConsole: true
 	}))
+    .pipe(rename(outputFile + '.css'))
 	.pipe(gulp.dest(buildDir));
 });
 
@@ -87,12 +88,10 @@ gulp.task('build-browser-min',['init', 'sass'], function() {
   .pipe(rename(outputFileMinSt))
   .pipe(gulp.dest(buildDir));
 });
- 
+
 gulp.task('build-browser-gzip', ['build-browser-min'], function() {
   return gulp.src(outputFileMin)
     .pipe(gzip({append: false, gzipOptions: { level: 9 }}))
     .pipe(rename(outputFile + ".min.gz.js"))
     .pipe(gulp.dest(buildDir));
 });
-
-
