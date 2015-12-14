@@ -57,3 +57,5 @@
 	- added spinner to the async data retriever
 0.0.30
 	- bugfix: spinner not always attached
+0.0.31
+	- renamed built css file (now tnt.board.css)
