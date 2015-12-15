@@ -1,67 +1,65 @@
 var pins_theme = function () {
 
     var theme = function (board, div) {
-	var axis_track = tnt.board.track()
-	    .height(0)
-	    .background_color("white")
-	    .display(tnt.board.track.feature.axis()
-		     .orientation("top")
-		    );
+    	var axis_track = tnt.board.track()
+    	    .height(0)
+    	    .background_color("white")
+    	    .display(tnt.board.track.feature.axis()
+    		     .orientation("top")
+    		    );
 
-	var pin_track = tnt.board.track()
-	    .height(60)
-	    .background_color("white")
-	    .display(tnt.board.track.feature.pin()
-		     .domain([0.3, 1.2])
-		     .foreground_color("red")
-		     .on("click", function (d) {
-                 console.log(d);
+    	var pin_track = tnt.board.track()
+    	    .height(60)
+    	    .background_color("white")
+    	    .display(tnt.board.track.feature.pin()
+    		     .domain([0.3, 1.2])
+    		     .foreground_color("red")
+    		     .on("click", function (d) {
+                     console.log(d);
+                     })
+                 .on("mouseover", function (d) {
+                     console.log("mouseover");
                  })
-             .on("mouseover", function (d) {
-                 console.log("mouseover");
-             })
-             .layout(tnt.board.track.layout()
-                .elements (function (elems, xScale) {
-                    joinClose (elems, xScale);
+                 .layout(tnt.board.track.layout()
+                    .elements (function (elems, xScale) {
+                        joinClose (elems, xScale);
+                    })
+                )
+
+             )
+    	    .data(tnt.board.track.data.sync()
+                .retriever (function () {
+                    return [
+
+                        {
+                            pos : 200,
+                            val : 0.5
+                        },
+                        {
+                            pos : 355,
+                            val : 0.8
+                        },
+                        {
+                            pos : 100,
+                            val : 0.3
+                        },
+                        {
+                            pos : 400,
+                            val : 1
+                        },
+                        {
+                            pos : 401,
+                            val : 1
+                        }
+                    ];
                 })
-            )
+            );
 
-         )
-	    .data(tnt.board.track.data()
-		  .update(
-		      tnt.board.track.data.retriever.sync()
-			  .retriever (function () {
-			      return [
-
-				  {
-				      pos : 200,
-				      val : 0.5
-				  },
-				  {
-				      pos : 355,
-				      val : 0.8
-				  },
-				  {
-				      pos : 100,
-				      val : 0.3
-				  },
-				  {
-				      pos : 400,
-				      val : 1
-				  },
-                  {
-                      pos : 401,
-                      val : 1
-                  }
-			      ]
-			  })
-		  )
-		 );
-	board
-	    .add_track(axis_track)
-	    .add_track(pin_track);
-	board(div);
-	board.start();
+    	board
+    	    .add_track(axis_track)
+    	    .add_track(pin_track);
+    	board(div);
+    	board.start();
     };
 
     function joinClose (arr, xScale) {
@@ -85,11 +83,10 @@ var pins_theme = function () {
             }
         }
         groups.push (currGroup);
-        console.log(groups);
         for (var g=0; g<groups.length; g++) {
             if (groups[g].length > 1) {
                 var med = groups[g][~~(groups[g].length / 2)];
-                med.label = groups[g].length
+                med.label = groups[g].length;
             }
         }
     }

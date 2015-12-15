@@ -33,35 +33,33 @@ var reload_theme = function () {
                      console.log("mouseover");
                  })
     		    )
-    	    .data(tnt.board.track.data()
-    		  .update(
-    		      tnt.board.track.data.retriever.sync()
-    			  .retriever (function () {
-    			      return [
-        				  {
-        				      pos : 200,
-        				      val : 0.5,
-                              label : "1"
-        				  },
-        				  {
-        				      pos : 355,
-        				      val : 0.8,
-                              label : "2"
-        				  },
-        				  {
-        				      pos : 100,
-        				      val : 0.3,
-                              label : "3"
-        				  },
-        				  {
-        				      pos : 400,
-        				      val : 1,
-                              label : "4"
-        				  }
-    			      ];
-    			  })
-    		  )
+    	    .data(tnt.board.track.data.sync()
+                .retriever (function () {
+                    return [
+                        {
+                            pos : 200,
+                            val : 0.5,
+                            label : "1"
+                        },
+                        {
+                            pos : 355,
+                            val : 0.8,
+                            label : "2"
+                        },
+                        {
+                            pos : 100,
+                            val : 0.3,
+                            label : "3"
+                        },
+                        {
+                            pos : 400,
+                            val : 1,
+                            label : "4"
+                        }
+                    ];
+                })
     		 );
+
     	board
     	    .add_track(axis_track)
     	    .add_track(pin_track);

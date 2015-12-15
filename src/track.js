@@ -1,15 +1,9 @@
 var apijs = require ("tnt.api");
 var iterator = require("tnt.utils").iterator;
 
-//var board = {};
 
 var track = function () {
     "use strict";
-
-    // var read_conf = {
-    // 	// Unique ID for this track
-    // 	id : track.id()
-    // };
 
     var display;
 

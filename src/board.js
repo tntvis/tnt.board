@@ -180,7 +180,8 @@ var board = function() {
     var _update_track = function (track, where) {
     	if (track.data()) {
     	    var track_data = track.data();
-    	    var data_updater = track_data.update();
+    	    // var data_updater = track_data.update();
+            var data_updater = track_data;
     	    //var data_updater = track.data().update();
     	    data_updater.call(track, {
                 'loc' : where,

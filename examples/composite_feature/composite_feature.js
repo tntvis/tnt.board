@@ -9,9 +9,7 @@ var composite_feature = function() {
 	var block_track = tnt.board.track()
 	    .height(30)
 	    .background_color("#FFCFDD")
-	    .data(tnt.board.track.data()
-		  .update(
-		      tnt.board.track.data.retriever.sync()
+	    .data(tnt.board.track.data.sync()
 			  .retriever (function () {
 			      return {
     				  'blocks2' : [
@@ -36,7 +34,6 @@ var composite_feature = function() {
     				  ]
 			      };
 			  })
-		  )
 		 )
 	    .display(tnt.board.track.feature.composite()
 		     .add ("blocks", tnt.board.track.feature.block()
