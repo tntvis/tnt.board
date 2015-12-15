@@ -162,21 +162,29 @@ api :
                 - name : tracks
                   path : tnt.board
                   args : array
-                  desc : sets new tracks in the board
-                  full : Sets new tracks in the board. Expects an array of tracks as argument. If the visualisation has started (ie, it already has tracks), they are re-arranged with the order given in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each existing tracks is recalculated. If no argument is provided, returns an array containing the current tracks in the board.
+                  desc : reorders the tracks in the board
+                  full : reorders the tracks in the board. Expects an array of tracks as argument. This method requires the visualisation to have started already. The tracks are re-arranged with the order given in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each existing tracks is recalculated. If no argument is provided, returns an array containing the current tracks in the board.
                   example : |
                       // Reorder the tracks. First tracks is put last
                       var tracks = myBoard.tracks();
-                      tracks.push(tracks.shift());
-                      myBoard.tracks(tracks);
+                      var new_tracks = [];
+                      new_tracks.push(tracks[0]);
+                      new_tracks.push(tracks[2]);
+                      new_tracks.push(tracks[1]);
+
+                      myBoard.tracks(new_tracks);
 
                 - name : track.add_track
-                  desc : adds a new track to the track visualization
-                - name : track.remove_track
-                  desc : removes the specified track from the visualization
-                - name : track.tracks
-                  desc : returns all the tracks in the visualization
-                - name : track.width
+                  path : tnt.board
+                  args : tnt.board.track
+                  desc : adds a new track to the track visualisation
+                  full : Adds a new track to the track visualisation. The order in which this method is called determines the order of the tracks in the board
+                  example : |
+                    var myBoard = tnt.board()
+                        .add_track(track1)
+                        .add_track(track2);
+
+                - name : width
                   desc : specifies the width of the track visualization
                 - name : track.allow_drag
                   desc : specifies the draggability of the tracks in the visualization
@@ -188,6 +196,8 @@ api :
                   desc : defines the background color of the track
                 - name : track.height
                   desc : defines the height of the track
+                - name : id
+                  desc : sets an id for the track
            - name : Data
              elements :
                 - name : track.data
