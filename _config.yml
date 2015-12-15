@@ -144,36 +144,6 @@ api :
                     myBoard.start();
                     myBoard.scroll(-1);
 
-                - name : move_right
-                  path : tnt.board
-                  args : float
-                  desc : scrolls the board to the right the specified amount
-                  full : Scrolls the board to the right. The argument indicates the number of board <i>pages</i> to scroll. For example, <i>board.move_right(1)</i> scrolls right to the next non-overlapping page, while <i>board.move_right(0.5)</i> scrolls right overlapping half page
-                  example : |
-                    var myBoard = tnt.board()
-                        .from(0)
-                        .to(1000)
-                        .right(1000);
-
-                    myBoard(div);
-                    myBoard.start();
-                    myBoard.move_right(0.7);
-
-                - name : move_left
-                  path : tnt.board
-                  args : float
-                  desc : scrolls the board to the left the specified amount
-                  full : Scrolls the board to the left. The argument indicates the number of board <i>pages</i> to scroll. For example, <i>board.move_left(1)</i> scrolls left to the next non-overlapping page, while <i>board.move_left(0.5)</i> scrolls left overlapping half page
-                  example : |
-                    var myBoard = tnt.board()
-                        .from(0)
-                        .to(1000)
-                        .right(1000);
-
-                    myBoard(div);
-                    myBoard.start();
-                    myBoard.move_left(0.7);
-
                 - name : zoom
                   path : tnt.board
                   args : float
@@ -189,22 +159,11 @@ api :
                         myBoard.start();
                         myBoard.zoom(2);
 
-                - name : reorder
-                  path : tnt.board
-                  args : array
-                  desc : reorders the tracks in the board
-                  full : Reorders the tracks in the board. Expects an array of tracks as argument. The tracks in the board are re-arranged accordingly with the order in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each track is re-calculated.
-                  example : |
-                    // Reorder the tracks to pu
-                    var tracks = myBoard.tracks();
-                    tracks.push(tracks.shift());
-                    myBoard.tracks(tracks);
-
                 - name : tracks
                   path : tnt.board
                   args : array
                   desc : sets new tracks in the board
-                  full : Sets new tracks in the board. Expects an array of tracks as argument. If the board already has tracks, they are re-arranged with the order given in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each existing tracks is recalculated. If no argument is provided, returns an array containing the current tracks in the board.
+                  full : Sets new tracks in the board. Expects an array of tracks as argument. If the visualisation has started (ie, it already has tracks), they are re-arranged with the order given in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each existing tracks is recalculated. If no argument is provided, returns an array containing the current tracks in the board.
                   example : |
                       // Reorder the tracks. First tracks is put last
                       var tracks = myBoard.tracks();

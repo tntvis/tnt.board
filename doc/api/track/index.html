@@ -20,17 +20,14 @@ api_toplevel : track
   var blockTrack = tnt.board.track()
       .height(30)
       .background_color("#FFCFDD")
-      .data (tnt.board.track.data()
-          .update(
-              tnt.board.track.data.retriever.sync()
-                  .retriever(function () {
-                      return [{
-                          start : 200,
-                          end : 350
-                      }];
-                  })
-           )
-       );
+      .data (tnt.board.track.data.sync()
+          .retriever(function () {
+              return [{
+                  start : 200,
+                  end : 350
+              }];
+          })
+      );
   {% endhighlight %}
 
 
@@ -57,18 +54,15 @@ var location_track = tnt.board.track()
 var block_track = tnt.board.track()
     .height(30)
     .background_color("#FFCFDD")
-    .data(tnt.board.track.data()
-        .update(
-            tnt.board.track.data.retriever.sync()
-                .retriever (function () {
-                    return [
-                        {
-                            start : 200,
-                            end   : 350
-                        }
-                    ];
-                })
-        )
+    .data(tnt.board.track.data.sync()
+        .retriever (function () {
+            return [
+            {
+                start : 200,
+                end   : 350
+            }
+            ];
+        })
     )
     .display(tnt.board.track.feature.block()
         .foreground_color("blue")
