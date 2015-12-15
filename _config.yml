@@ -1,0 +1,445 @@
+host: 127.0.0.1
+port: 4001
+safe: true
+highlighter: pygments
+baseurl : /tnt
+api :
+    - name : track
+      elements :
+           - name : Board
+             preamble : |
+                        Boards are track-based visualizations that can be panned and zoomed making all the tracks in the board to update accordingly. TnT boards can be configured using several methods that affect all the tracks in the board (like the <a href="#width">width</a> of the board). The height of the board is defined by the sum of the <a href="#height">heights</a> of all the tracks.
+             example : |
+                 var myBoard = tnt.board()
+                    .width(800);
+
+                 myBoard
+                    .add_track(track1)
+                    .add_track(track2);
+
+                 myBoard(div);
+                 myBoard.start();
+
+             elements :
+                - name : board
+                  path : tnt
+                  args : null
+                  desc : creates a new track-based board visualization
+                  full : Creates a new track-based board visualization that can be configured using the methods explained below. The returned object is also a function that can be called passing a DOM element as its argument. This DOM element is used as a container for the visualization.
+                  example : |
+                    var myBoard = tnt.board()
+
+                - name : from
+                  path : tnt.board
+                  args : integer | Promise
+                  desc : defines the left coordinate of the board
+                  full : Defines the left coordinate of the board (the start left position). If called without arguments returns the current left coordinate. As its argument accepts a scalar or a Promise that resolves to a scalar.
+                  example : |
+                    // Using a scalar
+                    var myBoard = tnt.board()
+                        .from(20);
+
+                    // Using a promise
+                    var myBoard2 = tnt.board()
+                        .from (new Promise (function (resolve, reject) {
+                            resolve (20);
+                        }));
+
+                - name : to
+                  path : tnt.board
+                  args : integer | Promise
+                  desc : defines the right coordinate of the board
+                  full : Defines the right coordinate of the board (the start right position). If called without arguments returns the current right coordinate. As its argument accepts a scalar or a Promise that resolves to a scalar.
+                  example : |
+                    // Using a scalar
+                    var myBoard = tnt.board()
+                        .to(1000);
+
+                    // Using a Promise
+                    var myBoard2 = tnt.board()
+                        .to (new Promise (function (resolve, reject) {
+                            resolve (1000);
+                        }));
+
+                - name : left
+                  path : tnt.board
+                  args : integer | Promise
+                  desc : defines the minimum possible coordinate of the board
+                  full : Defines the left limit (ie, minimum possible coordinate) of the board. If called without arguments returns the current left limit. As its argument accepts a scalar or a Promise that resolves to a scalar. By default this value is 0.
+                  example : |
+                    // Using a scalar
+                    var myBoard = tnt.board()
+                        .left(100);
+
+                    // Using a Promise
+                    var myBoard2 = tnt.board()
+                        .left (new Promise (function (resolve, reject) {
+                            resolve 100;
+                        }));
+
+                - name : right
+                  path : tnt.board
+                  args : integer | Promise
+                  desc : defines the maximum possible value of the board
+                  full : Defines the right limit (ie, the maximum possible coordinate) of the board. If called without arguments returns the current right limit. As its argument accepts a scalar or a Promise that resolves to a scalar.
+                  example : |
+                    // Using a scalar
+                    var myBoard = tnt.board()
+                        .right(1000);
+
+                    // Using a Promise
+                    var myBoard2 = tnt.board()
+                        .right (new Promise (function (resolve, reject) {
+                            resolve 1000;
+                        }));
+
+                - name : zoom_out
+                  path : tnt.board
+                  args : integer
+                  desc : defines the maximum extent of the board
+                  full : Defines the maximum extent of the board (ie, the limit when zooming out). If called without arguments returns the current value. This limit is respected even if the <a href="#from">from</a> and <a href="#to">to</a> coordinates specify spans beyond this limit. In that case, the coordinates are adjusted to satisfy this value.
+                  example : |
+                    // (to - from) can't be greater than 500
+                    var myBoard = tnt.board()
+                        .zoom_out(500);
+
+                - name : track.zoom_in
+                  path : tnt.board
+                  args : integer
+                  desc : Defines the minimum extent of the board
+                  full : Defines the minimum extent of the board (ie, the limit when zooming in). If called without arguments returns the current value. This limit is respected even if the <a href="#from">from</a> and <a href="#to">to</a> coordinates specify spans beyond this limit. In that case, the coordinates are adjusted to satisfy this value.
+                  example : |
+                    // (to - from) can't be lower than 100
+                    var myBoard = tnt.board()
+                        .zoom_in(100);
+
+                - name : start
+                  path : tnt.board
+                  args : null
+                  desc : starts (or re-starts) the visualisation
+                  full : Starts the visualisation (re-)initialisig all the tracks, resolving the coordinate promises and feeding the tracks with their data and displays.
+                  example : |
+                    var myBoard = tnt.board()
+                        .from(0)
+                        .to(1000)
+                        .left(0)
+                        .right(1000);
+
+                    // ... Adding tracks ...
+                    // Initialise the board
+                    myBoard.start();
+
+                - name : scroll
+                  path : tnt.board
+                  args : float
+                  desc : scrolls the board programmatically
+                  full : Scrolls the board programmatically. The argument indicates the number of board <i>pages</i> to scroll, if it is possitive the board scrolls to the right, while if it is negative scrolls to the left. For example, <i>board.scroll(1)</i> scrolls right to the next non-overlapping page, while <i>board.scroll(-0.5) scrolls left overlapping half a page.
+                  example : |
+                    var myBoard = tnt.board()
+                        .from(0)
+                        .to(1000)
+                        .right(1000);
+
+                    myBoard(div);
+                    myBoard.start();
+                    myBoard.scroll(-1);
+
+                - name : move_right
+                  path : tnt.board
+                  args : float
+                  desc : scrolls the board to the right the specified amount
+                  full : Scrolls the board to the right. The argument indicates the number of board <i>pages</i> to scroll. For example, <i>board.move_right(1)</i> scrolls right to the next non-overlapping page, while <i>board.move_right(0.5)</i> scrolls right overlapping half page
+                  example : |
+                    var myBoard = tnt.board()
+                        .from(0)
+                        .to(1000)
+                        .right(1000);
+
+                    myBoard(div);
+                    myBoard.start();
+                    myBoard.move_right(0.7);
+
+                - name : move_left
+                  path : tnt.board
+                  args : float
+                  desc : scrolls the board to the left the specified amount
+                  full : Scrolls the board to the left. The argument indicates the number of board <i>pages</i> to scroll. For example, <i>board.move_left(1)</i> scrolls left to the next non-overlapping page, while <i>board.move_left(0.5)</i> scrolls left overlapping half page
+                  example : |
+                    var myBoard = tnt.board()
+                        .from(0)
+                        .to(1000)
+                        .right(1000);
+
+                    myBoard(div);
+                    myBoard.start();
+                    myBoard.move_left(0.7);
+
+                - name : zoom
+                  path : tnt.board
+                  args : float
+                  desc : zooms in/out the track the specified amount
+                  full : Zooms in/out the track the specified amount. The argument indicates the number of <i>pages</i> to zoom, or in other words, times of <i>extent</i>. For example, <i>board.zoom(1)</i> does not do anything, <i>board.zoom(0.5)</i> zooms out to double the extent and <i>board.zoom(2)<i> zooms in to half the extent.
+                  example : |
+                    var myBoard = tnt.board()
+                        .from(0)
+                        .to(1000)
+                        .right(1000);
+
+                        myBoard(div);
+                        myBoard.start();
+                        myBoard.zoom(2);
+
+                - name : reorder
+                  path : tnt.board
+                  args : array
+                  desc : reorders the tracks in the board
+                  full : Reorders the tracks in the board. Expects an array of tracks as argument. The tracks in the board are re-arranged accordingly with the order in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each track is re-calculated.
+                  example : |
+                    // Reorder the tracks to pu
+                    var tracks = myBoard.tracks();
+                    tracks.push(tracks.shift());
+                    myBoard.tracks(tracks);
+
+                - name : tracks
+                  path : tnt.board
+                  args : array
+                  desc : sets new tracks in the board
+                  full : Sets new tracks in the board. Expects an array of tracks as argument. If the board already has tracks, they are re-arranged with the order given in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each existing tracks is recalculated. If no argument is provided, returns an array containing the current tracks in the board.
+                  example : |
+                      // Reorder the tracks. First tracks is put last
+                      var tracks = myBoard.tracks();
+                      tracks.push(tracks.shift());
+                      myBoard.tracks(tracks);
+
+                - name : track.add_track
+                  desc : adds a new track to the track visualization
+                - name : track.remove_track
+                  desc : removes the specified track from the visualization
+                - name : track.tracks
+                  desc : returns all the tracks in the visualization
+                - name : track.width
+                  desc : specifies the width of the track visualization
+                - name : track.allow_drag
+                  desc : specifies the draggability of the tracks in the visualization
+           - name : Tracks
+             elements :
+                - name : track.track
+                  desc : defines the track object
+                - name : track.background_color
+                  desc : defines the background color of the track
+                - name : track.height
+                  desc : defines the height of the track
+           - name : Data
+             elements :
+                - name : track.data
+                  desc : base data object
+                - name : data.update
+                  desc : specifies how the data is updated
+                - name : data.retriever.sync
+                  desc : specifies a synchronous data retriever
+                - name : data.retriever.async
+                  desc : specifies an asynchronous data retriever
+                - name : async.url
+                  desc : specifies a url for the asynchronous call
+                - name : data.retriever.ensembl
+                  desc : specifies a data retriever based on the Ensembl REST server
+                - name : ensembl.endpoint
+                  desc : specifies the Ensembl REST endpoint
+                - name : track.data.gene
+                  desc : updater using the ensembl retriever
+                - name : track.data.empty
+                  desc : updater for data independent tracks
+           - name : Features
+             elements :
+                - name : track.feature
+                  desc : base object for features
+                - name : feature.foreground_color
+                  desc : defines the foreground color of the elements
+                - name : feature.info
+                  desc : defines the info to display when an element is clicked [REVISE]
+                - name : feature.create
+                  desc : sets a new callback to create new elements
+                - name : feature.mover
+                  desc : sets a new callback to move the elements
+                - name : feature.updater
+                  desc : specifies how the current elements should be visualy updated
+                - name : feature.guider
+                  desc : defines the visual aspect not associated with elements
+                - name : track.feature.block
+                  desc : defines block based features
+                - name : track.feature.axis
+                  desc : defines axes based features
+                - name : axis.orientation
+                  desc : specifies the orientation of the axis feature
+                - name : track.feature.location
+                  desc : defines location based features
+                - name : track.feature.ensembl
+                  desc : defines track visualizations similar to the old Ensembl tracks in trees
+                - name : track.feature.vline
+                  desc : defines vertical lines elements
+                - name : track.feature.sequence
+                  desc : defines sequence elements
+                - name : track.feature.gene
+                  desc : defines gene like elements
+                - name : track.feature.area
+                  desc : defines area elements
+                - name : track.feature.line
+                  desc : defines line elements
+                - name : line.tension
+                  desc : defines the tension of the line
+                - name : line.x
+                  desc : defines the field to be used as the 'x' value
+                - name : line.y
+                  desc : defines the field to be used as the 'y' value
+           - name : Layouts
+             elements :
+                - name : track.layout.identity
+                  desc : defines layouts for tracks that doesn't need layouts
+                - name : track.layout.feature
+                  desc : defines a feature layout that avoids overlaps
+                - name : feature.height
+                  desc : sets the total height of the layout
+                - name : feature.elements
+                  desc : gets the elements in the layout
+                - name : feature.scale
+                  desc : specifies the scale to convert data to visualization coordinates
+
+    - name : utils
+      elements :
+           - name : Tooltips
+             preamble : |
+                         TnT comes with a basic tooltip library. This library is not restricted to TnT and can be used in any other web page without tnt, but it has not been developed as a general tooltip library that matches all scenarios. There are some limitations (explained below). It is also possible to use TnT with other tooltip libraries too. See the examples page for different uses of the library.
+             example : |
+                     var myTooltip = function (data) {
+                          var obj = {};
+                          obj.header = "NAME";
+                          obj.rows = [];
+                          obj.rows.push ({
+                              "label" : "type",
+                              "value" : data.type
+                          });
+                          tnt.tooltip.table()
+                             .width(200)
+                             .call(this, obj);
+                     };
+
+                     var container = d3.select("#container")
+                           .style("height", "2000px");
+                     container
+                           .append("svg")
+                           .attr("height", 300)
+                           .attr("width", 300)
+                           .append("circle")
+                           .datum({name:"this is me", type:"this is my type"})
+                           .attr("cx", 150)
+                           .attr("cy", 150)
+                           .attr("r", 50)
+                           .attr("fill", "red")
+                           .on("click", myTooltip);
+             elements :
+                - name : tooltip
+                  path : tnt
+                  args : null
+                  desc : creates a new tooltip instance
+                  full : Creates a new tooltip instance that can be configured with the methods explained below. To display the tooltip the returned function has to be called with <i>this</i> set to the DOM element the tooltip is related to and the data to be used for rendering. This generic tooltip object only knows how to position the tooltip in the page and creates the DOM elements appropriately, but it does not know about how to render or display the data. See below for other objects that creates specific instances of this tooltip and formats the data in specific ways (like tables or lists)
+                  example : |
+                            var data = {
+                                 "header" : "tooltip header",
+                                 "rows" : [ {
+                                      "label" : "color",
+                                      "value" : "blue"
+                                   }
+                                 ]
+                            };
+
+                            var fill_cbak = function (data) {
+                                // ...
+                            };
+                            tnt.tooltip()
+                              .width (200)
+                              .id (1)
+                              .fill (fill_cbak)
+                              .call (this, obj);
+
+                - name : position
+                  path : tnt.tooltip
+                  args : string
+                  desc : sets the relative position of the tooltip with respect to the mouse
+                  full : Sets the relative position of the tooltip with respect to the mouse. Possible values are "left" and "right". By default, "right" positioning is used and the left upper corner of the tooltip is positioned where the mouse is. If call without arguments, returns the current positioning value.
+                  example : |
+                         var tooltip = tnt.tooltip.table()
+                                         .position ("left");
+                - name : allow_drag
+                  path : tnt.tooltip
+                  args : boolean
+                  desc : determines if the tooltip is draggable or not
+                  full : Determines if the tooltip is draggable or not. By default, this option is set to <i>true</i>. If no argument is provided, returns the current value.
+                  example : |
+                          var tooltip = tnt.tooltip.table()
+                                          .allow_drag (false);
+                - name : show_closer
+                  path : tnt.tooltip
+                  args : boolean
+                  desc : determines if the closing cross is displayed
+                  full : Determines if the closing cross is displayed on the tooltip. If set to false, the tooltip can not be closed directly by the user (clicking on the cross), but only programmatically calling the <a href="#close">close</a> method. By default this option is set to <i>true</i>. If called without arguments, the current value is returned.
+                  example : |
+                         var tooltip = tnt.tooltip.table()
+                                         .show_closer (false);
+                - name : width
+                  path : tnt.tooltip
+                  args : integer
+                  desc : sets the minimum width of the tooltip
+                  full : Sets the minimum width of the tooltip. This width is not enforced if elements inside of the tooltip (like images) have greater <i>width</i>. The numeric argument determines the width in pixels. If called without arguments, returns the current value of this method
+                  example : |
+                          var tooltip = tnt.tooltip.table()
+                                          .width (200) // 200 pixels
+                - name : id
+                  path : tnt.tooltip
+                  args : integer | string
+                  desc : sets an id for the tooltip
+                  full : Sets an id for the tooltip. This controls the number of tooltips that can be displayed simultaneously in the same page. Everytime a tooltip is created, any previous tooltips with the same <i>id</i> is removed. This is typically used to allow different tooltips to co-exist in the same page or restrict their number. For example, if the <i>id</i> is always set to the same value, everytime a tooltip is created any previous tooltip is destroyed. Another option is to have a different <i>id</i> per different type of element in the page, allowing only one type of tooltip per element. If called without arguments, the current <i>id</i> of the tooltip is returned
+                  example : |
+                           var myTooltip = function (data) {
+                             var obj = {};
+                             obj.header = "Circle";
+                             obj.rows = [];
+                             obj.rows.push ({
+                                 "label" : "type",
+                                 "value" : data.type
+                             });
+                             tnt.tooltip.table()
+                                 .width (200)
+                                 .id (data.type)
+                                 .call (this, obj);
+                           };
+                - name : fill
+                  path : tnt.tooltip
+                  args : callback
+                  desc : specifies the rendering of the tooltip
+                  full : This method specifies the rendering of the tooltip. The callback is run passing the container element as a d3 selection as <i>this</i> and the data obj as the argument. See <a href="#table">tnt.tooltip.table</a> or <a href="#plain">tnt.tooltip.plain</a> for examples of how to use this method. If called without arguments, the current callback is returned
+                  example : |
+                           var t = tnt.tooltip()
+                                   .width (200)
+                                   .fill (function (data) {
+                                       var container = this;
+
+                                       var table = container
+                                            .append ("table")
+                                            .style ("width", t.width() + "px");
+
+                                       table
+                                            .append ("tr")
+                                            .append ("th")
+                                            .text (data.header);
+
+                                       table
+                                            .append ("tr")
+                                            .append ("td")
+                                            .style ("text-align", "center")
+                                            .html (data.body);
+                                   });
+                - name : plain
+                  path : tnt.tooltip
+                  args : null
+                  desc : tooltips showing data in a loosely structured way
+                  full : Returns a tooltip that accept a data object consisting in two fields, <i>header</i> and <i>body</i>. The former typically contains a string that will be used as the header of the tooltip. The latter will be rendered as the body of the tooltip and can contain any valid html
