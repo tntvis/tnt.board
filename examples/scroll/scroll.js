@@ -1,25 +1,51 @@
-var reload_theme = function () {
-
-    var orig = {};
+var scroll_theme = function () {
 
     var theme = function (board, div) {
-    	orig.from = board.from();
-    	orig.to = board.to();
-    	var reload = d3.select(div)
+        // Scroll left button
+    	var scroll_left = d3.select(div)
     	    .append("button")
-    	    .text("reload")
+    	    .text("<")
+            .style("margin", "10px")
     	    .on("click", function () {
-                board.from(orig.from);
-                board.to(orig.to);
-        		board.start();
+                board.scroll(-0.5);
     	    });
 
+        // Scroll right button
+        var scroll_right = d3.select(div)
+            .append("button")
+            .text(">")
+            .style("margin", "10px")
+            .on("click", function () {
+                board.scroll(0.5);
+            });
+
+        // Zoom in button
+        var zoom_in = d3.select(div)
+            .append("button")
+            .text("+")
+            .style("margin", "10px")
+            .on("click", function () {
+                board.zoom(1.5);
+            });
+
+        // Zoom out button
+        var zoom_out = d3.select(div)
+            .append("button")
+            .text("-")
+            .style("margin", "10px")
+            .on("click", function () {
+                board.zoom(0.5);
+            });
+
+        // The axis track
     	var axis_track = tnt.board.track()
     	    .height(0)
     	    .background_color("white")
     	    .display(tnt.board.track.feature.axis()
     		     .orientation("top")
-    		    );
+    		);
+
+        // Pin track
     	var pin_track = tnt.board.track()
     	    .height(60)
     	    .background_color("white")
@@ -62,6 +88,7 @@ var reload_theme = function () {
     			  })
     		  )
     		 );
+
     	board
     	    .add_track(axis_track)
     	    .add_track(pin_track);

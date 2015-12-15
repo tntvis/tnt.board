@@ -215,20 +215,17 @@ var board = function() {
     };
 
     // right/left/zoom pans or zooms the track. These methods are exposed to allow external buttons, etc to interact with the tracks. The argument is the amount of panning/zooming (ie. 1.2 means 20% panning) With left/right only positive numbers are allowed.
-    api.method ('move_right', function (factor) {
+    api.method ('scroll', function (factor) {
+        var amount = Math.abs(factor);
     	if (factor > 0) {
-    	    _manual_move(factor, 1);
-    	}
-    });
-
-    api.method ('move_left', function (factor) {
-    	if (factor > 0) {
-    	    _manual_move(factor, -1);
-    	}
+    	    _manual_move(amount, 1);
+    	} else if (factor < 0){
+            _manual_move(amount, -1);
+        }
     });
 
     api.method ('zoom', function (factor) {
-        _manual_move(factor, 0);
+        _manual_move(1/factor, 0);
     });
 
     api.method ('find_track_by_id', function (id) {
@@ -425,10 +422,10 @@ var board = function() {
 
     	var newDomain;
     	switch (direction) {
-            case -1 :
+            case 1 :
             newDomain = [(~~oldDomain[0] - offset), ~~(oldDomain[1] - offset)];
     	    break;
-        	case 1 :
+        	case -1 :
         	    newDomain = [(~~oldDomain[0] + offset), ~~(oldDomain[1] - offset)];
         	    break;
         	case 0 :
