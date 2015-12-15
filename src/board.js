@@ -19,6 +19,14 @@ var board = function() {
         to       : 500
     };
 
+    // Limit caps
+    var caps = {
+        left : undefined,
+        right : undefined
+    };
+    var cap_width = 3;
+
+
     // TODO: We have now background color in the tracks. Can this be removed?
     // It looks like it is used in the too-wide pane etc, but it may not be needed anymore
     var bgColor   = d3.rgb('#F8FBEF'); //#F8FBEF
@@ -32,7 +40,6 @@ var board = function() {
         zoom_out : 1000,
         zoom_in  : 100
     };
-    var cap_width = 3;
     var dur = 500;
     var drag_allowed = true;
 
@@ -81,7 +88,7 @@ var board = function() {
     	    .attr("class", "tnt_g");
 
     	// caps
-    	svg_g
+    	caps.left = svg_g
     	    .append("rect")
     	    .attr("id", "tnt_" + div_id + "_5pcap")
     	    .attr("x", 0)
@@ -89,7 +96,7 @@ var board = function() {
     	    .attr("width", 0)
     	    .attr("height", height)
     	    .attr("fill", "red");
-    	svg_g
+    	caps.right = svg_g
     	    .append("rect")
     	    .attr("id", "tnt_" + div_id + "_3pcap")
     	    .attr("x", width-cap_width)
@@ -300,6 +307,8 @@ var board = function() {
     	    // Resize the zooming/panning pane
     	    d3.select("#tnt_" + div_id).style("width", (parseInt(w) + cap_width*2) + "px");
     	    d3.select("#tnt_" + div_id + "_pane").attr("width", w);
+            caps.right
+                .attr("x", w-cap_width);
 
     	    // Replot
     	    width = w;
@@ -307,6 +316,7 @@ var board = function() {
     	    for (var i=0; i<tracks.length; i++) {
         		tracks[i].g.select("rect").attr("width", w);
         		tracks[i].display().reset.call(tracks[i]);
+                tracks[i].display().init.call(tracks[i], w);
         		tracks[i].display().update.call(tracks[i],xScale);
     	    }
     	} else {

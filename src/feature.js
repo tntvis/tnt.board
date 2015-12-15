@@ -652,15 +652,15 @@ tnt_feature.pin = function () {
     });
 
     feature.guider (function (width) {
-	var track = this;
-	track.g
-	    .append("line")
-	    .attr("x1", 0)
-	    .attr("x2", width)
-	    .attr("y1", track.height())
-	    .attr("y2", track.height())
-	    .style("stroke", "black")
-	    .style("stroke-with", "1px");
+        var track = this;
+        track.g
+            .append("line")
+            .attr("x1", 0)
+            .attr("x2", width)
+            .attr("y1", track.height())
+            .attr("y2", track.height())
+            .style("stroke", "black")
+            .style("stroke-with", "1px");
     });
 
     return feature;

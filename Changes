@@ -64,3 +64,5 @@
 	- api: Track ids are not settable (and "find_track" method added to board)
 	- api: Simplification of the "right" method: can't be async anymore
 	- api: Simplified data object / interface
+	- bugfix : fixed problem with width changes
+
