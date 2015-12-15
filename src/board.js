@@ -150,8 +150,8 @@ var board = function() {
         _place_tracks();
 
         // The continuation callback
-        var cont = function (resp) {
-            limits.right = resp;
+        var cont = function () {
+            // limits.right = resp;
 
             // zoomEventHandler.xExtent([limits.left, limits.right]);
             if ((loc.to - loc.from) < limits.zoom_in) {
@@ -168,16 +168,7 @@ var board = function() {
             }
         };
 
-        // If limits.right is a function, we have to call it asynchronously and
-        // then starting the plot once we have set the right limit (plot)
-        // If not, we assume that it is an objet with new (maybe partially defined)
-        // definitions of the limits and we can plot directly
-        // TODO: Right now, only right can be called as an async function which is weak
-        if (typeof (limits.right) === 'function') {
-            limits.right(cont);
-        } else {
-            cont(limits.right);
-        }
+        cont();
     });
 
     api.method ('update', function () {
