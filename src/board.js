@@ -259,12 +259,12 @@ var board = function() {
         _manual_move(1/factor, 0);
     });
 
-    api.method ('find_track_by_id', function (id) {
-    	for (var i=0; i<tracks.length; i++) {
-    	    if (tracks[i].id() === id) {
-    		return tracks[i];
-    	    }
-    	}
+    api.method ('find_track', function (id) {
+        for (var i=0; i<tracks.length; i++) {
+            if (tracks[i].id() === id) {
+                return tracks[i];
+            }
+        }
     });
 
     api.method ('remove_track', function (track) {

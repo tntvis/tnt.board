@@ -6,10 +6,10 @@ var iterator = require("tnt.utils").iterator;
 var track = function () {
     "use strict";
 
-    var read_conf = {
-    	// Unique ID for this track
-    	id : track.id()
-    };
+    // var read_conf = {
+    // 	// Unique ID for this track
+    // 	id : track.id()
+    // };
 
     var display;
 
@@ -19,20 +19,21 @@ var track = function () {
     	height           : 250,
     	// data is the object (normally a tnt.track.data object) used to retrieve and update data for the track
     	data             : track.data.empty(),
-        label             : ""
+        label            : "",
+        id               : track.id()
     };
 
     // The returned object / closure
-    var _ = function() {};
+    var t = {};
 
     // API
-    var api = apijs (_)
-    	.getset (conf)
-    	.get (read_conf);
+    var api = apijs (t)
+    	.getset (conf);
+    	// .get (read_conf);
 
     // TODO: This means that height should be defined before display
     // we shouldn't rely on this
-    _.display = function (new_plotter) {
+    t.display = function (new_plotter) {
         if (!arguments.length) {
             return display;
         }
@@ -47,10 +48,10 @@ var track = function () {
             }
         }
 
-        return _;
+        return this;
     };
 
-    return _;
+    return t;
 };
 
 track.id = iterator(1);
