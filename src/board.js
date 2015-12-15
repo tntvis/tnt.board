@@ -274,24 +274,11 @@ var board = function() {
     	return track_vis;
     });
 
-    // api.method('tracks', function (new_tracks) {
-    // 	if (!arguments.length) {
-    // 	    return tracks;
-    // 	}
-    // 	tracks = new_tracks;
-    // 	return track_vis;
-    // });
-
     api.method('tracks', function (ts) {
         if (!arguments.length) {
             return tracks;
         }
-        if (tracks.length) {
-            _reorder(ts);
-        } else {
-            track_vis.add_track(ts);
-        }
-
+        _reorder(ts);
         return this;
     });
 

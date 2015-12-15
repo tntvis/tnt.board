@@ -64,7 +64,7 @@ var reorder_theme = function () {
             );
 
     	board
-            .tracks([axis_track, pin_track]);
+            .add_track([axis_track, pin_track]);
 
     	board(div);
 

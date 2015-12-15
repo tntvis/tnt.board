@@ -60,7 +60,7 @@
 0.0.31
 	- renamed built css file (now tnt.board.css)
 	- api: "move_right" / "move_left" renamed "scroll"
-	- api: "reorder" removed, "tracks" now reorders and create tracks
+	- api: "reorder" removed, "tracks" now reorders tracks
 	- api: Track ids are not settable (and "find_track" method added to board)
 	- api: Simplification of the "right" method: can't be async anymore
 	- api: Simplified data object / interface

@@ -68,7 +68,7 @@ var updater_theme = function () {
             );
 
     	board
-            .tracks([axis_track, pin_track, block_track]);
+            .add_track ([axis_track, pin_track, block_track]);
 
     	board(div);
 
