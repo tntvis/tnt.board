@@ -214,6 +214,37 @@ var board = function() {
     	}
     };
 
+    var _reorder = function (new_tracks) {
+        // TODO: This is defining a new height, but the global height is used to define the size of several
+        // parts. We should do this dynamically
+
+        var found_indexes = [];
+        for (var j=0; j<new_tracks.length; j++) {
+            var found = false;
+            for (var i=0; i<tracks.length; i++) {
+                if (tracks[i].id() === new_tracks[j].id()) {
+                    found = true;
+                    found_indexes[i] = true;
+                    // tracks.splice(i,1);
+                    break;
+                }
+            }
+            if (!found) {
+                _init_track(new_tracks[j]);
+                _update_track(new_tracks[j], {from : loc.from, to : loc.to});
+            }
+        }
+
+        for (var x=0; x<tracks.length; x++) {
+            if (!found_indexes[x]) {
+                tracks[x].g.remove();
+            }
+        }
+
+        tracks = new_tracks;
+        _place_tracks();
+    };
+
     // right/left/zoom pans or zooms the track. These methods are exposed to allow external buttons, etc to interact with the tracks. The argument is the amount of panning/zooming (ie. 1.2 means 20% panning) With left/right only positive numbers are allowed.
     api.method ('scroll', function (factor) {
         var amount = Math.abs(factor);
@@ -236,38 +267,6 @@ var board = function() {
     	}
     });
 
-    api.method ('reorder', function (new_tracks) {
-    	// TODO: This is defining a new height, but the global height is used to define the size of several
-    	// parts. We should do this dynamically
-
-        var found_indexes = [];
-    	for (var j=0; j<new_tracks.length; j++) {
-    	    var found = false;
-    	    for (var i=0; i<tracks.length; i++) {
-        		if (tracks[i].id() === new_tracks[j].id()) {
-        		    found = true;
-                    found_indexes[i] = true;
-                    // tracks.splice(i,1);
-        		    break;
-        		}
-    	    }
-    	    if (!found) {
-                _init_track(new_tracks[j]);
-        		_update_track(new_tracks[j], {from : loc.from, to : loc.to});
-    	    }
-    	}
-
-    	for (var x=0; x<tracks.length; x++) {
-            if (!found_indexes[x]) {
-                tracks[x].g.remove();
-            }
-    	}
-
-    	tracks = new_tracks;
-    	_place_tracks();
-
-    });
-
     api.method ('remove_track', function (track) {
         track.g.remove();
     });
@@ -283,12 +282,25 @@ var board = function() {
     	return track_vis;
     });
 
-    api.method('tracks', function (new_tracks) {
-    	if (!arguments.length) {
-    	    return tracks;
-    	}
-    	tracks = new_tracks;
-    	return track_vis;
+    // api.method('tracks', function (new_tracks) {
+    // 	if (!arguments.length) {
+    // 	    return tracks;
+    // 	}
+    // 	tracks = new_tracks;
+    // 	return track_vis;
+    // });
+
+    api.method('tracks', function (ts) {
+        if (!arguments.length) {
+            return tracks;
+        }
+        if (tracks.length) {
+            _reorder(ts);
+        } else {
+            track_vis.add_track(ts);
+        }
+
+        return this;
     });
 
     //
