@@ -6,7 +6,7 @@ theme : null
 api_toplevel : track
 ---
 <h2>tnt.board</h2>
-<p><i>tnt.board</i> creates a new track-based visualization. Typically, each track displays a set of features defined during their setup. Boards can be panned or zoomed within their defined limits. New boards are created using the <a href="#board">tnt.board</a> method. Once it is created new tracks can be added with <a href="#add_track">tnt.board.add_track</a></p>
+<p><i>tnt.board</i> creates a new track-based visualization. Typically, each track displays a set of features defined during their setup. Boards can be panned or zoomed within their defined limits. New boards are created using the tnt.<a href="#board">board</a> method. Once it is created new tracks can be added with board.<a href="#add_track">add_track</a></p>
 
   {% highlight javascript linenos %}
   var myBoard = tnt.board().from(0).to(500).left(0).right(500);
@@ -80,5 +80,13 @@ myBoard
 myBoard(document.getElementById("mydiv"));
 myBoard.start();
 {% endhighlight %}
+
+<p>The example above starts by defining a board and its limits, two different <i>tracks</i> are then defined and attached to the <i>board</i>. The <i>board</i> itself is a function that when executed initialises the visualisation using the provided <i>DOM element</i> as its container. Finally, the <i>board</i> is started, which means that the data is retrieved and displayed. It is important to understand and remember these three states of the visualisation:</p>
+
+<ul>
+    <li><b>Defined</b>: The board instance is defined at the code level, but the visualisation hasn't been inisialised and the container is still empty</li>
+    <li><b>Initialised</b>: The container is populated with the board elements</li>
+    <li><b>Started</b>: The tracks are created, their data retrieved and the features plotted</li>
+</ul>
 
 <p>See below for a description of all the methods available for each type of object</p>

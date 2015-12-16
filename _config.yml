@@ -1,23 +1,29 @@
 host: 127.0.0.1
 port: 4001
 safe: true
-highlighter: pygments
 baseurl : /tnt
 api :
     - name : track
       elements :
            - name : Board
              preamble : |
-                        Boards are track-based visualizations that can be panned and zoomed making all the tracks in the board to update accordingly. TnT boards can be configured using several methods that affect all the tracks in the board (like the <a href="#width">width</a> of the board). The height of the board is defined by the sum of the <a href="#height">heights</a> of all the tracks.
+                        Boards are track-based visualizations that can be panned and zoomed making all the tracks in the board to update accordingly. TnT boards can be configured using several methods that affect all the tracks in the board (like the <a href="#width">width</a> of the board). The height of the board is defined by the sum of the <a href="#height">heights</a> of all the tracks. The <i>board</i> instance can be configured using the methods explained below. When used as setters, these methods return the board object itself allowing to chain them as in this example:
              example : |
+                 // Definition
                  var myBoard = tnt.board()
-                    .width(800);
+                     .from(0)
+                     .to(1000)
+                     .max(1000)
+                     .width(800);
 
                  myBoard
-                    .add_track(track1)
-                    .add_track(track2);
+                     .add_track(track1)
+                     .add_track(track2);
 
+                 // Initialisation
                  myBoard(div);
+
+                 // Start
                  myBoard.start();
 
              elements :
@@ -30,10 +36,10 @@ api :
                     var myBoard = tnt.board()
 
                 - name : from
-                  path : tnt.board
-                  args : integer | Promise
+                  path : board
+                  args : integer
                   desc : defines the left coordinate of the board
-                  full : Defines the left coordinate of the board (the start left position). If called without arguments returns the current left coordinate. As its argument accepts a scalar or a Promise that resolves to a scalar.
+                  full : Defines the left coordinate of the board (the start left position). If called without arguments returns the current value.
                   example : |
                     // Using a scalar
                     var myBoard = tnt.board()
@@ -47,9 +53,9 @@ api :
 
                 - name : to
                   path : tnt.board
-                  args : integer | Promise
+                  args : integer
                   desc : defines the right coordinate of the board
-                  full : Defines the right coordinate of the board (the start right position). If called without arguments returns the current right coordinate. As its argument accepts a scalar or a Promise that resolves to a scalar.
+                  full : Defines the right coordinate of the board (the start right position). If called without arguments returns the current value.
                   example : |
                     // Using a scalar
                     var myBoard = tnt.board()
@@ -61,40 +67,28 @@ api :
                             resolve (1000);
                         }));
 
-                - name : left
-                  path : tnt.board
-                  args : integer | Promise
+                - name : min
+                  path : board
+                  args : integer
                   desc : defines the minimum possible coordinate of the board
-                  full : Defines the left limit (ie, minimum possible coordinate) of the board. If called without arguments returns the current left limit. As its argument accepts a scalar or a Promise that resolves to a scalar. By default this value is 0.
+                  full : Defines the minimum possible coordinate of the board. If called without arguments returns the current limit. By default this value is 0.
                   example : |
                     // Using a scalar
                     var myBoard = tnt.board()
-                        .left(100);
+                        .min(100);
 
-                    // Using a Promise
-                    var myBoard2 = tnt.board()
-                        .left (new Promise (function (resolve, reject) {
-                            resolve 100;
-                        }));
-
-                - name : right
-                  path : tnt.board
-                  args : integer | Promise
+                - name : max
+                  path : board
+                  args : integer
                   desc : defines the maximum possible value of the board
-                  full : Defines the right limit (ie, the maximum possible coordinate) of the board. If called without arguments returns the current right limit. As its argument accepts a scalar or a Promise that resolves to a scalar.
+                  full : Defines the upper limit (ie, the maximum possible coordinate) of the board. If called without arguments returns the current upper limit.
                   example : |
                     // Using a scalar
                     var myBoard = tnt.board()
-                        .right(1000);
-
-                    // Using a Promise
-                    var myBoard2 = tnt.board()
-                        .right (new Promise (function (resolve, reject) {
-                            resolve 1000;
-                        }));
+                        .max(1000);
 
                 - name : zoom_out
-                  path : tnt.board
+                  path : board
                   args : integer
                   desc : defines the maximum extent of the board
                   full : Defines the maximum extent of the board (ie, the limit when zooming out). If called without arguments returns the current value. This limit is respected even if the <a href="#from">from</a> and <a href="#to">to</a> coordinates specify spans beyond this limit. In that case, the coordinates are adjusted to satisfy this value.
@@ -103,8 +97,8 @@ api :
                     var myBoard = tnt.board()
                         .zoom_out(500);
 
-                - name : track.zoom_in
-                  path : tnt.board
+                - name : zoom_in
+                  path : board
                   args : integer
                   desc : Defines the minimum extent of the board
                   full : Defines the minimum extent of the board (ie, the limit when zooming in). If called without arguments returns the current value. This limit is respected even if the <a href="#from">from</a> and <a href="#to">to</a> coordinates specify spans beyond this limit. In that case, the coordinates are adjusted to satisfy this value.
@@ -114,7 +108,7 @@ api :
                         .zoom_in(100);
 
                 - name : start
-                  path : tnt.board
+                  path : board
                   args : null
                   desc : starts (or re-starts) the visualisation
                   full : Starts the visualisation (re-)initialisig all the tracks, resolving the coordinate promises and feeding the tracks with their data and displays.
@@ -122,48 +116,48 @@ api :
                     var myBoard = tnt.board()
                         .from(0)
                         .to(1000)
-                        .left(0)
-                        .right(1000);
+                        .min(0)
+                        .max(1000);
 
                     // ... Adding tracks ...
                     // Initialise the board
                     myBoard.start();
 
                 - name : scroll
-                  path : tnt.board
+                  path : board
                   args : float
                   desc : scrolls the board programmatically
-                  full : Scrolls the board programmatically. The argument indicates the number of board <i>pages</i> to scroll, if it is possitive the board scrolls to the right, while if it is negative scrolls to the left. For example, <i>board.scroll(1)</i> scrolls right to the next non-overlapping page, while <i>board.scroll(-0.5) scrolls left overlapping half a page.
+                  full : Scrolls the board programmatically. The argument indicates the number of board <i>pages</i> to scroll, if it is possitive the board scrolls to the right, while if it is negative scrolls to the left. For example, <i>board.scroll(1)</i> scrolls right to the next non-overlapping page, while <i>board.scroll(-0.5)</i> scrolls left overlapping half a page.
                   example : |
                     var myBoard = tnt.board()
                         .from(0)
                         .to(1000)
-                        .right(1000);
+                        .max(1000);
 
                     myBoard(div);
                     myBoard.start();
                     myBoard.scroll(-1);
 
                 - name : zoom
-                  path : tnt.board
+                  path : board
                   args : float
                   desc : zooms in/out the track the specified amount
-                  full : Zooms in/out the track the specified amount. The argument indicates the number of <i>pages</i> to zoom, or in other words, times of <i>extent</i>. For example, <i>board.zoom(1)</i> does not do anything, <i>board.zoom(0.5)</i> zooms out to double the extent and <i>board.zoom(2)<i> zooms in to half the extent.
+                  full : Zooms in/out the track the specified amount. The argument indicates the number of <i>pages</i> to zoom, or in other words, times of <i>extent</i>. For example, <i>board.zoom(1)</i> does not do anything, <i>board.zoom(0.5)</i> zooms out to double the extent and <i>board.zoom(2)</i> zooms in to half the extent.
                   example : |
                     var myBoard = tnt.board()
                         .from(0)
                         .to(1000)
-                        .right(1000);
+                        .max(1000);
 
                         myBoard(div);
                         myBoard.start();
                         myBoard.zoom(2);
 
                 - name : tracks
-                  path : tnt.board
+                  path : board
                   args : array
                   desc : reorders the tracks in the board
-                  full : reorders the tracks in the board. Expects an array of tracks as argument. This method requires the visualisation to have started already. The tracks are re-arranged with the order given in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each existing tracks is recalculated. If no argument is provided, returns an array containing the current tracks in the board.
+                  full : Reorders the tracks in the board. Expects an array of tracks as argument. This method requires the visualisation to have started already. The tracks are re-arranged with the order given in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each existing tracks is recalculated. If no argument is provided, returns an array containing the current tracks in the board.
                   example : |
                       // Reorder the tracks. First tracks is put last
                       var tracks = myBoard.tracks();
@@ -174,8 +168,8 @@ api :
 
                       myBoard.tracks(new_tracks);
 
-                - name : track.add_track
-                  path : tnt.board
+                - name : add_track
+                  path : board
                   args : tnt.board.track
                   desc : adds a new track to the track visualisation
                   full : Adds a new track to the track visualisation. The order in which this method is called determines the order of the tracks in the board
@@ -185,19 +179,111 @@ api :
                         .add_track(track2);
 
                 - name : width
-                  desc : specifies the width of the track visualization
-                - name : track.allow_drag
-                  desc : specifies the draggability of the tracks in the visualization
+                  path : board
+                  args : integer
+                  desc : Specifies the width of the board
+                  full : Specifies the width of the board. If the width changes after the visualisation has been initialised, the board and all the tracks are re-initialised with the new width. If no argument is provided, the current width is returned.
+                  example : |
+                    var myBoard = tnt.board()
+                        .width (800);
+
+
+                - name : allow_drag
+                  path : board
+                  args : boolean
+                  desc : specifies if the board can be scrolled with the mouse
+                  full : Specifies if the board can be scrolled with the mouse. If set to <i>false</i>, no <i>drag</i> event is used in the board. This method can be set dynamically after the visualisation has started. Disable dragging doesn't disallow scrolling programmatically via board.<a href="#scroll">scroll</a>.
+                  example : |
+                    var myBoard = tnt.board()
+                        .allow_drag = false;
+
            - name : Tracks
+             preamble : |
+                Each <a href="#Board">board</a> can contain one of more <i>tracks</i> to display data. They are piled up in the board vertically (growing downwards) in the order of attachment to the board. Tracks are created using the constructor <i>tnt.board.track</i> and attached using board.<a href="#add_track">add_track</a>. Each <i>track</i> instance can be configured using the methods explained below. When used as setters, these methods return the track object allowing to chain them as in this example:
+             example : |
+                  var myBoard = tnt
+                    .board()
+                    .from(0)
+                    .to(500)
+                    .min(0)
+                    .max(500);
+
+                  var locationTrack = tnt.board.track()
+                      .height(20)
+                      .color("white")
+                      .display(tnt.board.track.feature.axis())
+                      .orientation("top");
+
+                  var blockTrack = tnt.board.track()
+                      .height(30)
+                      .color("#FFCFDD")
+                      .data (tnt.board.track.data.sync()
+                          .retriever(function () {
+                              return [{
+                                  start : 200,
+                                  end : 350
+                              }];
+                          })
+                      );
+
              elements :
-                - name : track.track
-                  desc : defines the track object
-                - name : track.background_color
-                  desc : defines the background color of the track
-                - name : track.height
-                  desc : defines the height of the track
+                - name : track
+                  path : tnt.board
+                  args : null
+                  desc : creates a new track
+                  full : Creates a new track. This track has to be configured via its methods. The newly created track can be attached to the board using board's <a href=#add_track>add_track</a> method.
+                  example : |
+                      var myBoard = tnt.board().from(0).to(500).max(500);
+
+                      var blockTrack = tnt.board.track()
+                          .height(30)
+                          .color("#FFCFDD")
+                          .data (tnt.board.track.data.sync()
+                          .retriever(function () {
+                              return [{
+                                  start : 200,
+                                  end : 350
+                              }];
+                          })
+                      );
+
+
+                - name : color
+                  path : track
+                  args : string
+                  desc : specifies the background color of the track
+                  full : Specifies the background color of the track. Color names ("white") and hexadecimal codes ("#FFFFFF") are allowed. If called without arguments, the current track color is returned.
+                  example : |
+                    var blockTrack = tnt.board.track()
+                        .color("#FFCFDD");
+
+                - name : height
+                  path : track
+                  args : integer
+                  desc : defines the height of the track in pixels
+                  full : Defines the height of the track in pixels. If called without arguments, returns the current height. This value can be changed after the visualisation has <i>started</i>, but for the change to be applied to the track, the board.<a href="#tracks">tracks</a> method should be called.
+                  example : |
+                    var myBoard = tnt.board();
+                    var blockTrack = tnt.board.track()
+                        .height(30);
+
                 - name : id
-                  desc : sets an id for the track
+                  path : track
+                  args : string
+                  desc : sets an ID for the track
+                  full : Sets an ID for the track. Uniqueness of track IDs is required in order to avoid unexpected results. Any track missing an ID when the tracks are initialised are assigned a numerical ID starting with "1". This means that explicitely giving low numerical IDs to tracks is not recommended to allow ID collisions. If called without arguments, returns the current ID of the track.
+                  example : |
+                    var track = tnt.board.track()
+                        .data(...)
+                        .display(...)
+                        .id("mytrack");
+
+                    var trackID = track.id(); // "mytrack"
+
+                - name : find_track
+                  path : track
+                  args : string
+
            - name : Data
              elements :
                 - name : track.data
