@@ -57,7 +57,7 @@
 	- added spinner to the async data retriever
 0.0.30
 	- bugfix: spinner not always attached
-0.0.31
+0.1.0
 	- renamed built css file (now tnt.board.css)
 	- api: "move_right" / "move_left" renamed "scroll"
 	- api: "reorder" removed, "tracks" now reorders tracks
@@ -65,4 +65,6 @@
 	- api: Simplification of the "right" method: can't be async anymore
 	- api: Simplified data object / interface
 	- bugfix : fixed problem with width changes
+	- api: methods renamed: left => min; right => max; background_color => color; foreground_color => color
+
 

@@ -40,7 +40,7 @@ var scroll_theme = function () {
         // The axis track
     	var axis_track = tnt.board.track()
     	    .height(0)
-    	    .background_color("white")
+    	    .color("white")
     	    .display(tnt.board.track.feature.axis()
     		     .orientation("top")
     		);
@@ -48,10 +48,10 @@ var scroll_theme = function () {
         // Pin track
     	var pin_track = tnt.board.track()
     	    .height(60)
-    	    .background_color("white")
+    	    .color("white")
     	    .display(tnt.board.track.feature.pin()
     		     .domain([0.3, 1.2])
-    		     .foreground_color("red")
+    		     .color("red")
     		     .on("click", function (d) {
                      console.log(d);
                      })

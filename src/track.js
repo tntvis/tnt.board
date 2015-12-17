@@ -8,8 +8,7 @@ var track = function () {
     var display;
 
     var conf = {
-    	// foreground_color : d3.rgb('#000000'),
-    	background_color : d3.rgb('#CCCCCC'),
+    	color : d3.rgb('#CCCCCC'),
     	height           : 250,
     	// data is the object (normally a tnt.track.data object) used to retrieve and update data for the track
     	data             : track.data.empty(),

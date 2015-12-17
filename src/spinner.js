@@ -12,7 +12,7 @@ var spinner = function () {
         }
         if (track.spinner==1) {
             var container = track.g;
-            var bgColor = track.background_color();
+            var bgColor = track.color();
             sp_elem = container
                 .append("svg")
                 .attr("class", "tnt_spinner")
@@ -42,7 +42,7 @@ var spinner = function () {
             // Move the spinner to front
             var node = sp_elem.node();
             if (node.parentNode) {
-                node.parentNode.appendChild(node);    
+                node.parentNode.appendChild(node);
             }
         }
     };

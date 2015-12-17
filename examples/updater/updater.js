@@ -5,7 +5,7 @@ var updater_theme = function () {
         // Axis track
     	var axis_track = tnt.board.track()
     	    .height(0)
-    	    .background_color("white")
+    	    .color("white")
     	    .display(tnt.board.track.feature.axis()
     		     .orientation("top")
     		);
@@ -13,13 +13,13 @@ var updater_theme = function () {
         // Data track
     	var pin_track = tnt.board.track()
     	    .height(60)
-    	    .background_color("white")
+    	    .color("white")
     	    .display(tnt.board.track.feature.pin()
                 .index(function (d) {
                     return d.pos;
                 })
                 .domain([0.3, 1.2])
-                .foreground_color("red")
+                .color("red")
             )
             .data(tnt.board.track.data.sync()
                 .retriever (function (loc) {
@@ -38,12 +38,12 @@ var updater_theme = function () {
 
         var block_track = tnt.board.track()
             .height(20)
-            .background_color("white")
+            .color("white")
             .display(tnt.board.track.feature.block()
                 .index(function (d) {
                     return d.start;
                 })
-                .foreground_color("blue")
+                .color("blue")
             )
             .data(tnt.board.track.data.async()
                 .retriever (function (loc) {

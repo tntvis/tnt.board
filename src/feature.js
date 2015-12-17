@@ -16,7 +16,7 @@ var tnt_feature = function () {
         //layout   : function () {},
         index    : undefined,
         layout   : layout.identity(),
-        foreground_color : '#000'
+        color : '#000'
     };
 
 
@@ -265,7 +265,7 @@ tnt_feature.area = function () {
     	    .classed("tnt_elem", true)
     	    .datum(data_points)
     	    .attr("d", area)
-    	    .attr("fill", d3.rgb(feature.foreground_color()).brighter());
+    	    .attr("fill", d3.rgb(feature.color()).brighter());
     });
 
     var line_mover = feature.mover();
@@ -362,7 +362,7 @@ tnt_feature.line = function () {
     	    .append("path")
     	    .attr("class", "tnt_elem")
     	    .attr("d", line(data_points))
-    	    .style("stroke", feature.foreground_color())
+    	    .style("stroke", feature.color())
     	    .style("stroke-width", 4)
     	    .style("fill", "none");
     });
@@ -397,8 +397,8 @@ tnt_feature.ensembl = function () {
     // 'Inherit' from board.track.feature
     var feature = tnt_feature();
 
-    var foreground_color2 = "#7FFF00";
-    var foreground_color3 = "#00BB00";
+    var color2 = "#7FFF00";
+    var color3 = "#00BB00";
 
     feature.guider (function (width) {
     	var track = this;
@@ -411,7 +411,7 @@ tnt_feature.ensembl = function () {
     	    .attr("x2", width)
     	    .attr("y1", height_offset)
     	    .attr("y2", height_offset)
-    	    .style("stroke", feature.foreground_color())
+    	    .style("stroke", feature.color())
     	    .style("stroke-width", 1);
 
     	track.g
@@ -421,7 +421,7 @@ tnt_feature.ensembl = function () {
     	    .attr("x2", width)
     	    .attr("y1", track.height() - height_offset)
     	    .attr("y2", track.height() - height_offset)
-    	    .style("stroke", feature.foreground_color())
+    	    .style("stroke", feature.color())
     	    .style("stroke-width", 1);
 
     });
@@ -443,17 +443,17 @@ tnt_feature.ensembl = function () {
                 return (xScale(d.end) - xScale(d.start));
     	    })
     	    .attr("height", track.height() - ~~(height_offset * 2))
-    	    .attr("fill", track.background_color())
+    	    .attr("fill", track.color())
     	    .transition()
     	    .duration(500)
     	    .attr("fill", function (d) {
         		if (d.type === 'high') {
-        		    return d3.rgb(feature.foreground_color());
+        		    return d3.rgb(feature.color());
         		}
         		if (d.type === 'low') {
-        		    return d3.rgb(feature.foreground_color2());
+        		    return d3.rgb(feature.color2());
         		}
-        		return d3.rgb(feature.foreground_color3());
+        		return d3.rgb(feature.color3());
     	    });
     });
 
@@ -476,19 +476,19 @@ tnt_feature.ensembl = function () {
     	    });
     });
 
-    feature.foreground_color2 = function (col) {
+    feature.color2 = function (col) {
     	if (!arguments.length) {
-    	    return foreground_color2;
+    	    return color2;
     	}
-    	foreground_color2 = col;
+    	color2 = col;
     	return feature;
     };
 
-    feature.foreground_color3 = function (col) {
+    feature.color3 = function (col) {
     	if (!arguments.length) {
-    	    return foreground_color3;
+    	    return color3;
     	}
-    	foreground_color3 = col;
+    	color3 = col;
     	return feature;
     };
 
@@ -512,7 +512,7 @@ tnt_feature.vline = function () {
     	    })
     	    .attr("y1", 0)
     	    .attr("y2", track.height())
-    	    .attr("stroke", feature.foreground_color())
+    	    .attr("stroke", feature.color())
     	    .attr("stroke-width", 1);
     });
 
@@ -573,7 +573,7 @@ tnt_feature.pin = function () {
     	    	return track.height() - yScale(d[opts.val(d, i)]);
     	    })
     	    .attr("stroke", function (d) {
-                return d3.functor(feature.foreground_color())(d);
+                return d3.functor(feature.color())(d);
             });
 
     	new_pins
@@ -586,7 +586,7 @@ tnt_feature.pin = function () {
     	    })
     	    .attr("r", pin_ball_r)
     	    .attr("fill", function (d) {
-                return d3.functor(feature.foreground_color())(d);
+                return d3.functor(feature.color())(d);
             });
 
         new_pins
@@ -691,12 +691,12 @@ tnt_feature.block = function () {
         		return (xScale(feature.to()(d, i)) - xScale(feature.from()(d, i)));
     	    })
     	    .attr("height", track.height())
-    	    .attr("fill", track.background_color())
+    	    .attr("fill", track.color())
     	    .transition()
     	    .duration(500)
     	    .attr("fill", function (d) {
         		if (d.color === undefined) {
-        		    return feature.foreground_color();
+        		    return feature.color();
         		} else {
         		    return d.color;
         		}

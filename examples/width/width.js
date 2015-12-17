@@ -5,7 +5,7 @@ var width_theme = function () {
         // Axis track
     	var axis_track = tnt.board.track()
     	    .height(0)
-    	    .background_color("white")
+    	    .color("white")
     	    .display(tnt.board.track.feature.axis()
     		     .orientation("top")
     		);
@@ -13,10 +13,10 @@ var width_theme = function () {
         // Data track1
     	var pin_track = tnt.board.track()
     	    .height(60)
-    	    .background_color("white")
+    	    .color("white")
     	    .display(tnt.board.track.feature.pin()
                 .domain([0.3, 1.2])
-                .foreground_color("red")
+                .color("red")
             )
             .data(tnt.board.track.data.sync()
                 .retriever (function () {
@@ -48,9 +48,9 @@ var width_theme = function () {
         // Data track 2
         var block_track = tnt.board.track()
             .height(30)
-            .background_color("white")
+            .color("white")
             .display(tnt.board.track.feature.block()
-                .foreground_color("blue")
+                .color("blue")
             )
             .data(tnt.board.track.data.sync()
                 .retriever (function () {

@@ -18,17 +18,17 @@ var ids_theme = function () {
 
     	var axis_track = tnt.board.track()
             .height(0)
-            .background_color("white")
+            .color("white")
             .display(tnt.board.track.feature.axis()
             .orientation("top")
         );
     	var pin_track = tnt.board.track()
             .id ("pins")
             .height(60)
-            .background_color("white")
+            .color("white")
             .display(tnt.board.track.feature.pin()
                 .domain([0.3, 1.2])
-                .foreground_color("red")
+                .color("red")
             )
             .data(tnt.board.track.data.sync()
                 .retriever (function () {

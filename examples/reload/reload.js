@@ -16,24 +16,24 @@ var reload_theme = function () {
 
     	var axis_track = tnt.board.track()
     	    .height(0)
-    	    .background_color("white")
+    	    .color("white")
     	    .display(tnt.board.track.feature.axis()
-    		     .orientation("top")
-    		    );
+                .orientation("top")
+            );
     	var pin_track = tnt.board.track()
     	    .height(60)
-    	    .background_color("white")
-    	    .display(tnt.board.track.feature.pin()
-    		     .domain([0.3, 1.2])
-    		     .foreground_color("red")
-    		     .on("click", function (d) {
-                     console.log(d);
-                     })
-                 .on("mouseover", function (d) {
-                     console.log("mouseover");
-                 })
-    		    )
-    	    .data(tnt.board.track.data.sync()
+    	    .color("white")
+            .display(tnt.board.track.feature.pin()
+                .domain([0.3, 1.2])
+                .color("red")
+                .on("click", function (d) {
+                    console.log(d);
+                })
+                .on("mouseover", function (d) {
+                    console.log("mouseover");
+                })
+            )
+            .data(tnt.board.track.data.sync()
                 .retriever (function () {
                     return [
                         {
@@ -58,7 +58,7 @@ var reload_theme = function () {
                         }
                     ];
                 })
-    		 );
+            );
 
     	board
     	    .add_track(axis_track)

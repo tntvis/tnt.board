@@ -5,7 +5,7 @@ myBoard.right (1000);
 
 var location_track = tnt.board.track()
     .height(20)
-    .background_color("white")
+    .color("white")
     .display(tnt.board.track.feature.axis()
         .orientation("top")
     );
@@ -13,7 +13,7 @@ var location_track = tnt.board.track()
 var block_track = tnt.board.track()
     .label("my track")
     .height(30)
-    .background_color("#FFCFDD")
+    .color("#FFCFDD")
     .data (tnt.board.track.data.sync()
         .retriever (function () {
             return [
@@ -25,7 +25,7 @@ var block_track = tnt.board.track()
         })
     )
     .display(tnt.board.track.feature.block()
-    .foreground_color("blue")
+    .color("blue")
     .index(function (d) {
         return d.start;
     }));

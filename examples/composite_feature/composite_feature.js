@@ -3,12 +3,13 @@ var composite_feature = function() {
     var theme = function(board, div) {
 	board(div);
 
-	board.right (1000);
+	board.max (1000)
+        .min (10);
 
 	// Block Track1
 	var block_track = tnt.board.track()
 	    .height(30)
-	    .background_color("#FFCFDD")
+	    .color("#FFCFDD")
 	    .data(tnt.board.track.data.sync()
 			  .retriever (function () {
 			      return {
@@ -40,7 +41,7 @@ var composite_feature = function() {
 			   .on("click", function () {
 			       console.log("block");
 			   })
-			   .foreground_color("blue")
+			   .color("blue")
 			   .index(function (d) {
 			       return d.start;
 			   }))
@@ -48,7 +49,7 @@ var composite_feature = function() {
 			   .on("click", function () {
 			       console.log("block2");
 			   })
-			   .foreground_color("green")
+			   .color("green")
 			   .index(function (d) {
 			       return d.start;
 			   }))
@@ -56,7 +57,7 @@ var composite_feature = function() {
 			   // .on("click", function () {
 			   //     console.log("line");
 			   // })
-			   .foreground_color("red")
+			   .color("red")
 		     	   .index(function (d) {
 		     	       return d.pos;
 		     	   }))
@@ -65,14 +66,14 @@ var composite_feature = function() {
 	// Axis Track1
 	var axis_track = tnt.board.track()
 	    .height(30)
-	    .background_color("white")
+	    .color("white")
 	    .display(tnt.board.track.feature.axis()
 		     .orientation("top"));
 
 	// Location Track1
 	var loc_track = tnt.board.track()
 	    .height(30)
-	    .background_color("white")
+	    .color("white")
 	    .display(tnt.board.track.feature.location());
 
 	board

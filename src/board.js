@@ -35,8 +35,8 @@ var board = function() {
     var xScale;
     var zoomEventHandler = d3.behavior.zoom();
     var limits = {
-        left : 0,
-        right : 1000,
+        min : 0,
+        max : 1000,
         zoom_out : 1000,
         zoom_in  : 100
     };
@@ -158,12 +158,10 @@ var board = function() {
 
         // The continuation callback
         var cont = function () {
-            // limits.right = resp;
 
-            // zoomEventHandler.xExtent([limits.left, limits.right]);
             if ((loc.to - loc.from) < limits.zoom_in) {
-                if ((loc.from + limits.zoom_in) > limits.right) {
-                    loc.to = limits.right;
+                if ((loc.from + limits.zoom_in) > limits.max) {
+                    loc.to = limits.max;
                 } else {
                     loc.to = loc.from + limits.zoom_in;
                 }
@@ -405,7 +403,7 @@ var board = function() {
     	    .attr("y", 0)
     	    .attr("width", track_vis.width())
     	    .attr("height", track.height())
-    	    .style("fill", track.background_color())
+    	    .style("fill", track.color())
     	    .style("pointer-events", "none");
 
     	if (track.display()) {
@@ -485,7 +483,7 @@ var board = function() {
 
     	// Show the red bars at the limits
     	var domain = xScale.domain();
-    	if (domain[0] <= 5) {
+    	if (domain[0] <= (limits.min + 5)) {
     	    d3.select("#tnt_" + div_id + "_5pcap")
     		.attr("width", cap_width)
     		.transition()
@@ -493,7 +491,7 @@ var board = function() {
     		.attr("width", 0);
     	}
 
-    	if (domain[1] >= (limits.right)-5) {
+    	if (domain[1] >= (limits.max)-5) {
     	    d3.select("#tnt_" + div_id + "_3pcap")
     		.attr("width", cap_width)
     		.transition()
@@ -503,10 +501,10 @@ var board = function() {
 
 
     	// Avoid moving past the limits
-    	if (domain[0] < limits.left) {
-    	    zoomEventHandler.translate([zoomEventHandler.translate()[0] - xScale(limits.left) + xScale.range()[0], zoomEventHandler.translate()[1]]);
-    	} else if (domain[1] > limits.right) {
-    	    zoomEventHandler.translate([zoomEventHandler.translate()[0] - xScale(limits.right) + xScale.range()[1], zoomEventHandler.translate()[1]]);
+    	if (domain[0] < limits.min) {
+    	    zoomEventHandler.translate([zoomEventHandler.translate()[0] - xScale(limits.min) + xScale.range()[0], zoomEventHandler.translate()[1]]);
+    	} else if (domain[1] > limits.max) {
+    	    zoomEventHandler.translate([zoomEventHandler.translate()[0] - xScale(limits.max) + xScale.range()[1], zoomEventHandler.translate()[1]]);
     	}
 
     	_deferred();
