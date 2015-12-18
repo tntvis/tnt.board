@@ -146,6 +146,8 @@ var board = function() {
     // track_vis always starts on loc.from & loc.to
     api.method ('start', function () {
 
+        plot();
+
         // Reset the tracks
         for (var i=0; i<tracks.length; i++) {
             if (tracks[i].g) {
@@ -166,7 +168,6 @@ var board = function() {
                     loc.to = loc.from + limits.zoom_in;
                 }
             }
-            plot();
 
             for (var i=0; i<tracks.length; i++) {
                 _update_track(tracks[i], loc);
@@ -191,7 +192,7 @@ var board = function() {
     	    data_updater.call(track, {
                 'loc' : where,
                 'on_success' : function () {
-                    track.display().update.call(track, xScale, where);
+                    track.display().update.call(track);
                 }
     	    });
     	}
@@ -269,14 +270,14 @@ var board = function() {
     });
 
     api.method ('add_track', function (track) {
-    	if (track instanceof Array) {
-    	    for (var i=0; i<track.length; i++) {
-    		track_vis.add_track (track[i]);
-    	    }
-    	    return track_vis;
-    	}
-    	tracks.push(track);
-    	return track_vis;
+        if (track instanceof Array) {
+            for (var i=0; i<track.length; i++) {
+                track_vis.add_track (track[i]);
+            }
+            return track_vis;
+        }
+        tracks.push(track);
+        return track_vis;
     });
 
     api.method('tracks', function (ts) {
@@ -371,14 +372,12 @@ var board = function() {
         // caps
         d3.select("#tnt_" + div_id + "_5pcap")
             .attr("height", h)
-            // .move_to_front()
             .each(function (d) {
                 move_to_front(this);
             });
 
         d3.select("#tnt_" + div_id + "_3pcap")
             .attr("height", h)
-            //.move_to_front()
             .each (function (d) {
                 move_to_front(this);
             });
@@ -407,7 +406,9 @@ var board = function() {
     	    .style("pointer-events", "none");
 
     	if (track.display()) {
-    	    track.display().init.call(track, width);
+    	    track.display()
+                .scale(xScale)
+                .init.call(track, width);
     	}
 
     	return track_vis;
@@ -511,7 +512,7 @@ var board = function() {
 
     	for (var i = 0; i < tracks.length; i++) {
     	    var track = tracks[i];
-    	    track.display().move.call(track,xScale);
+    	    track.display().move.call(track);
     	}
     };
 

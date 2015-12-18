@@ -8,7 +8,7 @@ var tnt_feature = function () {
     var dispatch = d3.dispatch ("click", "dblclick", "mouseover", "mouseout");
 
     ////// Vars exposed in the API
-    var exports = {
+    var config = {
         create   : function () {throw "create_elem is not defined in the base feature object";},
         mover    : function () {throw "move_elem is not defined in the base feature object";},
         updater  : function () {},
@@ -16,7 +16,8 @@ var tnt_feature = function () {
         //layout   : function () {},
         index    : undefined,
         layout   : layout.identity(),
-        color : '#000'
+        color : '#000',
+        scale : undefined
     };
 
 
@@ -31,7 +32,7 @@ var tnt_feature = function () {
 
     var init = function (width) {
         var track = this;
-
+        
         track.g
             .append ("text")
             .attr ("x", 5)
@@ -40,7 +41,7 @@ var tnt_feature = function () {
             .attr ("fill", "grey")
             .text (track.label());
 
-        exports.guider.call(track, width);
+        config.guider.call(track, width);
     };
 
     var plot = function (new_elems, track, xScale) {
@@ -48,17 +49,13 @@ var tnt_feature = function () {
         new_elems.on("mouseover", dispatch.mouseover);
         new_elems.on("dblclick", dispatch.dblclick);
         new_elems.on("mouseout", dispatch.mouseout);
-        // new_elem is a g element where the feature is inserted
-        exports.create.call(track, new_elems, xScale);
+        // new_elem is a g element the feature is inserted
+        config.create.call(track, new_elems, xScale);
     };
 
-    var update = function (xScale, where, field) {
+    var update = function (field) {
         var track = this;
         var svg_g = track.g;
-        // var layout = exports.layout;
-        // if (layout.height) {
-        //     layout.height(track.height());
-        // }
 
         var elements = track.data().elements();
 
@@ -66,7 +63,7 @@ var tnt_feature = function () {
             elements = elements[field];
         }
 
-        var data_elems = exports.layout.call(track, elements, xScale);
+        var data_elems = config.layout.call(track, elements, config.scale);
 
         var vis_sel;
         var vis_elems;
@@ -76,11 +73,11 @@ var tnt_feature = function () {
             vis_sel = svg_g.selectAll(".tnt_elem");
         }
 
-        if (exports.index) { // Indexing by field
+        if (config.index) { // Indexing by field
             vis_elems = vis_sel
                 .data(data_elems, function (d) {
                     if (d !== undefined) {
-                        return exports.index(d);
+                        return config.index(d);
                     }
                 });
         } else { // Indexing by position in array
@@ -88,7 +85,7 @@ var tnt_feature = function () {
                 .data(data_elems);
         }
 
-        exports.updater.call(track, vis_elems, xScale);
+        config.updater.call(track, vis_elems, config.scale);
 
     	var new_elem = vis_elems
     	    .enter();
@@ -97,14 +94,14 @@ var tnt_feature = function () {
     	    .append("g")
     	    .attr("class", "tnt_elem")
     	    .classed("tnt_elem_" + field, field)
-    	    .call(feature.plot, track, xScale);
+    	    .call(feature.plot, track, config.scale);
 
     	vis_elems
     	    .exit()
     	    .remove();
     };
 
-    var move = function (xScale, field) {
+    var move = function (field) {
     	var track = this;
     	var svg_g = track.g;
     	var elems;
@@ -116,7 +113,7 @@ var tnt_feature = function () {
     	    elems = svg_g.selectAll(".tnt_elem");
     	}
 
-    	exports.mover.call(this, elems, xScale);
+    	config.mover.call(this, elems);
     };
 
     var mtf = function (elem) {
@@ -136,7 +133,7 @@ var tnt_feature = function () {
 
     // API
     apijs (feature)
-    	.getset (exports)
+    	.getset (config)
     	.method ({
     	    reset  : reset,
     	    plot   : plot,
@@ -163,18 +160,18 @@ tnt_feature.composite = function () {
     };
 
     var init = function (width) {
-    	var track = this;
-     	for (var display in displays) {
-    	    if (displays.hasOwnProperty(display)) {
-    		displays[display].init.call(track, width);
-    	    }
-    	}
+        var track = this;
+        for (var display in displays) {
+            if (displays.hasOwnProperty(display)) {
+                displays[display].init.call(track, width);
+            }
+        }
     };
 
-    var update = function (xScale) {
+    var update = function () {
     	var track = this;
     	for (var i=0; i<display_order.length; i++) {
-    	    displays[display_order[i]].update.call(track, xScale, undefined, display_order[i]);
+    	    displays[display_order[i]].update.call(track, undefined, display_order[i]);
     	    displays[display_order[i]].move_to_front.call(track, display_order[i]);
     	}
     	// for (var display in displays) {
@@ -184,13 +181,13 @@ tnt_feature.composite = function () {
     	// }
     };
 
-    var move = function (xScale) {
-    	var track = this;
-    	for (var display in displays) {
-    	    if (displays.hasOwnProperty(display)) {
-    		displays[display].move.call(track, xScale, display);
-    	    }
-    	}
+    var move = function () {
+        var track = this;
+        for (var display in displays) {
+            if (displays.hasOwnProperty(display)) {
+                displays[display].move.call(track, display);
+            }
+        }
     };
 
     var add = function (key, display) {
@@ -218,14 +215,14 @@ tnt_feature.composite = function () {
 
     // API
     apijs (features)
-	.method ({
-	    reset  : reset,
-	    update : update,
-	    move   : move,
-	    init   : init,
-	    add    : add,
-	    displays : get_displays
-	});
+    	.method ({
+    	    reset  : reset,
+    	    update : update,
+    	    move   : move,
+    	    init   : init,
+    	    add    : add,
+    	    displays : get_displays
+    	});
 
     return features;
 };
@@ -241,11 +238,12 @@ tnt_feature.area = function () {
     var data_points;
 
     var line_create = feature.create(); // We 'save' line creation
-    feature.create (function (points, xScale) {
+
+    feature.create (function (points) {
     	var track = this;
+        var xScale = feature.scale();
 
     	if (data_points !== undefined) {
-    //	     return;
     	    track.g.select("path").remove();
     	}
 
@@ -269,8 +267,9 @@ tnt_feature.area = function () {
     });
 
     var line_mover = feature.mover();
-    feature.mover (function (path, xScale) {
+    feature.mover (function (path) {
     	var track = this;
+        var xScale = feature.scale();
     	line_mover.call(track, path, xScale);
 
     	area.x(line.x());
@@ -331,8 +330,9 @@ tnt_feature.line = function () {
 
     // For now, create is a one-off event
     // TODO: Make it work with partial paths, ie. creating and displaying only the path that is being displayed
-    feature.create (function (points, xScale) {
+    feature.create (function (points) {
     	var track = this;
+        var xScale = feature.scale();
 
     	if (data_points !== undefined) {
     	    // return;
@@ -367,8 +367,9 @@ tnt_feature.line = function () {
     	    .style("fill", "none");
     });
 
-    feature.mover (function (path, xScale) {
+    feature.mover (function (path) {
     	var track = this;
+        var xScale = feature.scale();
 
     	line.x(function (d) {
     	    return xScale(x(d));
@@ -385,8 +386,9 @@ tnt_feature.conservation = function () {
         var feature = tnt_feature.area();
 
         var area_create = feature.create(); // We 'save' area creation
-        feature.create  (function (points, xScale) {
+        feature.create  (function (points) {
         	var track = this;
+            var xScale = feature.scale();
         	area_create.call(track, d3.select(points[0][0]), xScale);
         });
 
@@ -426,8 +428,9 @@ tnt_feature.ensembl = function () {
 
     });
 
-    feature.create (function (new_elems, xScale) {
+    feature.create (function (new_elems) {
     	var track = this;
+        var xScale = feature.scale();
 
     	var height_offset = ~~(track.height() - (track.height()  * 0.8)) / 2;
 
@@ -457,7 +460,8 @@ tnt_feature.ensembl = function () {
     	    });
     });
 
-    feature.updater (function (blocks, xScale) {
+    feature.updater (function (blocks) {
+        var xScale = feature.scale();
     	blocks
     	    .select("rect")
     	    .attr("width", function (d) {
@@ -465,7 +469,8 @@ tnt_feature.ensembl = function () {
     	    });
     });
 
-    feature.mover (function (blocks, xScale) {
+    feature.mover (function (blocks) {
+        var xScale = feature.scale();
     	blocks
     	    .select("rect")
     	    .attr("x", function (d) {
@@ -499,7 +504,8 @@ tnt_feature.vline = function () {
     // 'Inherit' from feature
     var feature = tnt_feature();
 
-    feature.create (function (new_elems, xScale) {
+    feature.create (function (new_elems) {
+        var xScale = feature.scale();
     	var track = this;
     	new_elems
     	    .append ("line")
@@ -516,7 +522,8 @@ tnt_feature.vline = function () {
     	    .attr("stroke-width", 1);
     });
 
-    feature.mover (function (vlines, xScale) {
+    feature.mover (function (vlines) {
+        var xScale = feature.scale();
     	vlines
     	    .select("line")
     	    .attr("x1", function (d) {
@@ -551,8 +558,9 @@ tnt_feature.pin = function () {
         .getset(opts);
 
 
-    feature.create (function (new_pins, xScale) {
+    feature.create (function (new_pins) {
     	var track = this;
+        var xScale = feature.scale();
     	yScale
     	    .domain(feature.domain())
     	    .range([pin_ball_r, track.height()-pin_ball_r-10]); // 10 for labelling
@@ -605,7 +613,7 @@ tnt_feature.pin = function () {
 
     });
 
-    feature.updater (function (pins, xScale){
+    feature.updater (function (pins) {
         pins
             .select("text")
             .text(function (d) {
@@ -613,8 +621,10 @@ tnt_feature.pin = function () {
             });
     });
 
-    feature.mover(function (pins, xScale) {
+    feature.mover(function (pins) {
 	var track = this;
+    var xScale = feature.scale();
+
 	pins
 	    //.each(position_pin_line)
 	    .select("line")
@@ -678,8 +688,9 @@ tnt_feature.block = function () {
     	    return d.end;
     	});
 
-    feature.create(function (new_elems, xScale) {
+    feature.create(function (new_elems) {
     	var track = this;
+        var xScale = feature.scale();
     	new_elems
     	    .append("rect")
     	    .attr("x", function (d, i) {
@@ -703,7 +714,8 @@ tnt_feature.block = function () {
     	    });
     });
 
-    feature.updater(function (elems, xScale) {
+    feature.updater(function (elems) {
+        var xScale = feature.scale();
     	elems
     	    .select("rect")
     	    .attr("width", function (d) {
@@ -711,7 +723,8 @@ tnt_feature.block = function () {
     	    });
     });
 
-    feature.mover(function (blocks, xScale) {
+    feature.mover(function (blocks) {
+        var xScale = feature.scale();
     	blocks
     	    .select("rect")
     	    .attr("x", function (d) {
@@ -729,6 +742,7 @@ tnt_feature.block = function () {
 tnt_feature.axis = function () {
     var xAxis;
     var orientation = "top";
+    var xScale;
 
     // Axis doesn't inherit from feature
     var feature = {};
@@ -749,13 +763,13 @@ tnt_feature.axis = function () {
         xAxis = undefined;
     };
 
-    feature.update = function (xScale) {
+    feature.update = function () {
     	// Create Axis if it doesn't exist
-    	if (xAxis === undefined) {
-    	    xAxis = d3.svg.axis()
-    		.scale(xScale)
-    		.orient(orientation);
-    	}
+        if (xAxis === undefined) {
+            xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient(orientation);
+        }
 
     	var track = this;
     	var svg_g = track.g;
@@ -767,7 +781,15 @@ tnt_feature.axis = function () {
     	    return orientation;
     	}
     	orientation = pos;
-    	return feature;
+    	return this;
+    };
+
+    feature.scale = function (s) {
+        if (!arguments.length) {
+            return xScale;
+        }
+        xScale = s;
+        return this;
     };
 
     return feature;

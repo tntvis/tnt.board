@@ -66,5 +66,7 @@
 	- api: Simplified data object / interface
 	- bugfix : fixed problem with width changes
 	- api: methods renamed: left => min; right => max; background_color => color; foreground_color => color
+	- x-scale is now an config method in display + simplified track update
+
 
 

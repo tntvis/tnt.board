@@ -22,7 +22,6 @@ var track = function () {
     // API
     var api = apijs (t)
     	.getset (conf);
-    	// .get (read_conf);
 
     // TODO: This means that height should be defined before display
     // we shouldn't rely on this
@@ -30,6 +29,7 @@ var track = function () {
         if (!arguments.length) {
             return display;
         }
+
         display = new_plotter;
         if (typeof (display) === 'function') {
             display.layout && display.layout().height(conf.height);

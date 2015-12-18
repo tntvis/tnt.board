@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="../../build/tnt.board.css" type="text/css" />
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="../../build/tnt.board.js"></script>
+    <script src="allow_drag.js"></script>
+</head>
+
+<body>
+    <div id="mydiv"></div>
+    <script>
+    var myBoard = tnt.board().from(20).to(500);
+    var theme = allow_drag_theme();
+    theme(myBoard, document.getElementById("mydiv"));
+    </script>
+</body>
