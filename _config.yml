@@ -197,34 +197,55 @@ api :
                     var myBoard = tnt.board()
                         .allow_drag = false;
 
+                - name : find_track
+                  path : board
+                  args : string
+                  desc : Finds a track by ID
+                  full : Finds a track by ID. It expects the ID of the track as its argument.
+                  example : |
+                    var myBoard = tnt.board()
+                        .from(0)
+                        .to(1000);
+
+                    var myTrack = tnt.board.track()
+                        .display(...)
+                        .data(...)
+                        .id("mytrack");
+
+                    var t = myBoard.find_track("mytrack");
+
            - name : Tracks
              preamble : |
                 Each <a href="#Board">board</a> can contain one of more <i>tracks</i> to display data. They are piled up in the board vertically (growing downwards) in the order of attachment to the board. Tracks are created using the constructor <i>tnt.board.track</i> and attached using board.<a href="#add_track">add_track</a>. Each <i>track</i> instance can be configured using the methods explained below. When used as setters, these methods return the track object allowing to chain them as in this example:
              example : |
-                  var myBoard = tnt
-                    .board()
+                var myBoard = tnt.board()
                     .from(0)
                     .to(500)
                     .min(0)
                     .max(500);
 
-                  var locationTrack = tnt.board.track()
-                      .height(20)
-                      .color("white")
-                      .display(tnt.board.track.feature.axis())
-                      .orientation("top");
+                var locationTrack = tnt.board.track()
+                    .height(20)
+                    .color("white")
+                    .display (tnt.board.track.feature.axis()
+                        .orientation("top");
+                    );
 
-                  var blockTrack = tnt.board.track()
-                      .height(30)
-                      .color("#FFCFDD")
-                      .data (tnt.board.track.data.sync()
-                          .retriever(function () {
-                              return [{
-                                  start : 200,
-                                  end : 350
-                              }];
-                          })
-                      );
+                var blockTrack = tnt.board.track()
+                    .height(30)
+                    .color("#FFCFDD")
+                    .data (tnt.board.track.data.sync()
+                        .retriever (function () {
+                            return [{
+                                start : 200,
+                                end : 350
+                            }];
+                        })
+                    );
+
+                myBoard
+                    .add_track (locationTrack)
+                    .add_track (blockTrack)
 
              elements :
                 - name : track
@@ -280,11 +301,18 @@ api :
 
                     var trackID = track.id(); // "mytrack"
 
-                - name : find_track
-                  path : track
-                  args : string
-
            - name : Data
+             preamble : |
+                Tracks need data to display. TnT provides two generic methods to fetch it: tnt.board.data.<a href="#sync">sync</a>, which pulls data into the track <i>synchronously</i> and  tnt.board.data.<a href="#async">async</i>, which relies on <i>Promises</i> to fetch the data <i>asynchronously</i>. Both methods offer the same interface and share the same configuration methods.
+             example : |
+               var blockData = tnt.board.data.sync()
+                .retriever (function () {
+                    return [{
+                        start : 200,
+                        end   : 350
+                    }];
+                });
+
              elements :
                 - name : track.data
                   desc : base data object
@@ -304,11 +332,12 @@ api :
                   desc : updater using the ensembl retriever
                 - name : track.data.empty
                   desc : updater for data independent tracks
+
            - name : Features
              elements :
                 - name : track.feature
                   desc : base object for features
-                - name : feature.foreground_color
+                - name : feature.color
                   desc : defines the foreground color of the elements
                 - name : feature.info
                   desc : defines the info to display when an element is clicked [REVISE]
