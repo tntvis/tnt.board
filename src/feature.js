@@ -32,7 +32,7 @@ var tnt_feature = function () {
 
     var init = function (width) {
         var track = this;
-        
+
         track.g
             .append ("text")
             .attr ("x", 5)
@@ -163,6 +163,7 @@ tnt_feature.composite = function () {
         var track = this;
         for (var display in displays) {
             if (displays.hasOwnProperty(display)) {
+                displays[display].scale(features.scale());
                 displays[display].init.call(track, width);
             }
         }
@@ -171,14 +172,14 @@ tnt_feature.composite = function () {
     var update = function () {
     	var track = this;
     	for (var i=0; i<display_order.length; i++) {
-    	    displays[display_order[i]].update.call(track, undefined, display_order[i]);
+    	    displays[display_order[i]].update.call(track, display_order[i]);
     	    displays[display_order[i]].move_to_front.call(track, display_order[i]);
     	}
-    	// for (var display in displays) {
-    	//     if (displays.hasOwnProperty(display)) {
-    	// 	displays[display].update.call(track, xScale, display);
-    	//     }
-    	// }
+        // for (var display in displays) {
+        //     if (displays.hasOwnProperty(display)) {
+        //         displays[display].update.call(track, xScale, display);
+        //     }
+        // }
     };
 
     var move = function () {
@@ -196,15 +197,6 @@ tnt_feature.composite = function () {
     	return features;
     };
 
-    // var on_click = function (cbak) {
-    //     for (var display in displays) {
-    //         if (displays.hasOwnProperty(display)) {
-    //             displays[display].on("click",cbak);
-    //         }
-    //     }
-    //     return features;
-    // };
-
     var get_displays = function () {
     	var ds = [];
     	for (var i=0; i<display_order.length; i++) {
@@ -215,6 +207,7 @@ tnt_feature.composite = function () {
 
     // API
     apijs (features)
+        .getset("scale")
     	.method ({
     	    reset  : reset,
     	    update : update,
@@ -797,6 +790,7 @@ tnt_feature.axis = function () {
 
 tnt_feature.location = function () {
     var row;
+    var xScale;
 
     var feature = {};
     feature.reset = function () {
@@ -806,13 +800,21 @@ tnt_feature.location = function () {
     feature.init = function () {
         row = undefined;
     };
-    feature.move = function(xScale) {
+    feature.move = function() {
     	var domain = xScale.domain();
     	row.select("text")
     	    .text("Location: " + ~~domain[0] + "-" + ~~domain[1]);
     };
 
-    feature.update = function (xScale) {
+    feature.scale = function (sc) {
+        if (!arguments.length) {
+            return xScale;
+        }
+        xScale = sc;
+        return this;
+    };
+
+    feature.update = function () {
     	var track = this;
     	var svg_g = track.g;
     	var domain = xScale.domain();
@@ -820,7 +822,7 @@ tnt_feature.location = function () {
     	    row = svg_g;
     	    row
         		.append("text")
-        		.text("Location: " + ~~domain[0] + "-" + ~~domain[1]);
+        		.text("Location: " + Math.round(domain[0]) + "-" + Math.round(domain[1]));
     	}
     };
 

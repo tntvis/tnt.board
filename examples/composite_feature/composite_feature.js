@@ -4,7 +4,7 @@ var composite_feature = function() {
 	board(div);
 
 	board.max (1000)
-        .min (10);
+        .min (0);
 
 	// Block Track1
 	var block_track = tnt.board.track()
@@ -58,9 +58,9 @@ var composite_feature = function() {
 			   //     console.log("line");
 			   // })
 			   .color("red")
-		     	   .index(function (d) {
-		     	       return d.pos;
-		     	   }))
+               .index(function (d) {
+                   return d.pos;
+               }))
 		    );
 
 	// Axis Track1
