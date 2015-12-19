@@ -18,18 +18,6 @@ var custom_feature_theme = function () {
             var track = this;
             var y = track.height();
 
-            // elems
-            //     .append("line")
-            //     .attr("x1", function (d) {
-            //         return xScale(d.pos);
-            //     })
-            //     .attr("x2", function (d) {
-            //         return xScale(d.pos);
-            //     })
-            //     .attr("y1", y)
-            //     .attr("y2", y/2)
-            //     .attr("stroke", "red");
-
             var g = elems
                 .append("g")
                 .attr("transform", function (d) {
