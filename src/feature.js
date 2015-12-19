@@ -65,6 +65,10 @@ var tnt_feature = function () {
 
         var data_elems = config.layout.call(track, elements, config.scale);
 
+        if (data_elems === undefined) {
+            return;
+        }
+
         var vis_sel;
         var vis_elems;
         if (field !== undefined) {
