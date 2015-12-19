@@ -460,12 +460,37 @@ api :
                     var track = tnt.board.track()
                         .display (display);
 
+
                 - name : index
                   path : feature
                   args : callback
-                  desc : specifies an <i>index</i> function to control how elements are linked between successive updates of the track. When a <a href="#Track">track</a> is updated and the new <a href="#Data">data</a> is retrieved, the <a href="#Display">display</a> needs to know which elements are new, which have dissapeared and which are currently in the display. These <i>binding</i> of elements is made before the new data is displayed and is based on this function. Old elements for which the <i>index</i> function returns the same value are linked or bound together. By default data are linked based on their position in the data array.
+                  desc : Specifies an <i>index</i> function to link elements between successive track updates
+                  full : specifies an <i>index</i> function to link elements between successive track updates. When a <a href="#Track">track</a> is updated and the new <a href="#Data">data</a> is retrieved, the <a href="#Display">display</a> needs to know which elements are new, which have dissapeared and which are currently in the display. These <i>binding</i> of elements is made before the new data is displayed and is based on this function. This function is called on every (new & old) element passing the element object as its argument. Elements for which the <i>index</i> function returns the same value are linked or bound together. By default data are linked based on their position in the data array.
                   example : |
-                    var
+                    // Data track
+                	var pin_track = tnt.board.track()
+                	    .height(60)
+                	    .color("white")
+                	    .display(tnt.board.track.feature.pin()
+                            // Elements having the same "pos" attribute are linked between data updates
+                            .index(function (d) {
+                                return d.pos;
+                            })
+                            .domain([0.3, 1.2])
+                            .color("red")
+                        )
+                        .data(tnt.board.track.data.sync()
+                            .retriever (function (loc) {
+                                var elems = [];
+                                var data = pins_data;
+                                for (var i=0; i<data.length; i++) {
+                                    if ((data[i].pos > loc.from) && (data[i].pos < loc.to)) {
+                                        elems.push(data[i]);
+                                    }
+                                }
+                                return elems;
+                            })
+                        );
 
                 - name : color
                   path : display
