@@ -1,7 +1,7 @@
 
-var myBoard = tnt.board().from(20).to(500);
+var myBoard = tnt.board().from(20).to(500).max(1000);
+
 myBoard(document.getElementById("mydiv"));
-myBoard.right (1000);
 
 var location_track = tnt.board.track()
     .height(20)
@@ -25,10 +25,10 @@ var block_track = tnt.board.track()
         })
     )
     .display(tnt.board.track.feature.block()
-    .color("blue")
-    .index(function (d) {
-        return d.start;
-    }));
+        .color("blue")
+    );
+
+
 
 myBoard
     .add_track(location_track)
