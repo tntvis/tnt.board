@@ -460,6 +460,13 @@ api :
                     var track = tnt.board.track()
                         .display (display);
 
+                - name : index
+                  path : feature
+                  args : callback
+                  desc : specifies an <i>index</i> function to control how elements are linked between successive updates of the track. When a <a href="#Track">track</a> is updated and the new <a href="#Data">data</a> is retrieved, the <a href="#Display">display</a> needs to know which elements are new, which have dissapeared and which are currently in the display. These <i>binding</i> of elements is made before the new data is displayed and is based on this function. Old elements for which the <i>index</i> function returns the same value are linked or bound together. By default data are linked based on their position in the data array.
+                  example : |
+                    var
+
                 - name : color
                   path : display
                   args : string
@@ -596,13 +603,16 @@ api :
                   path : tnt.board.track.feature
                   args : null
                   desc : creates a feature that displays vertical lines in the specified positions
-                  full : Creates a feature that displays vertical lines in the specified positions. It expects an array of numerical values representing the positions of the lines in the track.
+                  full : Creates a feature that displays vertical lines in the specified positions. It expects an array of objects having a field representing the x-coordinate of the lines in the track. This value is the same one specified in the <a href="#index">index</a> property of the <a href="#Display">display</a>
                   example : |
                     var vlines_track = tnt.board.track()
                         .display (tnt.board.track.feature.vline())
                         .data (tnt.board.track.data.sync(
+                            .index (function (d) {
+                                return d.pos;
+                            })
                             .retriever (function () {
-                                return []
+                                return [{pos: 15}, {pos: 30}, {pos: 100}];
                             })
                         ));
 
