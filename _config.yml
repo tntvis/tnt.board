@@ -288,6 +288,15 @@ api :
                     var blockTrack = tnt.board.track()
                         .height(30);
 
+                - name : label
+                  path : track
+                  args : string
+                  desc : sets a label to the track
+                  full : Sets a label to the track. This label is displayed in the top left corner of the track.
+                  example : |
+                    var block_track = tnt.board.track()
+                        .label("My Data");
+
                 - name : id
                   path : track
                   args : string
@@ -303,7 +312,7 @@ api :
 
            - name : Data
              preamble : |
-                Tracks need data to display. TnT provides two generic methods to fetch it: tnt.board.data.<a href="#sync">sync</a>, which pulls data into the track <i>synchronously</i> and  tnt.board.data.<a href="#async">async</a>, which relies on <i>Promises</i> to fetch the data <i>asynchronously</i>. Both methods offer the same interface and share the same configuration methods.
+                Tracks need data to display. TnT provides two generic methods to fetch it: tnt.board.data.<a href="#sync">sync</a>, which pulls data into the track <i>synchronously</i> and  tnt.board.data.<a href="#async">async</a>, which relies on <i>Promises</i> to fetch the data <i>asynchronously</i>. Both methods offer the same interface and share the same configuration methods. If called without arguments, the current data retriever is returned.
              example : |
                var dataSync = tnt.board.data.sync()
                     .retriever (function () {
@@ -339,7 +348,7 @@ api :
                   path : track
                   args : null
                   desc : specifies a new data retriever for the track.
-                  full : Specifies a new data retriever for the track. This is used on every board <i>update</i> to retrieve new data to <a href="#display">display</a>
+                  full : Specifies a new data retriever for the track. This is used on every board <i>update</i> to retrieve new data to <a href="#Display">display</a>
                   example : |
                     var track = tnt.board.track()
                         .data (data);
@@ -413,16 +422,191 @@ api :
 
            - name : Display
              preamble : |
-               Once a <a href="#Track">track</a> has retrieved its data, it needs to <i>display</i> it. TnT provides several ready-to-use <i>displayers</i> that can be "plugged" in the <a href="#Track">track</a> using its <a href="#display">display</a> method.<br />
+               Once a <a href="#Track">track</a> has retrieved its data, it needs to <i>display</i> it. TnT provides several ready-to-use <i>features</i> that can be "plugged" in the <a href="#Track">track</a> (see for example tnt.board.track.feature.<a href="#block">block</a> or tnt.board.track.feature.<a href="#pin">pin</a>) using its <a href="#display">display</a> method. These ready-to-use <i>features</i> are based on the generic <a href="#feature">feature</a> interface and hence "inherit" all the methods described for the generic tnt.board.track.<a href="#feature">feature</a> interface. Creating custom <i>features</i> is also possble using the generic interface.<br />
                <br />
-               Creating custom <i>displays</i> is also possible, and different displays can be attached to the same track to display different type of the data.
+               Each <i>displayer</i> is composed of one or more <i>features</i>. A displayer with more that one <i>feature</i> can be used to display different type of <a href="#Data">data</a> in the same <a href="#Track">track</a> (see tnt.board.track.feature.<a href="#composite">), for an example).
+             example : |
+               var axis_track = tnt.board.track()
+                   .height(20)
+                   .color("white")
+                   .display(tnt.board.track.feature.axis()
+                       .orientation("top")
+                   );
+
+               var block_track = tnt.board.track()
+                   .height(30)
+                   .color("#FFCFDD")
+                   .data (tnt.board.track.data.sync()
+                       .retriever (function () {
+                           return [
+                               {
+                                   start : 200,
+                                   end   : 350
+                               }
+                           ];
+                       })
+                   )
+                   .display(tnt.board.track.feature.block()
+                       .color("blue")
+                   );
+
              elements :
-                - name : track.feature
-                  desc : base object for features
-                - name : feature.color
-                  desc : defines the foreground color of the elements
-                - name : feature.info
-                  desc : defines the info to display when an element is clicked [REVISE]
+                - name : display
+                  path : track
+                  args : null
+                  desc : specifies a new data displayer for the track
+                  full : Specifies a new data displayer for the track. This is used everytime new <a href="#Data">data</a> is available for the track. If called without arguments, the current <i>displayer</i> is returned.
+                  example : |
+                    var track = tnt.board.track()
+                        .display (display);
+
+                - name : color
+                  path : display
+                  args : string
+                  desc : specifies the foreground color of the elements to display
+                  full : Specifies the foreground color of the elements to display in the track. Color names ("red") and hexadecimal codes ("00FF00") are allowed. If called without arguments, the current color is returned. By default all elements are black.
+                  example : |
+                    var display = tnt.board.track.feature()
+                        .color("red");
+
+                - name : location
+                  path : tnt.board.track.feature
+                  args : null
+                  desc : creates a new location feature for a track
+                  full : Creates a new location feature for a track. This is a data-less display that shows the current range of the board in the track
+                  example : |
+                   var location_track = tnt.board.track()
+                       .color("white")
+                       .display(tnt.board.track.feature.location());
+
+                - name : axis
+                  path : tnt.board.track.feature
+                  args : null
+                  desc : creates a new axis feature for a track
+                  full : Creates a new axis feature for a track. This is a data-less display that shows the x-axis of the plot in the track
+                  example : |
+                   var axis_track = tnt.board.track()
+                       .height(20)
+                       .color("white")
+                       .display(tnt.board.track.feature.axis()
+                           .orientation("top")
+                       );
+
+                - name : orientation
+                  path : axis
+                  args : string
+                  desc : sets the orientation of a tnt.board.track.feature.<a href="#axis">axis</a> feature.
+                  full : Sets the orientation of a tnt.board.track.feature.<a href="#axis">axis</a> feature. It accepts a string as argument that can be either "top" or "bottom"
+
+                - name : block
+                  path : tnt.board.track.feature
+                  args : null
+                  desc : creates a new block-based feature for a track
+                  full : Creates a new block-based feature for a track. This feature expects the data as an array of objects containing numerical <i>start</i> and <i>end</i> properties, although the name of the properties is configurable.
+                  example : |
+                   var block_track = tnt.board.track()
+                       .height(30)
+                       .color("#FFCFDD")
+                       .data (tnt.board.track.data.sync()
+                           .retriever (function () {
+                               return [
+                                   {
+                                       start : 200,
+                                       end   : 350
+                                   }
+                               ];
+                           })
+                       )
+                       .display(tnt.board.track.feature.block()
+                           .color("blue")
+                       );
+
+                - name : pin
+                  path : tnt.board.track.feature
+                  args : null
+                  desc : creates a new pin-based feature for a track.
+                  full : Creates a new pin-based feature for a track. This feature expects the data as an array of objects containing numerical <i>pos</i> and <i>val</i> properties, although the name of the properties is configurable. The <i>pos</i> property refers to its x-position in the track and the <i>val</i> property refers to the height of the pin in the <a href="#Track">track</a> and expects a number in the <i>y</i> <a href="#domain">domain</a> (by default, between 0 and 1).
+                  example : |
+                    var pin_track = tnt.board.track()
+                        .display (tnt.board.trac.feature.pin())
+                        .data (tnt.board.track.data.sync()
+                            .retriever (function () {
+                                return [
+                                    {pos : 200, val: 0.5},
+                                    {pos : 355, val: 0.8}
+                                ];
+                            })
+                        );
+
+                - name : domain
+                  path : pin
+                  args : array
+                  desc : sets the <i>domain</i> for the y-axis in the tnt.board.track.feature.<a href="#pin">pins</a> feature
+                  full : Sets the <i>domain</i> for the y-axis in the tnt.board.track.feature.<a href="#pin">pins</a> feature. It expects an array of numerical values representing the lower and upper limit respectively for the <i>y-axis</i>. By default the domain is [0,1]. Called without arguments return the current domain.
+                  example : |
+                    var pin_track = tnt.board.track()
+                        .display (tnt.board.trac.feature.pin()
+                            .domain([0.3, 1.2])
+                        )
+                        .data (tnt.board.track.data.sync()
+                            .retriever (function () {
+                                return [
+                                    {pos : 200, val: 0.5},
+                                    {pos : 355, val: 0.8}
+                                ];
+                            })
+                        );
+                - name : line
+                  path : tnt.board.track.feature
+                  args : null
+                  desc : creates a new line-based feature for a track
+                  full : Creates a new line-based feature for a track. The line is defined by a series of points in the track. This points are applied a <i>tension</i> to smooth the connections between the points. This feature expects the data as an array of objects containing numerical <i>pos</i> and <i>val</i> properties, although the name of the properties is configurable. The <i>pos</i> property refers to the x-position of each point in the <a href="#Track">track</a> and the <i>val</i> property refers to the height of the points in the <a href="#Track">track</a> and expects a number in the <i>y-axis</i> <a href="#domain">domain</a> (by default, between 0 and 1).
+                  example : |
+                    var line_track = tnt.board.track()
+                        .display (tnt.board.trac.feature.line())
+                        .data (tnt.board.track.data.sync()
+                            .retriever (function () {
+                                return [
+                                    {pos : 200, val: 0.5},
+                                    {pos : 355, val: 0.8}
+                                    // ...
+                                ];
+                            })
+                        );
+
+                - name : area
+                  path : tnt.board.track.feature
+                  args : null
+                  desc : creates a new area-based feature for a track
+                  full : Creates a new area-based feature for a track. This feature is based on the tnt.board.track.feature.<a href="#line">line</a> feature but coloring the area behind the curve.
+                  example : |
+                    var line_track = tnt.board.track()
+                        .display (tnt.board.track.feature.area())
+                        .data (tnt.board.track.data.sync()
+                            .retriever (function () {
+                                return [
+                                    {pos : 200, val: 0.5},
+                                    {pos : 355, val: 0.8}
+                                    // ...
+                                ];
+                            })
+                        );
+
+                - name : vline
+                  path : tnt.board.track.feature
+                  args : null
+                  desc : creates a feature that displays vertical lines in the specified positions
+                  full : Creates a feature that displays vertical lines in the specified positions. It expects an array of numerical values representing the positions of the lines in the track.
+                  example : |
+                    var vlines_track = tnt.board.track()
+                        .display (tnt.board.track.feature.vline())
+                        .data (tnt.board.track.data.sync(
+                            .retriever (function () {
+                                return []
+                            })
+                        ));
+
+
                 - name : feature.create
                   desc : sets a new callback to create new elements
                 - name : feature.mover
