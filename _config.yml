@@ -458,29 +458,116 @@ api :
                   full : Specifies a new data displayer for the track. This is used everytime new <a href="#Data">data</a> is available for the track. If called without arguments, the current <i>displayer</i> is returned.
                   example : |
                     var track = tnt.board.track()
-                        .display (display);
+                        .display (feature);
 
+                - name : feature
+                  path : tnt.board.track
+                  args : null
+                  desc : general interface for creating <i>features</i>
+                  full : General interface for creating <i>features</i>. This interface exposes four methods to configure the feature, <a href="#create">create</a>, <a href="#mover">mover</a>, <a href="#update">update</a> and <a href="#guider">guider</a>. These methods can be used to create new features and rely heavily on the <a href="d3js.org"d3</a> library. TnT Board also offers several ready-to-use features built on top of this general interface
+                  example : |
+                    var vline_feature = function () {
+                        var feature = tnt.board.track.feature();
+
+                        feature.create (function (new_elems) {
+                            var track = this;
+                            var xScale = track.scale();
+                            new_elems
+                                .append("line")
+                                .attr("x1", function (d) {
+                                    return xScale(d.pos);
+                                })
+                                .attr("x2", function (d) {
+                                    return xScale(pos.d);
+                                })
+                                .attr("y1", 0)
+                                .attr("y2", track.height())
+                                .attr("stroke", feature.color());
+                        });
+
+                        feature.mover (function (vlines) {
+                            select("line")
+                                .attr("x1", function (d) {
+                                    return xScale(d.pos);
+                                })
+                                .attr("x2", function (d) {
+                                    return xScale(d.pos);
+                                })
+                        });
+
+                        return feature;
+                    }
+
+                - name : create
+                  path : feature
+                  args : callback
+                  desc : specifies how new elements are displayed
+                  full : Specifies how new elements are displayed. Accepts a callback that is called with a <a href="https://github.com/mbostock/d3/wiki/Selections">d3 selection</a> containing the new elements on every data update. In of this function, <i>this</i> is set to the current <a href="#Track">track</a>. When this method is called without arguments returns the current <i>create</i> function.
+                  example :
+                    var vline_feature = function () {
+                        var feature = tnt.board.track.feature();
+
+                        feature.create (function (new_elems) {
+                            var track = this;
+                            var xScale = track.scale();
+                            new_elems
+                                .append("line")
+                                .attr("x1", function (d) {
+                                    return xScale(d.pos);
+                                })
+                                .attr("x2", function (d) {
+                                    return xScale(pos.d);
+                                })
+                                .attr("y1", 0)
+                                .attr("y2", track.height())
+                                .attr("stroke", feature.color());
+                        });
+
+                - name : mover
+                  path : feature
+                  args : callback
+                  desc : specifies how the elements are <i>moved</i> when the board is dragged
+                  full : Specifies how the elements are <i>moved</i> when the board is dragged. Accepts a callback that is called with the current elements in the track. In of this function, <i>this</i> is set to the current <a href="#Track">track</a>. When this method is called without arguments returns the current <i>mover</i> function.
+                  examples :
+                    var vline_feature = function () {
+                        var feature = tnt.board.track.feature();
+
+                        feature.mover (function (vlines) {
+                            select("line")
+                                .attr("x1", function (d) {
+                                    return xScale(d.pos);
+                                })
+                                .attr("x2", function (d) {
+                                    return xScale(d.pos);
+                                })
+                        });
+
+                - name : guider
+                  path : feature
+                  args : callback
+                  desc : sets a callback to display non-scaled elements in the <a href="#Display">display</a>
+                  full : Sets a callback to display non-scaled elements in the <a href="#Display">display</a>. There are cases where the <a href="#Track">track</a> needs to dispay non-scaled visual elements (rulers, baselines, etc). The method specified with this callback is called on <a href="#Display">display</a> initialisation passing the <a href="#Board">board</a>'s <a href="#width">width</a> as its argument. In this function, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method return the current <i>guider</i> function.
 
                 - name : index
                   path : feature
                   args : callback
-                  desc : Specifies an <i>index</i> function to link elements between successive track updates
-                  full : specifies an <i>index</i> function to link elements between successive track updates. When a <a href="#Track">track</a> is updated and the new <a href="#Data">data</a> is retrieved, the <a href="#Display">display</a> needs to know which elements are new, which have dissapeared and which are currently in the display. These <i>binding</i> of elements is made before the new data is displayed and is based on this function. This function is called on every (new & old) element passing the element object as its argument. Elements for which the <i>index</i> function returns the same value are linked or bound together. By default data are linked based on their position in the data array.
+                  desc : specifies an <i>index</i> function to link elements between successive track updates
+                  full : Specifies an <i>index</i> function to link elements between successive track updates. When a <a href="#Track">track</a> is updated and the new <a href="#Data">data</a> is retrieved, the <a href="#Display">display</a> needs to know which elements are new, which have dissapeared and which are currently in the display. These <i>binding</i> of elements is made before the new data is displayed and is based on this function. This function is called on every (new & old) element passing the element object as its argument. Elements for which the <i>index</i> function returns the same value are linked or bound together. By default data are linked based on their position in the data array.
                   example : |
                     // Data track
-                	var pin_track = tnt.board.track()
-                	    .height(60)
-                	    .color("white")
-                	    .display(tnt.board.track.feature.pin()
+                    var pin_track = tnt.board.track()
+                        .height(60)
+                        .color("white")
+                        .display (tnt.board.track.feature.pin()
                             // Elements having the same "pos" attribute are linked between data updates
-                            .index(function (d) {
+                            .index (function (d) {
                                 return d.pos;
                             })
                             .domain([0.3, 1.2])
                             .color("red")
                         )
-                        .data(tnt.board.track.data.sync()
-                            .retriever (function (loc) {
+                        .data (tnt.board.track.data.sync()
+                            retriever (function (loc) {
                                 var elems = [];
                                 var data = pins_data;
                                 for (var i=0; i<data.length; i++) {
