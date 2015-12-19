@@ -214,7 +214,7 @@ api :
 
                     var t = myBoard.find_track("mytrack");
 
-           - name : Tracks
+           - name : Track
              preamble : |
                 Each <a href="#Board">board</a> can contain one of more <i>tracks</i> to display data. They are piled up in the board vertically (growing downwards) in the order of attachment to the board. Tracks are created using the constructor <i>tnt.board.track</i> and attached using board.<a href="#add_track">add_track</a>. Each <i>track</i> instance can be configured using the methods explained below. When used as setters, these methods return the track object allowing to chain them as in this example:
              example : |
@@ -303,37 +303,119 @@ api :
 
            - name : Data
              preamble : |
-                Tracks need data to display. TnT provides two generic methods to fetch it: tnt.board.data.<a href="#sync">sync</a>, which pulls data into the track <i>synchronously</i> and  tnt.board.data.<a href="#async">async</i>, which relies on <i>Promises</i> to fetch the data <i>asynchronously</i>. Both methods offer the same interface and share the same configuration methods.
+                Tracks need data to display. TnT provides two generic methods to fetch it: tnt.board.data.<a href="#sync">sync</a>, which pulls data into the track <i>synchronously</i> and  tnt.board.data.<a href="#async">async</a>, which relies on <i>Promises</i> to fetch the data <i>asynchronously</i>. Both methods offer the same interface and share the same configuration methods.
              example : |
-               var blockData = tnt.board.data.sync()
-                .retriever (function () {
-                    return [{
-                        start : 200,
-                        end   : 350
-                    }];
-                });
+               var dataSync = tnt.board.data.sync()
+                    .retriever (function () {
+                        return [
+                            {
+                                start : 200,
+                                end   : 350
+                            }
+                        ];
+                    });
+
+               // Presumes that a Promise library is imported
+                var dataAsync = tnt.board.data.async()
+                    .retriever (function () {
+                        return new Promise (function (resolve, reject) {
+                            resolve ([
+                                {
+                                    start : 200,
+                                    end : 350
+                                }
+                            ])
+                        });
+                    });
+
+                var track1 = tnt.board.track()
+                    .data(dataSync);
+
+                var track2 = tnt.board.track()
+                    .data(dataAsync);
 
              elements :
-                - name : track.data
-                  desc : base data object
-                - name : data.update
-                  desc : specifies how the data is updated
-                - name : data.retriever.sync
-                  desc : specifies a synchronous data retriever
-                - name : data.retriever.async
-                  desc : specifies an asynchronous data retriever
-                - name : async.url
-                  desc : specifies a url for the asynchronous call
-                - name : data.retriever.ensembl
-                  desc : specifies a data retriever based on the Ensembl REST server
-                - name : ensembl.endpoint
-                  desc : specifies the Ensembl REST endpoint
-                - name : track.data.gene
-                  desc : updater using the ensembl retriever
-                - name : track.data.empty
-                  desc : updater for data independent tracks
+                - name : data
+                  path : track
+                  args : null
+                  desc : specifies a new data retriever for the track.
+                  full : Specifies a new data retriever for the track. This is used on every board <i>update</i> to retrieve new data to <a href="#display">display</a>
+                  example : |
+                    var track = tnt.board.track()
+                        .data (data);
 
-           - name : Features
+                - name : sync
+                  path : tnt.board.data
+                  args : null
+                  desc : specifies a synchronous data retriever
+                  full : Specifies a synchronous data retriever.
+                  example : |
+                    var dataSync = tnt.board.data.sync()
+                        .retriever (function () {
+                            return [
+                                {
+                                    start : 200,
+                                    end   : 350
+                                }
+                            ];
+                        });
+
+                - name : async
+                  path : tnt.board.data
+                  args : null
+                  desc : specifies an asynchronous data retriever
+                  full : Specifies an asynchronous data retriever.
+                  example : |
+                    // Presumes that a Promise library is imported
+                    var dataAsync = tnt.board.data.async()
+                        .retriever (function () {
+                            return new Promise (function (resolve, reject) {
+                                resolve ([
+                                    {
+                                        start : 200,
+                                        end : 350
+                                    }
+                                ])
+                            });
+                        });
+                - name : empty
+                  path : tnt.board.data
+                  args : null
+                  desc : convenience data object for tracks that doesn't require data
+                  full : Convenience data object for tracks that doesn't require data.
+                  example : |
+                    var track = tnt.board.track()
+                        .data(tnt.board.track.data.empty());
+
+                - name : retriever
+                  path : data
+                  args : callback
+                  desc : callback that retrieves the data to visualise
+                  full : Callback that retrieves the data to visualise. This callback is called passing the location object to allow contextual data retrievals. This location object has the <i>from</i> and <i>to</i> properties. The callback is expected to return an array of objects (if the <a href="#data"> is <a href="#sync">sync</a>) or a <i>Promise</i> that resolves to an array of objects (if the <a href="#data">data</a> is <a href="#async">async</a>). These objects represent the elements to be <a href="#display">displayed</a> in each update of the <a href="#board">board</a>
+                  example : |
+                    var dataSync = tnt.board.data.sync()
+                        .retriever (function () {
+                            return [
+                                {
+                                    start : 200,
+                                    end   : 350
+                                }
+                            ];
+                        });
+
+                - name : elements
+                  path : data
+                  args : null
+                  desc : gets the elements that resulted from the last retrieval
+                  full : Gets the elements that resulted from the last retrieval. Normally, there is no need to call this method directly since it is called implicitely by the <a href="#display">display</a> instance. It is useful if the data needs to be edited before being passed to the <a href="#display">display</a>
+                  example : |
+                    var elems = dataSync.elements();
+
+           - name : Display
+             preamble : |
+               Once a <a href="#Track">track</a> has retrieved its data, it needs to <i>display</i> it. TnT provides several ready-to-use <i>displayers</i> that can be "plugged" in the <a href="#Track">track</a> using its <a href="#display">display</a> method.<br />
+               <br />
+               Creating custom <i>displays</i> is also possible, and different displays can be attached to the same track to display different type of the data.
              elements :
                 - name : track.feature
                   desc : base object for features
