@@ -507,7 +507,6 @@ tnt_feature.vline = function () {
     	new_elems
     	    .append ("line")
     	    .attr("x1", function (d) {
-                // TODO: Should use the index value?
                 return xScale(feature.index()(d));
     	    })
     	    .attr("x2", function (d) {
@@ -619,42 +618,42 @@ tnt_feature.pin = function () {
     });
 
     feature.mover(function (pins) {
-	var track = this;
-    var xScale = feature.scale();
+    	var track = this;
+        var xScale = feature.scale();
 
-	pins
-	    //.each(position_pin_line)
-	    .select("line")
-	    .attr("x1", function (d, i) {
-            return xScale(d[opts.pos(d, i)]);
-	    })
-	    .attr("y1", function (d) {
-    		return track.height();
-	    })
-	    .attr("x2", function (d,i) {
-    		return xScale(d[opts.pos(d, i)]);
-	    })
-	    .attr("y2", function (d, i) {
-    		return track.height() - yScale(d[opts.val(d, i)]);
-	    });
+    	pins
+    	    //.each(position_pin_line)
+    	    .select("line")
+    	    .attr("x1", function (d, i) {
+                return xScale(d[opts.pos(d, i)]);
+    	    })
+    	    .attr("y1", function (d) {
+        		return track.height();
+    	    })
+    	    .attr("x2", function (d,i) {
+        		return xScale(d[opts.pos(d, i)]);
+    	    })
+    	    .attr("y2", function (d, i) {
+        		return track.height() - yScale(d[opts.val(d, i)]);
+    	    });
 
-	pins
-	    .select("circle")
-	    .attr("cx", function (d, i) {
-            return xScale(d[opts.pos(d, i)]);
-	    })
-	    .attr("cy", function (d, i) {
-            return track.height() - yScale(d[opts.val(d, i)]);
-	    });
+    	pins
+    	    .select("circle")
+    	    .attr("cx", function (d, i) {
+                return xScale(d[opts.pos(d, i)]);
+    	    })
+    	    .attr("cy", function (d, i) {
+                return track.height() - yScale(d[opts.val(d, i)]);
+    	    });
 
-    pins
-        .select("text")
-        .attr("x", function (d, i) {
-            return xScale(d[opts.pos(d, i)]);
-        })
-        .text(function (d) {
-            return d.label || "";
-        });
+        pins
+            .select("text")
+            .attr("x", function (d, i) {
+                return xScale(d[opts.pos(d, i)]);
+            })
+            .text(function (d) {
+                return d.label || "";
+            });
 
     });
 
