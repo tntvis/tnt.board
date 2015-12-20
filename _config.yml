@@ -268,6 +268,14 @@ api :
                           })
                       );
 
+                - name : scale
+                  path : track
+                  args : null
+                  desc : returns the scale to transform between the input domain and the output range
+                  full : Returns the scale to transform between the input domain and the output range. This scale is needed when elements (specified in the user-space) are <a href="#Display">displayed</a> in the track (pixels-space). See <a href="#feature">feature</a> for an example of use.
+                  example : |
+                    var scale = myTrack.scale();
+
 
                 - name : color
                   path : track
@@ -542,11 +550,17 @@ api :
                                 })
                         });
 
+                - name : updater
+                  path : feature
+                  args : callback
+
+
                 - name : guider
                   path : feature
                   args : callback
                   desc : sets a callback to display non-scaled elements in the <a href="#Display">display</a>
                   full : Sets a callback to display non-scaled elements in the <a href="#Display">display</a>. There are cases where the <a href="#Track">track</a> needs to dispay non-scaled visual elements (rulers, baselines, etc). The method specified with this callback is called on <a href="#Display">display</a> initialisation passing the <a href="#Board">board</a>'s <a href="#width">width</a> as its argument. In this function, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method return the current <i>guider</i> function.
+
 
                 - name : index
                   path : feature
@@ -727,191 +741,3 @@ api :
                                 return [{pos: 15}, {pos: 30}, {pos: 100}];
                             })
                         ));
-
-
-                - name : feature.create
-                  desc : sets a new callback to create new elements
-                - name : feature.mover
-                  desc : sets a new callback to move the elements
-                - name : feature.updater
-                  desc : specifies how the current elements should be visualy updated
-                - name : feature.guider
-                  desc : defines the visual aspect not associated with elements
-                - name : track.feature.block
-                  desc : defines block based features
-                - name : track.feature.axis
-                  desc : defines axes based features
-                - name : axis.orientation
-                  desc : specifies the orientation of the axis feature
-                - name : track.feature.location
-                  desc : defines location based features
-                - name : track.feature.ensembl
-                  desc : defines track visualizations similar to the old Ensembl tracks in trees
-                - name : track.feature.vline
-                  desc : defines vertical lines elements
-                - name : track.feature.sequence
-                  desc : defines sequence elements
-                - name : track.feature.gene
-                  desc : defines gene like elements
-                - name : track.feature.area
-                  desc : defines area elements
-                - name : track.feature.line
-                  desc : defines line elements
-                - name : line.tension
-                  desc : defines the tension of the line
-                - name : line.x
-                  desc : defines the field to be used as the 'x' value
-                - name : line.y
-                  desc : defines the field to be used as the 'y' value
-           - name : Layouts
-             elements :
-                - name : track.layout.identity
-                  desc : defines layouts for tracks that doesn't need layouts
-                - name : track.layout.feature
-                  desc : defines a feature layout that avoids overlaps
-                - name : feature.height
-                  desc : sets the total height of the layout
-                - name : feature.elements
-                  desc : gets the elements in the layout
-                - name : feature.scale
-                  desc : specifies the scale to convert data to visualization coordinates
-
-    - name : utils
-      elements :
-           - name : Tooltips
-             preamble : |
-                         TnT comes with a basic tooltip library. This library is not restricted to TnT and can be used in any other web page without tnt, but it has not been developed as a general tooltip library that matches all scenarios. There are some limitations (explained below). It is also possible to use TnT with other tooltip libraries too. See the examples page for different uses of the library.
-             example : |
-                     var myTooltip = function (data) {
-                          var obj = {};
-                          obj.header = "NAME";
-                          obj.rows = [];
-                          obj.rows.push ({
-                              "label" : "type",
-                              "value" : data.type
-                          });
-                          tnt.tooltip.table()
-                             .width(200)
-                             .call(this, obj);
-                     };
-
-                     var container = d3.select("#container")
-                           .style("height", "2000px");
-                     container
-                           .append("svg")
-                           .attr("height", 300)
-                           .attr("width", 300)
-                           .append("circle")
-                           .datum({name:"this is me", type:"this is my type"})
-                           .attr("cx", 150)
-                           .attr("cy", 150)
-                           .attr("r", 50)
-                           .attr("fill", "red")
-                           .on("click", myTooltip);
-             elements :
-                - name : tooltip
-                  path : tnt
-                  args : null
-                  desc : creates a new tooltip instance
-                  full : Creates a new tooltip instance that can be configured with the methods explained below. To display the tooltip the returned function has to be called with <i>this</i> set to the DOM element the tooltip is related to and the data to be used for rendering. This generic tooltip object only knows how to position the tooltip in the page and creates the DOM elements appropriately, but it does not know about how to render or display the data. See below for other objects that creates specific instances of this tooltip and formats the data in specific ways (like tables or lists)
-                  example : |
-                            var data = {
-                                 "header" : "tooltip header",
-                                 "rows" : [ {
-                                      "label" : "color",
-                                      "value" : "blue"
-                                   }
-                                 ]
-                            };
-
-                            var fill_cbak = function (data) {
-                                // ...
-                            };
-                            tnt.tooltip()
-                              .width (200)
-                              .id (1)
-                              .fill (fill_cbak)
-                              .call (this, obj);
-
-                - name : position
-                  path : tnt.tooltip
-                  args : string
-                  desc : sets the relative position of the tooltip with respect to the mouse
-                  full : Sets the relative position of the tooltip with respect to the mouse. Possible values are "left" and "right". By default, "right" positioning is used and the left upper corner of the tooltip is positioned where the mouse is. If call without arguments, returns the current positioning value.
-                  example : |
-                         var tooltip = tnt.tooltip.table()
-                                         .position ("left");
-                - name : allow_drag
-                  path : tnt.tooltip
-                  args : boolean
-                  desc : determines if the tooltip is draggable or not
-                  full : Determines if the tooltip is draggable or not. By default, this option is set to <i>true</i>. If no argument is provided, returns the current value.
-                  example : |
-                          var tooltip = tnt.tooltip.table()
-                                          .allow_drag (false);
-                - name : show_closer
-                  path : tnt.tooltip
-                  args : boolean
-                  desc : determines if the closing cross is displayed
-                  full : Determines if the closing cross is displayed on the tooltip. If set to false, the tooltip can not be closed directly by the user (clicking on the cross), but only programmatically calling the <a href="#close">close</a> method. By default this option is set to <i>true</i>. If called without arguments, the current value is returned.
-                  example : |
-                         var tooltip = tnt.tooltip.table()
-                                         .show_closer (false);
-                - name : width
-                  path : tnt.tooltip
-                  args : integer
-                  desc : sets the minimum width of the tooltip
-                  full : Sets the minimum width of the tooltip. This width is not enforced if elements inside of the tooltip (like images) have greater <i>width</i>. The numeric argument determines the width in pixels. If called without arguments, returns the current value of this method
-                  example : |
-                          var tooltip = tnt.tooltip.table()
-                                          .width (200) // 200 pixels
-                - name : id
-                  path : tnt.tooltip
-                  args : integer | string
-                  desc : sets an id for the tooltip
-                  full : Sets an id for the tooltip. This controls the number of tooltips that can be displayed simultaneously in the same page. Everytime a tooltip is created, any previous tooltips with the same <i>id</i> is removed. This is typically used to allow different tooltips to co-exist in the same page or restrict their number. For example, if the <i>id</i> is always set to the same value, everytime a tooltip is created any previous tooltip is destroyed. Another option is to have a different <i>id</i> per different type of element in the page, allowing only one type of tooltip per element. If called without arguments, the current <i>id</i> of the tooltip is returned
-                  example : |
-                           var myTooltip = function (data) {
-                             var obj = {};
-                             obj.header = "Circle";
-                             obj.rows = [];
-                             obj.rows.push ({
-                                 "label" : "type",
-                                 "value" : data.type
-                             });
-                             tnt.tooltip.table()
-                                 .width (200)
-                                 .id (data.type)
-                                 .call (this, obj);
-                           };
-                - name : fill
-                  path : tnt.tooltip
-                  args : callback
-                  desc : specifies the rendering of the tooltip
-                  full : This method specifies the rendering of the tooltip. The callback is run passing the container element as a d3 selection as <i>this</i> and the data obj as the argument. See <a href="#table">tnt.tooltip.table</a> or <a href="#plain">tnt.tooltip.plain</a> for examples of how to use this method. If called without arguments, the current callback is returned
-                  example : |
-                           var t = tnt.tooltip()
-                                   .width (200)
-                                   .fill (function (data) {
-                                       var container = this;
-
-                                       var table = container
-                                            .append ("table")
-                                            .style ("width", t.width() + "px");
-
-                                       table
-                                            .append ("tr")
-                                            .append ("th")
-                                            .text (data.header);
-
-                                       table
-                                            .append ("tr")
-                                            .append ("td")
-                                            .style ("text-align", "center")
-                                            .html (data.body);
-                                   });
-                - name : plain
-                  path : tnt.tooltip
-                  args : null
-                  desc : tooltips showing data in a loosely structured way
-                  full : Returns a tooltip that accept a data object consisting in two fields, <i>header</i> and <i>body</i>. The former typically contains a string that will be used as the header of the tooltip. The latter will be rendered as the body of the tooltip and can contain any valid html
