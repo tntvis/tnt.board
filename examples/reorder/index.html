@@ -10,7 +10,7 @@
 <body>
     <div id="mydiv"></div>
     <script>
-    var myBoard = tnt.board().from(20).to(500);
+    var myBoard = tnt.board().from(0).to(500).max(500).min(0).zoom_out(500);
     var theme = reorder_theme();
     theme(myBoard, document.getElementById("mydiv"));
     </script>

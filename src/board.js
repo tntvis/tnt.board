@@ -145,6 +145,10 @@ var board = function() {
 
     // track_vis always starts on loc.from & loc.to
     api.method ('start', function () {
+        // make sure that zoom_out is within the min-max range
+        if ((limits.max - limits.min) < limits.zoom_out) {
+            limits.zoom_out = limits.max - limits.min;
+        }
 
         plot();
 
@@ -324,24 +328,24 @@ var board = function() {
     });
 
     api.method('allow_drag', function(b) {
-	if (!arguments.length) {
-	    return drag_allowed;
-	}
-	drag_allowed = b;
-	if (drag_allowed) {
-	    // When this method is called on the object before starting the simulation, we don't have defined xScale
-	    if (xScale !== undefined) {
-		svg_g.call( zoomEventHandler.x(xScale)
-			   // .xExtent([0, limits.right])
-			   .scaleExtent([(loc.to-loc.from)/(limits.zoom_out-1), (loc.to-loc.from)/limits.zoom_in])
-			   .on("zoom", _move) );
-	    }
-	} else {
-	    // We create a new dummy scale in x to avoid dragging the previous one
-	    // TODO: There may be a cheaper way of doing this?
-	    zoomEventHandler.x(d3.scale.linear()).on("zoom", null);
-	}
-	return track_vis;
+        if (!arguments.length) {
+            return drag_allowed;
+        }
+        drag_allowed = b;
+        if (drag_allowed) {
+            // When this method is called on the object before starting the simulation, we don't have defined xScale
+            if (xScale !== undefined) {
+                svg_g.call( zoomEventHandler.x(xScale)
+                    // .xExtent([0, limits.right])
+                    .scaleExtent([(loc.to-loc.from)/(limits.zoom_out-1), (loc.to-loc.from)/limits.zoom_in])
+                    .on("zoom", _move) );
+            }
+        } else {
+            // We create a new dummy scale in x to avoid dragging the previous one
+            // TODO: There may be a cheaper way of doing this?
+            zoomEventHandler.x(d3.scale.linear()).on("zoom", null);
+        }
+        return track_vis;
     });
 
     var _place_tracks = function () {
