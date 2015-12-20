@@ -1,14 +1,14 @@
-<div id="example_tree"></div>
+<div id="example"></div>
 
 {% case page.theme %}
-  {% when 'front' %}
-     <script src={{ site.baseurl }}/lib/front.js></script>
+  {% when 'features' %}
+     <script src={{ site.baseurl }}/themes/features.js></script>
      <script>
-       (function () {
-       var ta = tnt.tree_annot();
-       var theme = tnt_theme()
-       theme(ta, document.getElementById('example_tree'));
-       })();
+         (function () {
+             var myBoard = tnt.board().from(20).to(500).max(500);
+             var theme = features_theme();
+             theme(myBoard, document.getElementById("example"));
+         })();
      </script>
 
   {% when 'minimal' %}
@@ -17,7 +17,7 @@
        (function () {
        var t = tnt.tree();
        var theme = tnt_theme()
-       theme(t, document.getElementById('example_tree'));
+       theme(t, document.getElementById('example'));
        })();
      </script>
 
@@ -28,7 +28,7 @@
        var t = tnt.tree();
        var theme = tnt_theme()
                        .newick("(((human, chimp), mouse))")
-       theme(t, document.getElementById('example_tree'));
+       theme(t, document.getElementById('example'));
        })();
      </script>
 
@@ -38,7 +38,7 @@
        (function () {
        var t = tnt.tree();
        var theme = tnt_theme();
-       theme(t, document.getElementById('example_tree'));
+       theme(t, document.getElementById('example'));
        })();
      </script>
 
@@ -50,7 +50,7 @@
        (function () {
        var t = tnt.tree_annot();
        var theme = tnt_theme_tree_hog();
-       theme(t, document.getElementById('example_tree'));
+       theme(t, document.getElementById('example'));
        })()
      </script>
 
@@ -61,7 +61,7 @@
     (function () {
     var gB = tnt.board.genome().species("human").gene("brca2").width(950);
     var theme = tnt_theme_track_compact();
-    theme(gB, document.getElementById('example_tree'));
+    theme(gB, document.getElementById('example'));
     })()
   </script>
 
@@ -70,7 +70,7 @@
   <span id="range_vals"></span></pre>
   <script>
     (function() {
-        var legend = tnt.utils.legend(document.getElementById("example_tree"))
+        var legend = tnt.utils.legend(document.getElementById("example"))
              .row_height(12)
              .fontsize(14);
         var col1 = legend.add_column().width(180); // width of the column is passed
