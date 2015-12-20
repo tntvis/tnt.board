@@ -15,7 +15,7 @@ var tnt_feature = function () {
         guider   : function () {},
         //layout   : function () {},
         index    : undefined,
-        layout   : layout.identity(),
+        // layout   : layout.identity(),
         color : '#000',
         scale : undefined
     };
@@ -63,7 +63,8 @@ var tnt_feature = function () {
             elements = elements[field];
         }
 
-        var data_elems = config.layout.call(track, elements, config.scale);
+        // var data_elems = config.layout.call(track, elements, config.scale);
+        var data_elems = elements;
 
         if (data_elems === undefined) {
             return;
