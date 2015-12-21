@@ -13,9 +13,8 @@ var tnt_feature = function () {
         mover    : function () {throw "move_elem is not defined in the base feature object";},
         updater  : function () {},
         guider   : function () {},
-        //layout   : function () {},
         index    : undefined,
-        // layout   : layout.identity(),
+        layout   : layout.identity(),
         color : '#000',
         scale : undefined
     };
@@ -63,8 +62,7 @@ var tnt_feature = function () {
             elements = elements[field];
         }
 
-        // var data_elems = config.layout.call(track, elements, config.scale);
-        var data_elems = elements;
+        var data_elems = config.layout.call(track, elements, config.scale);
 
         if (data_elems === undefined) {
             return;
