@@ -407,8 +407,8 @@ api :
                 - name : retriever
                   path : data
                   args : callback
-                  desc : callback that retrieves the data to visualise
-                  full : Callback that retrieves the data to visualise. This callback is called passing the location object to allow contextual data retrievals. This location object has the <i>from</i> and <i>to</i> properties. The callback is expected to return an array of objects (if the <a href="#data"> is <a href="#sync">sync</a>) or a <i>Promise</i> that resolves to an array of objects (if the <a href="#data">data</a> is <a href="#async">async</a>). These objects represent the elements to be <a href="#display">displayed</a> in each update of the <a href="#board">board</a>
+                  desc : sets a callback that retrieves the data to visualise
+                  full : Sets a callback that retrieves the data to visualise in the track. This callback is called passing the location object as its argument to allow contextual data retrievals. This location object has the <i>from</i> and <i>to</i> properties. Inside of the callback, <i>this</i> is set to the current track. The callback is expected to return an array of objects (if the <a href="#data">data</a> is <a href="#sync">sync</a>) or a <i>Promise</i> that resolves to an array of objects (if the <a href="#data">data</a> is <a href="#async">async</a>). These objects represent the elements to be <a href="#display">displayed</a> in each update of the <a href="#board">board</a>
                   example : |
                     var dataSync = tnt.board.data.sync()
                         .retriever (function () {
@@ -741,51 +741,3 @@ api :
                                 return [{pos: 15}, {pos: 30}, {pos: 100}];
                             })
                         ));
-
-           - name : Layout
-             preamble : |
-               Sometimes, it is needed to transform the <a href="#Data">data</a> before it is <a href="#Display">displayed</a> based on visualisation restrictions, for example to resolve overlaps between elements or join different elements that are too close in the visualisation. This transformation doesn't depend only on data or display but in the data in the context of the display. In order to facilitate this transformation TnT Board intercepts the data before it is displayed and pass it through a <i>layout</i> object. This <i>layout</i> exposes the <a href="#elements">elements</a> method that accepts an array of data object and returns an array of data objects, possibly modified. By default, TnT Board uses the <a href="#identity">identity</a> layout that just returns the input data array.
-             example : |
-                 var pin_track = tnt.board.track()
-                    .height(60)
-                    .color("white")
-                    .display (tnt.board.track.feature.pin()
-                        .domain([0.3, 1.2])
-                        .color("red")
-                        .layout (tnt.board.track.layout()
-                            .elements (function (elems, scale) {
-                                // Edit the elements to display based on the vis scale
-                            })
-                        )
-                    )
-                    .data (tnt.board.track.data.sync()
-                        .retriever (function () {
-                            var arr = [
-                                { pos: 200, val: 0.5 },
-                                { pos: 350, val: 0.8 }
-                            ];
-                            return arr;
-                        })
-                    );
-
-             elements :
-                - name : layout
-                  path : display
-                  args : tnt.board.track.layout
-                  desc : sets a new layout for this display
-                  full : Sets a new layout for this display. If called without arguments returns the current layout (tnt.board.track.layout.<a href="#identity">identity</a> by default).
-                  example : |
-                     var track = tnt.board.track()
-                         .display (tnt.board.track.feature.pin()
-                            .domain([0.3, 1.2])
-                            .layout (tnt.board.track.layout()
-                                .elements (function (elems, scale) {
-                                    // Edit the elements to display based on the vis scale
-                                })
-                            )
-                        )
-                - name : layout
-                  path : tnt.board.track
-                  args : null
-                  desc : creates a new layout
-                  full : creates a new TnT Board layout.
