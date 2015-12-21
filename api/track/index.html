@@ -1,0 +1,55 @@
+---
+layout : api
+title : API Reference
+type : api
+theme : null
+api_toplevel : track
+---
+<h2>tnt.board</h2>
+<p><i>tnt.board</i> creates a new track-based visualization. Typically, each track displays a set of features defined during their setup. Boards can be panned or zoomed within their defined limits. New boards are created using the tnt.<a href="#board">board</a> method. Once it is created new tracks can be attached to the board using the method board.<a href="#add_track">add_track</a></p>
+
+<p>Each new track needs to know how to get the data to display (either <i>synchonously</i> or <i>asynchronously</i>). A new call to get new data is performed everytime the board changes its state (while panning / zooming or programmatically). Each track should also define how to represent each of the features to display. TnT offers predefined common displays (like rectangles, lines, areas, pins, etc) ready to use. New displays can also be created using the <a href="www.d3js.org">d3</a> library. Composite displays are also allowed and a very powerful tool for displaying complex data. Examples of how to create different visualizations can be seen in the <a href="examples-brokenLink?">examples (BROKEN LINK)</a> page.</p>
+
+  {% highlight javascript linenos %}
+  var myBoard = tnt.board().from(0).to(500).left(0).right(500);
+
+  var axisTrack = tnt.board.track()
+      .height(20)
+      .color("white")
+      .display(tnt.board.track.feature.axis())
+      .orientation("top");
+
+  var blockTrack = tnt.board.track()
+      .height(30)
+      .color("#FFCFDD")
+      .data (tnt.board.track.data.sync()
+          .retriever(function () {
+              return [{
+                  start : 200,
+                  end : 350
+              }];
+          })
+      )
+      .display(tnt.board.track.feature.block()
+          .color("blue")
+          .index(function (d) {
+              return d.start;
+          })
+      );
+
+  // Attach the tracks to the board (order matters)
+  myBoard
+      .add_track(location_track)
+      .add_track(block_track);
+
+  // Start the board
+  myBoard(document.getElementById("mydiv"));
+  {% endhighlight %}
+
+  <p>The above example starts by defining a board that displays data from position 0 to 500, being the minimum position 0 (this is also the default) and the maximum 1000. This board contains 2 tracks. The first one is a <a href="locationTRAck">location track -- BROKEN LINK</a> with top orientation. The second track is 30 pixels high and displays one block from position 200 to 350 in the board. Both tracks are attached to the board. The <i>board</i> itself is a function that when executed initialises the visualisation using the provided <i>DOM element</i> as its container. Finally, the <i>board</i> is started, which means that the data is retrieved and displayed. It is important to understand and remember these three states of the visualisation:</p>
+
+<ul>
+    <li><b>Defined</b>: The board instance is defined at the code level, but the visualisation hasn't been inisialised and the container is still empty</li>
+    <li><b>Initialised</b>: The container is populated with the board elements</li>
+    <li><b>Started</b>: The tracks are created, their data retrieved and the features plotted</li>
+</ul>
