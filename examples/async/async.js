@@ -14,14 +14,10 @@ var async_theme = function () {
     	    .display(tnt.board.track.feature.pin()
                 .domain([0.3, 1.2])
                 .color("red")
-                .layout(tnt.board.track.layout()
-                    .elements (function (elems, xScale) {
-                        joinClose (elems, xScale);
-                    })
-                )
             )
             .data(tnt.board.track.data.async()
                 .retriever (function () {
+                    var track = this;
                     var arr = [
                         {
                             pos : 200,
@@ -47,7 +43,7 @@ var async_theme = function () {
 
                     return new Promise (function (resolve, reject) {
                         setTimeout(function () {
-                            resolve(arr);
+                            resolve(joinClose(arr, track.display().scale()));
                         }, 1000);
                     });
                 })
@@ -87,6 +83,8 @@ var async_theme = function () {
                 med.label = groups[g].length;
             }
         }
+
+        return arr;
     }
 
     return theme;
