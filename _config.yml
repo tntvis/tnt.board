@@ -354,7 +354,7 @@ api :
              elements :
                 - name : data
                   path : track
-                  args : null
+                  args : tnt.board.track.data
                   desc : specifies a new data retriever for the track.
                   full : Specifies a new data retriever for the track. This is used on every board <i>update</i> to retrieve new data to <a href="#Display">display</a>
                   example : |
@@ -362,7 +362,7 @@ api :
                         .data (data);
 
                 - name : sync
-                  path : tnt.board.data
+                  path : tnt.board.track.data
                   args : null
                   desc : specifies a synchronous data retriever
                   full : Specifies a synchronous data retriever.
@@ -378,7 +378,7 @@ api :
                         });
 
                 - name : async
-                  path : tnt.board.data
+                  path : tnt.board.track.data
                   args : null
                   desc : specifies an asynchronous data retriever
                   full : Specifies an asynchronous data retriever.
@@ -396,7 +396,7 @@ api :
                             });
                         });
                 - name : empty
-                  path : tnt.board.data
+                  path : tnt.board.track.data
                   args : null
                   desc : convenience data object for tracks that doesn't require data
                   full : Convenience data object for tracks that doesn't require data.
@@ -461,7 +461,7 @@ api :
              elements :
                 - name : display
                   path : track
-                  args : null
+                  args : tnt.board.track.feature
                   desc : specifies a new data displayer for the track
                   full : Specifies a new data displayer for the track. This is used everytime new <a href="#Data">data</a> is available for the track. If called without arguments, the current <i>displayer</i> is returned.
                   example : |
@@ -741,3 +741,49 @@ api :
                                 return [{pos: 15}, {pos: 30}, {pos: 100}];
                             })
                         ));
+
+           - name : Layout
+             preamble : |
+               Sometimes, it is needed to transform the <a href="#Data">data</a> before it is <a href="#Display">displayed</a> based on visualisation restrictions. For example to resolve overlaps between elements or join different elements that are too close in the visualisation. This transformation doesn't depend only on data or display but in the data in the context of the display. In order to facilitate this transformation TnT Board intercepts the data before it is displayed and pass it through a <i>layout</i> object. This <i>layout</i> exposes an <a href="#elements">elements</a> method that accepts an array of data object and returns an array of data objects, possibly modified. By default, TnT Board uses the <a href="#identity">identity</a> layout that just returns the input data array.
+             example : |
+                 var pin_track = tnt.board.track()
+                    .height(60)
+                    .color("white")
+                    .display (tnt.board.track.feature.pin()
+                        .domain([0.3, 1.2])
+                        .color("red")
+                        .layout (tnt.board.track.layout()
+                            .elements (function (elems, scale) {
+                                // Edit the elements to display based on the vis scale
+                            })
+                        )
+                    )
+                    .data (tnt.board.track.data.sync()
+                        .retriever (function () {
+                            var arr = [
+                                { pos: 200, val: 0.5 },
+                                { pos: 350, val: 0.8 }
+                            ];
+                            return arr;
+                        })
+                    );
+
+             elements :
+                - name : layout
+                  path : display
+                  args : tnt.board.track.layout
+                  desc : sets a new layout for this display
+                  full : Sets a new layout for this display. If called without arguments returns the current layout (tnt.board.track.layout.<a href="#identity">identity</a> by default).
+                  example : |
+                     var track = tnt.board.track()
+                         .display (tnt.board.track.feature.pin()
+                            .domain([0.3, 1.2])
+                            .layout (tnt.board.track.layout()
+                                .elements (function (elems, scale) {
+                                    // Edit the elements to display based on the vis scale
+                                })
+                            )
+                        )
+                - name : layout
+                  path : tnt.board.track
+                  args : null
