@@ -3,5 +3,4 @@ node_modules
 .coveralls.yml
 *~
 coverage/lcov.info
-build
 _site
