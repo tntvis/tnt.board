@@ -1,4 +1,4 @@
-var dependant_tracks_theme = function () {
+var mirror_tracks_theme = function () {
 
     var theme = function (board, div) {
 

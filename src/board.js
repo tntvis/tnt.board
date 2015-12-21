@@ -314,12 +314,15 @@ var board = function() {
 
     	    // Replot
     	    width = w;
+            xScale.range([0, width]);
+
     	    plot();
     	    for (var i=0; i<tracks.length; i++) {
         		tracks[i].g.select("rect").attr("width", w);
+                tracks[i].display().scale(xScale);
         		tracks[i].display().reset.call(tracks[i]);
                 tracks[i].display().init.call(tracks[i], w);
-        		tracks[i].display().update.call(tracks[i],xScale);
+        		tracks[i].display().update.call(tracks[i]);
     	    }
     	} else {
     	    width = w;
