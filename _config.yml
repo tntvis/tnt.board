@@ -744,7 +744,7 @@ api :
 
            - name : Layout
              preamble : |
-               Sometimes, it is needed to transform the <a href="#Data">data</a> before it is <a href="#Display">displayed</a> based on visualisation restrictions. For example to resolve overlaps between elements or join different elements that are too close in the visualisation. This transformation doesn't depend only on data or display but in the data in the context of the display. In order to facilitate this transformation TnT Board intercepts the data before it is displayed and pass it through a <i>layout</i> object. This <i>layout</i> exposes an <a href="#elements">elements</a> method that accepts an array of data object and returns an array of data objects, possibly modified. By default, TnT Board uses the <a href="#identity">identity</a> layout that just returns the input data array.
+               Sometimes, it is needed to transform the <a href="#Data">data</a> before it is <a href="#Display">displayed</a> based on visualisation restrictions, for example to resolve overlaps between elements or join different elements that are too close in the visualisation. This transformation doesn't depend only on data or display but in the data in the context of the display. In order to facilitate this transformation TnT Board intercepts the data before it is displayed and pass it through a <i>layout</i> object. This <i>layout</i> exposes the <a href="#elements">elements</a> method that accepts an array of data object and returns an array of data objects, possibly modified. By default, TnT Board uses the <a href="#identity">identity</a> layout that just returns the input data array.
              example : |
                  var pin_track = tnt.board.track()
                     .height(60)
@@ -787,3 +787,5 @@ api :
                 - name : layout
                   path : tnt.board.track
                   args : null
+                  desc : creates a new layout
+                  full : creates a new TnT Board layout.
