@@ -15,7 +15,7 @@ var tnt_feature = function () {
         guider   : function () {},
         //layout   : function () {},
         index    : undefined,
-        // layout   : layout.identity(),
+        layout   : layout.identity(),
         color : '#000',
         scale : undefined
     };
@@ -53,7 +53,7 @@ var tnt_feature = function () {
         config.create.call(track, new_elems, xScale);
     };
 
-    var update = function (field) {
+    var update = function (loc, field) {
         var track = this;
         var svg_g = track.g;
 
@@ -63,8 +63,8 @@ var tnt_feature = function () {
             elements = elements[field];
         }
 
-        // var data_elems = config.layout.call(track, elements, config.scale);
-        var data_elems = elements;
+        var data_elems = config.layout.call(track, elements);
+
 
         if (data_elems === undefined) {
             return;
@@ -177,7 +177,7 @@ tnt_feature.composite = function () {
     var update = function () {
     	var track = this;
     	for (var i=0; i<display_order.length; i++) {
-    	    displays[display_order[i]].update.call(track, display_order[i]);
+    	    displays[display_order[i]].update.call(track, undefined, display_order[i]);
     	    displays[display_order[i]].move_to_front.call(track, display_order[i]);
     	}
         // for (var display in displays) {
@@ -818,7 +818,7 @@ tnt_feature.location = function () {
         return this;
     };
 
-    feature.update = function () {
+    feature.update = function (loc) {
     	var track = this;
     	var svg_g = track.g;
     	var domain = xScale.domain();

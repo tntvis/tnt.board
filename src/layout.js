@@ -5,9 +5,9 @@ var apijs = require ("tnt.api");
 var layout = function () {
 
     // The returned closure / object
-    var l = function (new_elems, xScale)  {
+    var l = function (new_elems)  {
         var track = this;
-        l.elements().call(track, new_elems, xScale);
+        l.elements().call(track, new_elems);
         return new_elems;
     };
 

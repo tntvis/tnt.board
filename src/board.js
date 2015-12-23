@@ -195,7 +195,7 @@ var board = function() {
     	    data_updater.call(track, {
                 'loc' : where,
                 'on_success' : function () {
-                    track.display().update.call(track);
+                    track.display().update.call(track, where);
                 }
     	    });
     	}
@@ -322,7 +322,7 @@ var board = function() {
                 tracks[i].display().scale(xScale);
         		tracks[i].display().reset.call(tracks[i]);
                 tracks[i].display().init.call(tracks[i], w);
-        		tracks[i].display().update.call(tracks[i]);
+        		tracks[i].display().update.call(tracks[i], loc);
     	    }
     	} else {
     	    width = w;
