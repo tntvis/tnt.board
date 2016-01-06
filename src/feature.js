@@ -45,10 +45,30 @@ var tnt_feature = function () {
     };
 
     var plot = function (new_elems, track, xScale) {
-        new_elems.on("click", dispatch.click);
-        new_elems.on("mouseover", dispatch.mouseover);
-        new_elems.on("dblclick", dispatch.dblclick);
-        new_elems.on("mouseout", dispatch.mouseout);
+        new_elems.on("click", function (d, i) {
+            if (d3.event.defaultPrevented) {
+                return;
+            }
+            dispatch.click.call(this, d, i);
+        });
+        new_elems.on("mouseover", function (d, i) {
+            if (d3.event.defaultPrevented) {
+                return;
+            }
+            dispatch.mouseover.call(this, d, i);
+        });
+        new_elems.on("dblclick", function (d, i) {
+            if (d3.event.defaultPrevented) {
+                return;
+            }
+            dispatch.dblclick.call(this, d, i);
+        });
+        new_elems.on("mouseout", function (d, i) {
+            if (d3.event.defaultPrevented) {
+                return;
+            }
+            dispatch.mouseout.call(this, d, i);
+        });
         // new_elem is a g element the feature is inserted
         config.create.call(track, new_elems, xScale);
     };
