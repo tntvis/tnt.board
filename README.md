@@ -26,4 +26,4 @@ gulp build-browser
 
 ## Feedback
 Please, send any feedback to emepyc __AT__ gmail.com.
-Bug reports and feature requests are welcome [here](https://github.com/emepyc/tnt.board/issues/new)
+Bug reports and feature requests are welcome in the [issue tracker](https://github.com/emepyc/tnt.board/issues/new)
