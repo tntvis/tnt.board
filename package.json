@@ -43,7 +43,7 @@
     "npm-css": "^0.2.3"
   },
   "dependencies": {
-    "tnt.api": "0.1.0",
-    "tnt.utils": "0.1.0"
+    "tnt.api": "^0.1.0",
+    "tnt.utils": "^0.1.0"
   }
 }
