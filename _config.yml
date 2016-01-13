@@ -462,8 +462,7 @@ api :
                   args : null
                   class : interface
                   desc : general interface for creating visual displays of data
-                  full : General interface for creating visual displays of data. This interface exposes four methods to configure the feature, <a href="#feature.create">create</a>, <a href="#feature.mover">mover</a>, <a href="#feature.update">update</a> and <a href="#feature.guider">guider</a>. These methods are called <i>interface methods</i> and can be used to create new displays. TnT Board also offers several ready-to-use displays built on top of this general interface and described below.<br />
-                  The interface also exposes several methods that are <i>inherited</i> by the ready-to-use displays.
+                  full : General interface for creating visual displays of data. This interface exposes four methods to configure the feature, <a href="#feature.create">create</a>, <a href="#feature.mover">mover</a>, <a href="#feature.update">update</a> and <a href="#feature.guider">guider</a>. These methods are called <i>interface methods</i> and can be used to create new displays. TnT Board also offers several ready-to-use displays built on top of this general interface and described below.<br />The interface also exposes several methods that are <i>inherited</i> by the ready-to-use displays.
                   example : |
                     var vline_feature = function () {
                         var feature = tnt.board.track.feature();
