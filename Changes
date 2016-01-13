@@ -72,7 +72,8 @@
 
 0.1.1
 	- methods renamed: guider => fixed, mover => move, move => mover, updater => distribute
-
+0.1.2
+	- update deps to tnt.api: 0.1.0 and tnt.utils: 0.1.0
 	
 
 
