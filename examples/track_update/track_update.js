@@ -55,7 +55,7 @@ var track_update_theme = function () {
     	board(div);
 
         // Add 1 more track
-        var update = d3.select(div)
+        d3.select(div)
     	    .append("button")
     	    .text("update track")
             .style("margin", "10px")
@@ -68,7 +68,6 @@ var track_update_theme = function () {
                 data.elements(elems);
 
                 display.update.call(pin_track);
-
     	    });
 
     	board.start();

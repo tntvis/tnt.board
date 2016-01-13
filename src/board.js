@@ -518,7 +518,7 @@ var board = function() {
 
     	for (var i = 0; i < tracks.length; i++) {
     	    var track = tracks[i];
-    	    track.display().move.call(track);
+    	    track.display().mover.call(track);
     	}
     };
 

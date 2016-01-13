@@ -10,9 +10,9 @@ var tnt_feature = function () {
     ////// Vars exposed in the API
     var config = {
         create   : function () {throw "create_elem is not defined in the base feature object";},
-        mover    : function () {throw "move_elem is not defined in the base feature object";},
-        updater  : function () {},
-        guider   : function () {},
+        move    : function () {throw "move_elem is not defined in the base feature object";},
+        distribute  : function () {},
+        fixed   : function () {},
         //layout   : function () {},
         index    : undefined,
         layout   : layout.identity(),
@@ -41,7 +41,7 @@ var tnt_feature = function () {
             .attr ("fill", "grey")
             .text (track.label());
 
-        config.guider.call(track, width);
+        config.fixed.call(track, width);
     };
 
     var plot = function (new_elems, track, xScale) {
@@ -110,7 +110,7 @@ var tnt_feature = function () {
                 .data(data_elems);
         }
 
-        config.updater.call(track, vis_elems, config.scale);
+        config.distribute.call(track, vis_elems, config.scale);
 
     	var new_elem = vis_elems
     	    .enter();
@@ -126,7 +126,7 @@ var tnt_feature = function () {
     	    .remove();
     };
 
-    var move = function (field) {
+    var mover = function (field) {
     	var track = this;
     	var svg_g = track.g;
     	var elems;
@@ -138,7 +138,7 @@ var tnt_feature = function () {
     	    elems = svg_g.selectAll(".tnt_elem");
     	}
 
-    	config.mover.call(this, elems);
+    	config.move.call(this, elems);
     };
 
     var mtf = function (elem) {
@@ -163,7 +163,7 @@ var tnt_feature = function () {
     	    reset  : reset,
     	    plot   : plot,
     	    update : update,
-    	    move   : move,
+    	    mover   : mover,
     	    init   : init,
     	    move_to_front : move_to_front
     	});
@@ -207,11 +207,11 @@ tnt_feature.composite = function () {
         // }
     };
 
-    var move = function () {
+    var mover = function () {
         var track = this;
         for (var display in displays) {
             if (displays.hasOwnProperty(display)) {
-                displays[display].move.call(track, display);
+                displays[display].mover.call(track, display);
             }
         }
     };
@@ -236,7 +236,7 @@ tnt_feature.composite = function () {
     	.method ({
     	    reset  : reset,
     	    update : update,
-    	    move   : move,
+    	    mover   : mover,
     	    init   : init,
     	    add    : add,
     	    displays : get_displays
@@ -284,11 +284,11 @@ tnt_feature.area = function () {
     	    .attr("fill", d3.rgb(feature.color()).brighter());
     });
 
-    var line_mover = feature.mover();
-    feature.mover (function (path) {
+    var line_move = feature.move();
+    feature.move (function (path) {
     	var track = this;
         var xScale = feature.scale();
-    	line_mover.call(track, path, xScale);
+    	line_move.call(track, path, xScale);
 
     	area.x(line.x());
     	track.g
@@ -385,7 +385,7 @@ tnt_feature.line = function () {
     	    .style("fill", "none");
     });
 
-    feature.mover (function (path) {
+    feature.move (function (path) {
     	var track = this;
         var xScale = feature.scale();
 
@@ -420,7 +420,7 @@ tnt_feature.ensembl = function () {
     var color2 = "#7FFF00";
     var color3 = "#00BB00";
 
-    feature.guider (function (width) {
+    feature.fixed (function (width) {
     	var track = this;
     	var height_offset = ~~(track.height() - (track.height()  * 0.8)) / 2;
 
@@ -478,7 +478,7 @@ tnt_feature.ensembl = function () {
     	    });
     });
 
-    feature.updater (function (blocks) {
+    feature.distribute (function (blocks) {
         var xScale = feature.scale();
     	blocks
     	    .select("rect")
@@ -487,7 +487,7 @@ tnt_feature.ensembl = function () {
     	    });
     });
 
-    feature.mover (function (blocks) {
+    feature.move (function (blocks) {
         var xScale = feature.scale();
     	blocks
     	    .select("rect")
@@ -539,7 +539,7 @@ tnt_feature.vline = function () {
     	    .attr("stroke-width", 1);
     });
 
-    feature.mover (function (vlines) {
+    feature.move (function (vlines) {
         var xScale = feature.scale();
     	vlines
     	    .select("line")
@@ -630,7 +630,7 @@ tnt_feature.pin = function () {
 
     });
 
-    feature.updater (function (pins) {
+    feature.distribute (function (pins) {
         pins
             .select("text")
             .text(function (d) {
@@ -638,7 +638,7 @@ tnt_feature.pin = function () {
             });
     });
 
-    feature.mover(function (pins) {
+    feature.move(function (pins) {
     	var track = this;
         var xScale = feature.scale();
 
@@ -678,7 +678,7 @@ tnt_feature.pin = function () {
 
     });
 
-    feature.guider (function (width) {
+    feature.fixed (function (width) {
         var track = this;
         track.g
             .append("line")
@@ -731,7 +731,7 @@ tnt_feature.block = function () {
     	    });
     });
 
-    feature.updater(function (elems) {
+    feature.distribute(function (elems) {
         var xScale = feature.scale();
     	elems
     	    .select("rect")
@@ -740,7 +740,7 @@ tnt_feature.block = function () {
     	    });
     });
 
-    feature.mover(function (blocks) {
+    feature.move(function (blocks) {
         var xScale = feature.scale();
     	blocks
     	    .select("rect")
@@ -770,7 +770,7 @@ tnt_feature.axis = function () {
     	track.g.selectAll(".tick").remove();
     };
     feature.plot = function () {};
-    feature.move = function () {
+    feature.mover = function () {
     	var track = this;
     	var svg_g = track.g;
     	svg_g.call(xAxis);
@@ -824,7 +824,7 @@ tnt_feature.location = function () {
     feature.init = function () {
         row = undefined;
     };
-    feature.move = function() {
+    feature.mover = function() {
     	var domain = xScale.domain();
     	row.select("text")
     	    .text("Location: " + ~~domain[0] + "-" + ~~domain[1]);

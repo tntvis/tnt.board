@@ -53,7 +53,7 @@ var custom_feature_theme = function () {
                     return d.color;
                 });
         });
-        arrow_feature.mover (function (arrows) {
+        arrow_feature.move (function (arrows) {
             var track = this;
             var y = track.height();
             var xScale = arrow_feature.scale();

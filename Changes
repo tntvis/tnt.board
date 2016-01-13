@@ -70,6 +70,9 @@
 	- bugfix: don't fire click on mouseovers etc
 	- tnt.tooltip has been removed from the bundle
 
+0.1.1
+	- methods renamed: guider => fixed, mover => move, move => mover, updater => distribute
 
+	
 
 
