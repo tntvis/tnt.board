@@ -3,11 +3,11 @@ port: 4001
 safe: true
 baseurl : /tnt.board
 api :
-    - name : track
+    - name : board
       elements :
            - name : Board
              preamble : |
-                        Boards are track-based visualizations that can be panned and zoomed making all the tracks in the board to update accordingly. TnT boards can be configured using several methods that affect all the tracks in the board (like the <a href="#width">width</a> of the board). The height of the board is defined by the sum of the <a href="#height">heights</a> of all the tracks. The <i>board</i> instance can be configured using the methods explained below. When used as setters, these methods return the board object itself allowing to chain them as in this example:
+                Boards are track-based visualizations that can be panned and zoomed making all the tracks in the board to update accordingly. TnT Board can be configured using several methods that affect all the tracks in the board (like the <a href="#board.width">width</a> of the board). The height of the board is defined by the sum of the <a href="#track.height">heights</a> of all the tracks. The board can be configured using the methods explained below. When used as setters, these methods return the board object itself allowing to chain them as in this example:
              example : |
                  // Definition
                  var myBoard = tnt.board()
@@ -41,15 +41,8 @@ api :
                   desc : defines the left coordinate of the board
                   full : Defines the left coordinate of the board (the start left position). If called without arguments returns the current value.
                   example : |
-                    // Using a scalar
                     var myBoard = tnt.board()
                         .from(20);
-
-                    // Using a promise
-                    var myBoard2 = tnt.board()
-                        .from (new Promise (function (resolve, reject) {
-                            resolve (20);
-                        }));
 
                 - name : to
                   path : tnt.board
@@ -57,15 +50,8 @@ api :
                   desc : defines the right coordinate of the board
                   full : Defines the right coordinate of the board (the start right position). If called without arguments returns the current value.
                   example : |
-                    // Using a scalar
                     var myBoard = tnt.board()
                         .to(1000);
-
-                    // Using a Promise
-                    var myBoard2 = tnt.board()
-                        .to (new Promise (function (resolve, reject) {
-                            resolve (1000);
-                        }));
 
                 - name : min
                   path : board
@@ -73,7 +59,6 @@ api :
                   desc : defines the minimum possible coordinate of the board
                   full : Defines the minimum possible coordinate of the board. If called without arguments returns the current limit. By default this value is 0.
                   example : |
-                    // Using a scalar
                     var myBoard = tnt.board()
                         .min(100);
 
@@ -83,7 +68,6 @@ api :
                   desc : defines the maximum possible value of the board
                   full : Defines the upper limit (ie, the maximum possible coordinate) of the board. If called without arguments returns the current upper limit.
                   example : |
-                    // Using a scalar
                     var myBoard = tnt.board()
                         .max(1000);
 
@@ -91,7 +75,7 @@ api :
                   path : board
                   args : integer
                   desc : defines the maximum extent of the board
-                  full : Defines the maximum extent of the board (ie, the limit when zooming out). If called without arguments returns the current value. This limit is respected even if the <a href="#from">from</a> and <a href="#to">to</a> coordinates specify spans beyond this limit. In that case, the coordinates are adjusted to satisfy this value.
+                  full : Defines the maximum extent of the board (ie, the limit when zooming out). If called without arguments returns the current value. This limit is respected even if the <a href="#board.from">from</a> and <a href="#board.to">to</a> coordinates specify spans beyond this limit. In that case, the coordinates are adjusted to satisfy this value.
                   example : |
                     // (to - from) can't be greater than 500
                     var myBoard = tnt.board()
@@ -111,7 +95,7 @@ api :
                   path : board
                   args : null
                   desc : starts (or re-starts) the visualisation
-                  full : Starts the visualisation (re-)initialisig all the tracks, resolving the coordinate promises and feeding the tracks with their data and displays.
+                  full : Starts the visualisation (re-)initialisig all the tracks feeding the tracks with their data and displays. If the board has already started re-initialises the tracks in the board to their current state.
                   example : |
                     var myBoard = tnt.board()
                         .from(0)
@@ -120,6 +104,10 @@ api :
                         .max(1000);
 
                     // ... Adding tracks ...
+                    myBoard
+                        .add_track (track1)
+                        .add_track (track2);
+
                     // Initialise the board
                     myBoard.start();
 
@@ -157,7 +145,7 @@ api :
                   path : board
                   args : array
                   desc : reorders the tracks in the board
-                  full : Reorders the tracks in the board. Expects an array of tracks as argument. This method requires the visualisation to have started already. The tracks are re-arranged with the order given in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each existing tracks is recalculated. If no argument is provided, returns an array containing the current tracks in the board.
+                  full : Reorders the tracks in the board. Expects an array of tracks as argument. This method requires the visualisation to have started already. The tracks are re-arranged with the order given in the array. New tracks are created while existing tracks not in the array are removed. As a side effect, the height for each existing track is recalculated. If no argument is provided, returns an array containing the current tracks in the board.
                   example : |
                       // Reorder the tracks. First tracks is put last
                       var tracks = myBoard.tracks();
@@ -216,7 +204,7 @@ api :
 
            - name : Track
              preamble : |
-                Each <a href="#Board">board</a> can contain one of more <i>tracks</i> to display data. They are piled up in the board vertically (growing downwards) in the order of attachment to the board. Tracks are created using the constructor <i>tnt.board.track</i> and attached using board.<a href="#add_track">add_track</a>. Each <i>track</i> instance can be configured using the methods explained below. When used as setters, these methods return the track object allowing to chain them as in this example:
+                Each <a href="#Board">board</a> can contain one of more <i>tracks</i> to display data. They are piled up in the board vertically (growing downwards) in the order of attachment to the board. Tracks are created using the constructor <i>tnt.board.track</i> and attached using board.<a href="#board.add_track">add_track</a>. Each <i>track</i> instance can be configured using the methods explained below. When used as setters, these methods return the track object allowing to chain them as in the following example:
              example : |
                 var myBoard = tnt.board()
                     .from(0)
@@ -252,7 +240,7 @@ api :
                   path : tnt.board
                   args : null
                   desc : creates a new track
-                  full : Creates a new track. This track has to be configured via its methods. The newly created track can be attached to the board using board's <a href=#add_track>add_track</a> method.
+                  full : Creates a new track. This track has to be configured via its methods. The newly created track can be attached to the board using board's <a href=#board.add_track>add_track</a> method.
                   example : |
                       var myBoard = tnt.board().from(0).to(500).max(500);
 
@@ -272,7 +260,7 @@ api :
                   path : track
                   args : null
                   desc : returns the scale to transform between the input domain and the output range
-                  full : Returns the scale to transform between the input domain and the output range. This scale is needed when elements (specified in the user-space) are <a href="#Display">displayed</a> in the track (pixels-space). See <a href="#feature">feature</a> for an example of use.
+                  full : Returns the scale to transform between the input domain and the output range. This scale is needed when elements (specified in the user-space) are <a href="#Display">displayed</a> in the track (pixels-space). See <a href="#Display">the display interface</a> for an example of use.
                   example : |
                     var scale = myTrack.scale();
 
@@ -290,7 +278,7 @@ api :
                   path : track
                   args : integer
                   desc : defines the height of the track in pixels
-                  full : Defines the height of the track in pixels. If called without arguments, returns the current height. This value can be changed after the visualisation has <i>started</i>, but for the change to be applied to the track, the board.<a href="#tracks">tracks</a> method should be called.
+                  full : Defines the height of the track in pixels. If called without arguments, returns the current height. This value can be changed after the visualisation has <i>started</i>, but for the change to be applied to the track, the board.<a href="#board.tracks">tracks</a> method should be called.
                   example : |
                     var myBoard = tnt.board();
                     var blockTrack = tnt.board.track()
@@ -309,7 +297,7 @@ api :
                   path : track
                   args : string
                   desc : sets an ID for the track
-                  full : Sets an ID for the track. Uniqueness of track IDs is required in order to avoid unexpected results. Any track missing an ID when the tracks are initialised are assigned a numerical ID starting with "1". This means that explicitely giving low numerical IDs to tracks is not recommended to allow ID collisions. If called without arguments, returns the current ID of the track.
+                  full : Sets an ID for the track. Uniqueness of track IDs is required in order to avoid unexpected results. Any track missing an ID when the tracks are initialised are assigned a numerical ID starting with "1". This means that explicitely giving low numerical IDs to tracks is not recommended to avoid ID collisions. If called without arguments, returns the current ID of the track.
                   example : |
                     var track = tnt.board.track()
                         .data(...)
@@ -320,7 +308,7 @@ api :
 
            - name : Data
              preamble : |
-                Tracks need data to display. TnT provides two generic methods to fetch it: tnt.board.data.<a href="#sync">sync</a>, which pulls data into the track <i>synchronously</i> and  tnt.board.data.<a href="#async">async</a>, which relies on <i>Promises</i> to fetch the data <i>asynchronously</i>. Both methods offer the same interface and share the same configuration methods. If called without arguments, the current data retriever is returned.
+                Tracks need data to display. TnT Board provides two generic methods to fetch it: tnt.board.data.<a href="#sync">sync</a>, which pulls data into the track <i>synchronously</i> and  tnt.board.data.<a href="#async">async</a>, which relies on <i>ES2015 Promises</i> to fetch the data <i>asynchronously</i>. Both methods offer the same interface and share the same configuration methods.
              example : |
                var dataSync = tnt.board.data.sync()
                     .retriever (function () {
@@ -332,7 +320,7 @@ api :
                         ];
                     });
 
-               // Presumes that a Promise library is imported
+               // Assumes that a Promise library is available
                 var dataAsync = tnt.board.data.async()
                     .retriever (function () {
                         return new Promise (function (resolve, reject) {
@@ -383,7 +371,7 @@ api :
                   desc : specifies an asynchronous data retriever
                   full : Specifies an asynchronous data retriever.
                   example : |
-                    // Presumes that a Promise library is imported
+                    // Assumes that a Promise library is available
                     var dataAsync = tnt.board.data.async()
                         .retriever (function () {
                             return new Promise (function (resolve, reject) {
@@ -395,11 +383,12 @@ api :
                                 ])
                             });
                         });
+
                 - name : empty
                   path : tnt.board.track.data
                   args : null
-                  desc : convenience data object for tracks that doesn't require data
-                  full : Convenience data object for tracks that doesn't require data.
+                  desc : convenience data element for tracks that doesn't require data
+                  full : Convenience data element for tracks that doesn't require data. It is based on the <a href="">synchronous data retriever</a> so it still supports the same methods.
                   example : |
                     var track = tnt.board.track()
                         .data(tnt.board.track.data.empty());
@@ -407,8 +396,8 @@ api :
                 - name : retriever
                   path : data
                   args : callback
-                  desc : sets a callback that retrieves the data to visualise
-                  full : Sets a callback that retrieves the data to visualise in the track. This callback is called passing the location object as its argument to allow contextual data retrievals. This location object has the <i>from</i> and <i>to</i> properties. Inside of the callback, <i>this</i> is set to the current track. The callback is expected to return an array of objects (if the <a href="#data">data</a> is <a href="#sync">sync</a>) or a <i>Promise</i> that resolves to an array of objects (if the <a href="#data">data</a> is <a href="#async">async</a>). These objects represent the elements to be <a href="#display">displayed</a> in each update of the <a href="#board">board</a>
+                  desc : sets a callback that retrieves the data to visualise in the track
+                  full : Sets a callback that retrieves the data to visualise in the track. This callback is called passing the location object as its argument to allow positional data retrievals. This location object has the <i>from</i> and <i>to</i> properties. Inside of the callback, <i>this</i> is set to the current track. The callback is expected to return an array of objects (if the <a href="#track.data">data</a> is <a href="#data.sync">sync</a>) or a <i>Promise</i> that resolves to an array of objects (if the <a href="#track.data">data</a> is <a href="#data.async">async</a>). These returned objects represent the elements to be <a href="#Display">displayed</a> in each update of the <a href="#Board">board</a>
                   example : |
                     var dataSync = tnt.board.data.sync()
                         .retriever (function () {
@@ -423,16 +412,16 @@ api :
                 - name : elements
                   path : data
                   args : null
-                  desc : gets the elements that resulted from the last retrieval
-                  full : Gets the elements that resulted from the last retrieval. Normally, there is no need to call this method directly since it is called implicitely by the <a href="#display">display</a> instance. It is useful if the data needs to be edited before being passed to the <a href="#display">display</a>
+                  desc : returns the elements that resulted from the last retrieval
+                  full : Returns the elements that resulted from the last retrieval. Normally, there is no need to call this method directly since it is called implicitely by the <a href="#Display">display</a> of the visualisation. It is useful though if the data needs to be edited before being passed to the <a href="#Display">Display</a>
                   example : |
                     var elems = dataSync.elements();
 
            - name : Display
              preamble : |
-               Once a <a href="#Track">track</a> has retrieved its data, it needs to <i>display</i> it. TnT provides several ready-to-use <i>features</i> that can be "plugged" in the <a href="#Track">track</a> (see for example tnt.board.track.feature.<a href="#block">block</a> or tnt.board.track.feature.<a href="#pin">pin</a>) using its <a href="#display">display</a> method. These ready-to-use <i>features</i> are based on the generic <a href="#feature">feature</a> interface and hence "inherit" all the methods described for the generic tnt.board.track.<a href="#feature">feature</a> interface. Creating custom <i>features</i> is also possble using the generic interface.<br />
+               Once a <a href="#Track">track</a> has retrieved its <a href="#Data">data</a>, it needs to <i>display</i> it. TnT Board provides several ready-to-use <i>data displays</i> that can be ready-to-use by the <a href="#Track">tracks</a> (see for example tnt.board.track.feature.<a href="#tnt.board.track.feature.block">block</a> or tnt.board.track.feature.<a href="#tnt.board.track.feature.pin">pin</a>). These ready-to-use <i>displays</i> are based on the <a href="#tnt.board.track.feature">generic display interface</a> and hence expose all the methods described for the generic interface. Creating custom <i>features</i> is also possble using the generic interface.<br />
                <br />
-               Each <i>displayer</i> is composed of one or more <i>features</i>. A displayer with more that one <i>feature</i> can be used to display different type of <a href="#Data">data</a> in the same <a href="#Track">track</a> (see tnt.board.track.feature.<a href="#composite">), for an example).
+               Each <i>display</i> is composed of one or more <i>visual features</i>. A display with more that one <i>feature</i> can be used to display different types of <a href="#Data">data</a> in the same <a href="#Track">track</a> (see tnt.board.track.feature.<a href="#tnt.board.track.feature.composite">), for an example).
              example : |
                var axis_track = tnt.board.track()
                    .height(20)
@@ -462,17 +451,19 @@ api :
                 - name : display
                   path : track
                   args : tnt.board.track.feature
-                  desc : specifies a new data displayer for the track
-                  full : Specifies a new data displayer for the track. This is used everytime new <a href="#Data">data</a> is available for the track. If called without arguments, the current <i>displayer</i> is returned.
+                  desc : specifies a new data display for the track
+                  full : Specifies a new data display for the track. This is used everytime new update is made in the track. If called without arguments, the current <i>display</i> is returned.
                   example : |
                     var track = tnt.board.track()
-                        .display (feature);
+                        .display (tnt.board.track.feature.block());
 
                 - name : feature
                   path : tnt.board.track
                   args : null
-                  desc : general interface for creating <i>features</i>
-                  full : General interface for creating <i>features</i>. This interface exposes four methods to configure the feature, <a href="#create">create</a>, <a href="#mover">mover</a>, <a href="#update">update</a> and <a href="#guider">guider</a>. These methods can be used to create new features and rely heavily on the <a href="d3js.org"d3</a> library. TnT Board also offers several ready-to-use features built on top of this general interface
+                  class : interface
+                  desc : general interface for creating visual displays of data
+                  full : General interface for creating visual displays of data. This interface exposes four methods to configure the feature, <a href="#feature.create">create</a>, <a href="#feature.mover">mover</a>, <a href="#feature.update">update</a> and <a href="#feature.guider">guider</a>. These methods are called <i>interface methods</i> and can be used to create new displays. TnT Board also offers several ready-to-use displays built on top of this general interface and described below.<br />
+                  The interface also exposes several methods that are <i>inherited</i> by the ready-to-use displays.
                   example : |
                     var vline_feature = function () {
                         var feature = tnt.board.track.feature();
@@ -509,8 +500,9 @@ api :
                 - name : create
                   path : feature
                   args : callback
+                  class : interface method
                   desc : specifies how new elements are displayed
-                  full : Specifies how new elements are displayed. Accepts a callback that is called with a <a href="https://github.com/mbostock/d3/wiki/Selections">d3 selection</a> containing the new elements on every data update. In of this function, <i>this</i> is set to the current <a href="#Track">track</a>. When this method is called without arguments returns the current <i>create</i> function.
+                  full : Specifies how new elements are displayed. Accepts a callback that is called with a <a href="https://github.com/mbostock/d3/wiki/Selections">d3 selection</a> containing the new elements on every data update. Inside of this function, <i>this</i> is set to the current <a href="#Track">track</a>. When this method is called without arguments returns the current <i>create</i> function.
                   example :
                     var vline_feature = function () {
                         var feature = tnt.board.track.feature();
@@ -531,7 +523,7 @@ api :
                                 .attr("stroke", feature.color());
                         });
 
-                - name : mover
+                - name : move
                   path : feature
                   args : callback
                   desc : specifies how the elements are <i>moved</i> when the board is dragged
@@ -550,12 +542,12 @@ api :
                                 })
                         });
 
-                - name : updater
+                - name : update
                   path : feature
                   args : callback
 
 
-                - name : guider
+                - name : fixed
                   path : feature
                   args : callback
                   desc : sets a callback to display non-scaled elements in the <a href="#Display">display</a>

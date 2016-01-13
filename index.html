@@ -11,12 +11,12 @@ theme : features
 <p><aside>See <a href={{ site.baseurl }}/examples/index.html>more examples</a></aside></p>
 
 <h2><a name="introduction" href="#introduction">#</a>Introduction</h2>
-<p><b>TnT Board</b> is a javascript library for displaying track-based annotations in the web. It is part of the the <a href="">TnT</a> set of visualisation libraries to display trees and/or track-based visualisations. It has been designed with a powerful API, written with flexibility in mind, that allows the creation of expressive, dynamic and powerful track-based visualizations.</p>
+<p><b>TnT Board</b> is a javascript library for displaying track-based annotations in the web. It is part of the the <a href="http://tntvis.github.io/tnt/">TnT</a> set of visualisation libraries to display trees and/or track-based visualisations. It has been designed with a powerful API, written with flexibility in mind, that allows the creation of expressive, dynamic and powerful track-based visualisations.</p>
 
-<p>TnT Board defines several elements to facilitate the creation of visualisations: a board that is a container for tracks, tracks that are independent units of data representation, data retrievers to get the data synchronously or asynchronously and visual features to display the available data</p>
+<p>TnT Board defines several elements to facilitate the creation of visualisations: a <a href="{{ site.baseurl }}/api/board/index.html#Board">board</a> that is a container for tracks, <a href="{{ site.baseurl }}/api/board/index.html#Track">tracks</a> that are independent units of data representation, <a href="{{ site.baseurl }}/api/board/index.html#Data">data retrievers</a> to get the data synchronously or asynchronously and <a href="{{ site.baseurl }}/api/board/index.html#Display">visual features</a> to display the available data.</p>
 
 <h3>Boards</h3>
-<p>In TnT Board, a board is an interactive container for tracks. Each panning or zoom event in the board triggers new data and visualisation updates in the attached tracks. New boards are created using the tnt.<a href="#board">board</a> method. Once it is created new tracks can be attached using the board.<a href="#add_track">add_track</a> method. Boards are configured via several methods that are fully explained in the API page.</p>
+<p>In TnT Board, a <a href="{{ site.baseurl }}/api/board/index.html#Board">board</a> is an interactive container for <a href="{{ site.baseurl }}/api/board/index.html#Track">tracks</a>. Each panning or zoom event in the <a href="{{ site.baseurl }}/api/board/index.html#Board">board</a> triggers new data and visualisation updates in the attached tracks. New boards are created using the tnt.<a href="{{ site.baseurl }}/api/board/index.html#tnt.board">board</a> method. Once it is created new tracks can be attached using the board.<a href="{{ site.baseurl }}/api/board/index.html#board.add_track">add_track</a> method. Boards are configured via several methods that are fully explained in the <a href="{{ site.baseurl }}/api/">API page</a>.</p>
 
 {% highlight javascript linenos %}
 var myBoard = tnt.board()
@@ -32,7 +32,7 @@ myBoard(document.getElementyById('DOM_element_id'));
 myBoard.start();
 {% endhighlight %}
 
-<p>As exemplified above, the <i>board</i> itself (returned by tnt.board) is a function that when executed initialises the visualisation using the provided <i>DOM element</i> as its DOM container. After initialistion, the <i>board</i> is started, which means that the data is retrieved and displayed. It is important to understand these three states of the visualisation:</p>
+<p>As shown in the example above, the <a href="{{ site.baseurl }}/api/board/index.html#Board">board</a> itself is a function that when executed initialises the visualisation using the provided <i>DOM element</i> as its DOM container. After initialistion, the <a href="{{ site.baseurl }}/api/board/index.html#Board">board</a> is started, which means that each <a href="{{ site.baseurl }}/api/board/index.html#Track">track</a> retrieves and displays its data it. It is important to understand these three states of the visualisation:</p>
 
 <ul>
   <li><b>Defined</b>: The board instance is defined at the code level, but the visualisation hasn't been inisialised and the container is still empty</li>
@@ -42,10 +42,10 @@ myBoard.start();
 
 
 <h3>Tracks</h3>
-<p>In TnT Board, tracks are independent units of data representation, which means that each track is independent from each other and defines its own way of data retrieval and representation. At track definition, each new track selects how the data for the track is retrieved (either "synchronously" or "asynchronously") and displayed. TnT offers predefined common displays (like rectangles, lines, areas, pins, etc) ready to use and new displays can also be created using the <a href="www.d3js.org">d3</a> library. Composite displays are also allowed and a very powerful tool for displaying complex data. One of the main characteristics of TnT tracks is the separation of concerns between data retrieval and data representation. Check the API documentation for a full list of methods available for tracks, data retrievals and displays</p>
+<p>In TnT Board, <a href="{{ site.baseurl }}/api/board/index.html#Board">tracks</a> are independent units of data representation, which means that each track is independent from each other and defines its own way of <a href="{{ site.baseurl }}/api/board/index.html#Data">data retrieval</a> and <a href="{{ site.baseurl }}/api/board/index.html#Display">representation</a>. When it is defined, each new track selects how the data for the track is retrieved (either <a href="{{ site.baseurl }}/api/board/index.html#tnt.board.track.data.sync">synchronously</a> or <a href="{{ site.baseurl }}/api/board/index.html#tnt.board.track.data.async">asynchronously</a>) and <a href="{{ site.baseurl }}/api/board/index.html#Display">displayed</a>. TnT offers predefined common displays (like <a href="{{ site.baseurl }}/api/board/index.html#tnt.board.track.feature.block">rectangles</a>, <a href="{{ site.baseurl }}/api/board/index.html#tnt.board.track.feature.line">lines</a>, <a href="{{ site.baseurl }}/api/board/index.html#tnt.board.track.feature.area">areas</a>, <a href="{{ site.baseurl }}/api/board/index.html#tnt.board.track.feature.pin">pins</a>, etc) ready to use and new displays can also be created using the <a href="{{ site.baseurl }}/api/board/index.html#tnt.board.track.feature">display interface</a>. <a href="{{ site.baseurl }}/api/board/index.html#tnt.board.track.feature.composite">Composite</a> displays are also allowed and a very powerful tool for displaying complex data. One of the main characteristics of TnT Board is the separation of concerns between data retrieval and data representation. Check the <a href="{{ site.baseurl }}/api/">API documentation</a> for a full list of methods available for <a href="{{ site.baseurl }}/api/board/index.html#Track">tracks</a>, <a href="{{ site.baseurl }}/api/board/index.html#Data">data retrievals</a> and <a href="{{ site.baseurl }}/api/board/index.html#Display">displays</a></p>
 
 <h2><a name="example" href="#example">#</a>Example</h2>
-<p>Examples are a fundamental part of TnT documentation. Check them in the examples page</p>
+<p>Examples are a fundamental part of TnT documentation. Check more in the <a href="{{ site.baseurl }}/examples/">examples page</a></p>
   {% highlight javascript linenos %}
   var myBoard = tnt.board().from(0).to(500).left(0).right(500);
 
@@ -78,20 +78,23 @@ myBoard.start();
       .add_track(location_track)
       .add_track(block_track);
 
-  // Start the board
+  // Initialise the board
   myBoard(document.getElementById("mydiv"));
+
+  // Starts the visualisation
+  myBoard.start();
   {% endhighlight %}
 
-<p>The above example starts by defining a board that displays data from position 0 to 500, being the minimum (0) and maximum (1000) coordinates. The code also defines two tracks and each of them defines how the data is retrieved and displayed. Once defined, the tracks are attached to the board. The first one is a <a href="locationTRAck">location track -- BROKEN LINK</a> with top orientation. The second track is 30 pixels high and displays one block from position 200 to 350 in the board. Once the board is configure the visualisation is ready to start.</p>
+<p>The above example starts by defining a <a href="{{ site.baseurl }}/api/board/index.html#Board">board</a> that displays data from position 0 to 500, being the minimum and maximum coordinates 0 and 1000 respectively. The code also defines two <a href="{{ site.baseurl }}/api/board/index.html#Track">tracks</a> and each of them defines how the data is retrieved and displayed. Once defined, the tracks are attached to the board using the <a href="{{ site.baseurl }}/api/board/index.html#board.add_track">add_track</a> method. The first one is a location track. The second track is 30 pixels high and displays one block from position 200 to 350 in the board. Once the board is configure the visualisation is ready to start.</p>
 
 
 <h2><a name="installation" href="#installation">#</a>Installation</h2>
 <p>TnT Board can be linked directly from the github repo. It depends on <a href="http://d3js.org">d3js</a> and this library needs to be linked before tnt.board</p>
 
 {% highlight html linenos %}
-<link rel="stylesheet" href="http://emepyc.github.io/tnt/build/tnt.board.css" type="text/css" />
+<link rel="stylesheet" href="http://tntvis.github.io/tnt/build/tnt.board.css" type="text/css" />
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="http://emepyc.github.io/tnt/build/tnt.board.js" charset="utf-8"></script>
+<script src="http://tntvis.github.io/tnt/build/tnt.board.js" charset="utf-8"></script>
 {% endhighlight %}
 
 <p>It is also possible to install the source code and build the library locally. This can be achieved either by using <b>npm</b> or <b>github</b>:</p>
