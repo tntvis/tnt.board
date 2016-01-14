@@ -502,7 +502,7 @@ api :
                   class : interface method
                   desc : specifies how new elements are displayed
                   full : Specifies how new elements are displayed. Accepts a callback that is called with a <a href="https://github.com/mbostock/d3/wiki/Selections">d3 selection</a> containing the new elements on every data update. Inside of this function, <i>this</i> is set to the current <a href="#Track">track</a>. When this method is called without arguments returns the current <i>create</i> function.
-                  example :
+                  example : |
                     var vline_feature = function () {
                         var feature = tnt.board.track.feature();
 
@@ -526,12 +526,12 @@ api :
                   path : feature
                   args : callback
                   desc : specifies how the elements are <i>moved</i> when the board is dragged
-                  full : Specifies how the elements are <i>moved</i> when the board is dragged. Accepts a callback that is called with the current elements in the track. In of this function, <i>this</i> is set to the current <a href="#Track">track</a>. When this method is called without arguments returns the current <i>mover</i> function.
-                  examples :
+                  full : Specifies how the elements are <i>moved</i> when the board is dragged. Accepts a callback that is called with the current elements in the track. Inside of the callback, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method returns the current value.
+                  examples : |
                     var vline_feature = function () {
                         var feature = tnt.board.track.feature();
 
-                        feature.mover (function (vlines) {
+                        feature.move (function (vlines) {
                             select("line")
                                 .attr("x1", function (d) {
                                     return xScale(d.pos);
@@ -541,14 +541,35 @@ api :
                                 })
                         });
 
-                - name : update
+                - name : distribute
                   path : feature
                   args : callback
+                  class : interface method
+                  desc : distributes (vertically) the elements to display
+                  full : Distributes (vertically) the elements to display in the track. Accepts a callback that is called with a d3.selection containing the elements displayed in the track. Inside the callback, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method returns the current value.
+                  example : |
+                    var feature = tnt.board.track.feature()
+                        .distribute (function (sel) {
+                            sel
+                                .select("rect")
+                                .transition()
+                                .duration(500)
+                                .attr("y", function (d) {
+                                    return (feature.layout().gene_slot().slot_height * d.slot);
+                                })
+                                .attr("height", feature.layout().gene_slot().gene_height);
+                        })
+
+                - name : update
+                  path : feature
+                  args : obj
+                  desc : updates the track to the new location
 
 
                 - name : fixed
                   path : feature
                   args : callback
+                  class : interface method
                   desc : sets a callback to display non-scaled elements in the <a href="#Display">display</a>
                   full : Sets a callback to display non-scaled elements in the <a href="#Display">display</a>. There are cases where the <a href="#Track">track</a> needs to dispay non-scaled visual elements (rulers, baselines, etc). The method specified with this callback is called on <a href="#Display">display</a> initialisation passing the <a href="#Board">board</a>'s <a href="#width">width</a> as its argument. In this function, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method return the current <i>guider</i> function.
 
