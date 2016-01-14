@@ -78,5 +78,3 @@
 	- in package.json added min version
 0.1.4
 	- updated lib included
-0.1.5
-	- cleaned up calls to feature update
