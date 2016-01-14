@@ -1,7 +1,7 @@
 # TnT Board
-TnT Board is a javascript library for displaying track-based annotations in the web. It is part of the the [TnT](http://emepyc.github.io/tnt/) set of visualisation libraries to display trees and track-based visualisations, although it can be used independently of any other TnT library. It has been designed with a powerful [API](http://emepyc.github.io/tnt.board/api/index.html), written with flexibility in mind, that allows the creation of expressive, dynamic and powerful track-based visualizations.
+[TnT Board](http://tntvis.github.io/tnt.board) is a javascript library for displaying track-based annotations in the web. It is part of the the [TnT](http://tntvis.github.io/tnt/) set of visualisation libraries to display trees and track-based visualisations, although it can be used independently of any other TnT library. It has been designed with a powerful [API](http://tntvis.github.io/tnt.board/api/), written with flexibility in mind, that allows the creation of expressive, dynamic and powerful track-based visualizations.
 
-TnT Board defines several elements to facilitate the creation of visualisations: a board that is a container for tracks, tracks that are independent units of data representation, data retrievers to get the data synchronously or asynchronously and visual features to display the available data.
+TnT Board defines several elements to facilitate the creation of visualisations: a [board](http://tntvis.github.io/tnt.board/api/board/index.html#Board) that is a container for tracks, [tracks](http://tntvis.github.io/tnt.board/api/index.html#Track) that are independent units of data representation, [data retrievers](http://tntvis.github.io/tnt.board/api/index.html#Data) to get the data synchronously or asynchronously and [visual features](http://tntvis.github.io/tnt.board/api/index.html#Display) to display the available data.
 
 Check out the complete [documentation](http://tntvis.github.io/tnt.board/).
 
