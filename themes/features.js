@@ -15,7 +15,7 @@ var features_theme = function () {
             .height(20)
             .color("white")
             .display (tnt.board.track.feature.block()
-                .color("#3FAB19")
+                .color("orange")
                 .index(function (d) {
                     return d.start;
                 })
@@ -31,7 +31,7 @@ var features_theme = function () {
             .height(40)
             .color("white")
             .display (tnt.board.track.feature.line()
-                .color("#2868D2")
+                .color("steelblue")
                 .index (function (d) {
                     return d.pos;
                 })
@@ -47,7 +47,7 @@ var features_theme = function () {
             .height(40)
             .color("white")
             .display (tnt.board.track.feature.area()
-                .color("#77BD17")
+                .color("orange")
                 .index (function (d) {
                     return d.pos;
                 })
@@ -78,7 +78,7 @@ var features_theme = function () {
             .color("white")
             .display (tnt.board.track.feature.composite()
                 .add ("blocks", tnt.board.track.feature.block()
-                    .color("blue")
+                    .color("steelblue")
                     .index(function (d) {
                         return d.start;
                     })
