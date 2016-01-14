@@ -73,7 +73,7 @@ var tnt_feature = function () {
         config.create.call(track, new_elems, xScale);
     };
 
-    var update = function (loc, field) {
+    var update = function (field) {
         var track = this;
         var svg_g = track.g;
 
@@ -197,7 +197,7 @@ tnt_feature.composite = function () {
     var update = function () {
     	var track = this;
     	for (var i=0; i<display_order.length; i++) {
-    	    displays[display_order[i]].update.call(track, undefined, display_order[i]);
+    	    displays[display_order[i]].update.call(track, display_order[i]);
     	    displays[display_order[i]].move_to_front.call(track, display_order[i]);
     	}
         // for (var display in displays) {
@@ -838,7 +838,7 @@ tnt_feature.location = function () {
         return this;
     };
 
-    feature.update = function (loc) {
+    feature.update = function () {
     	var track = this;
     	var svg_g = track.g;
     	var domain = xScale.domain();
