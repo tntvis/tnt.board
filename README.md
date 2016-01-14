@@ -3,9 +3,9 @@ TnT Board is a javascript library for displaying track-based annotations in the 
 
 TnT Board defines several elements to facilitate the creation of visualisations: a board that is a container for tracks, tracks that are independent units of data representation, data retrievers to get the data synchronously or asynchronously and visual features to display the available data.
 
-Check the complete [documentation](http://tntvis.github.io/tnt.board/).
+Check out the complete [documentation](http://tntvis.github.io/tnt.board/).
 
-See more [examples](http://tntvis.github.io/tnt.board/examples/)
+Check out the [examples](http://tntvis.github.io/tnt.board/examples/)
 
 ## Installation
 
