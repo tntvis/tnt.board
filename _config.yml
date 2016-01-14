@@ -462,12 +462,23 @@ api :
                   args : null
                   class : interface
                   desc : general interface for creating visual displays of data
-                  full : General interface for creating visual displays of data. This interface exposes four methods to configure the feature, <a href="#feature.create">create</a>, <a href="#feature.mover">mover</a>, <a href="#feature.update">update</a> and <a href="#feature.guider">guider</a>. These methods are called <i>interface methods</i> and can be used to create new displays. TnT Board also offers several ready-to-use displays built on top of this general interface and described below.<br />The interface also exposes several methods that are <i>inherited</i> by the ready-to-use displays.
+                  full : |
+                    General interface for creating visual displays of data. This interface exposes four methods to configure the feature, <a href="#feature.create">create</a>, <a href="#feature.move">mover</a>, <a href="#feature.distribute">distribute</a> and <a href="#feature.fixed">fixed</a>. These methods are called <i>interface methods</i> and can be used to create new displays.
+                    <br />
+                    <br />
+                    To understand how to use these <i>interface methods</i> it is useful to understand the <i>interaction model</i> in TnT Board:
+                    <ol>
+                        <li> When the board is started all the tracks are cleaned using the <a href="#feature.reset">reset</a> method</li>
+                        <li> All the tracks are then updated. This makes new data to be retrieved based on the current coordinates of the <a href="#Board">board</a></li>
+                        <li> The <a href="feature.update">update</a> method of the display is called once the new data is available. This method calls the <a href="feature.distribute">distribute</a> <i>interface method</i> in case some vertical distribution needs to be done (for example, avoiding overlaps between elements) and finally renders the elements based on the <a href="feature.create">create</a> <i>interface method</i></li>
+                        <li> While the board is panned or zommed the display executes the <a href="#feature.move">move</a> <i>interface method</i></li>
+                        <li> When the the interaction stops new data is retrieved again using the new board's coordinates, the <a href="feature.distribute">distribute</a> method is called again on all the elements and the <a href="feature.create">create</a> method only on the new ones.</li>
+                    </ol>
+                    <br />
+                    <p>TnT Board also offers several ready-to-use displays built on top of this general interface and described below.<br />The interface also exposes several methods that are <i>inherited</i> by the ready-to-use displays.</p>
                   example : |
-                    var vline_feature = function () {
-                        var feature = tnt.board.track.feature();
-
-                        feature.create (function (new_elems) {
+                    var vertical_line = tnt.board.track.feature()
+                        .create (function (new_elems) {
                             var track = this;
                             var xScale = track.scale();
                             new_elems
@@ -481,9 +492,8 @@ api :
                                 .attr("y1", 0)
                                 .attr("y2", track.height())
                                 .attr("stroke", feature.color());
-                        });
-
-                        feature.mover (function (vlines) {
+                        })
+                        .move (function (vlines) {
                             select("line")
                                 .attr("x1", function (d) {
                                     return xScale(d.pos);
@@ -493,20 +503,19 @@ api :
                                 })
                         });
 
-                        return feature;
-                    }
+                    var board = tnt.board()
+                        .data (...)
+                        .display (vertical_line);
 
                 - name : create
                   path : feature
                   args : callback
                   class : interface method
-                  desc : specifies how new elements are displayed
-                  full : Specifies how new elements are displayed. Accepts a callback that is called with a <a href="https://github.com/mbostock/d3/wiki/Selections">d3 selection</a> containing the new elements on every data update. Inside of this function, <i>this</i> is set to the current <a href="#Track">track</a>. When this method is called without arguments returns the current <i>create</i> function.
+                  desc : specifies how new elements are rendered
+                  full : Specifies how new elements are rendered. Accepts a callback that is called with a <a href="https://github.com/mbostock/d3/wiki/Selections">d3 selection</a> containing the new elements on every data update. Inside of this function, <i>this</i> is set to the current <a href="#Track">track</a>. When this method is called without arguments returns the current value.
                   example : |
-                    var vline_feature = function () {
-                        var feature = tnt.board.track.feature();
-
-                        feature.create (function (new_elems) {
+                    var feature = tnt.board.track.feature()
+                        .create (function (new_elems) {
                             var track = this;
                             var xScale = track.scale();
                             new_elems
@@ -522,11 +531,31 @@ api :
                                 .attr("stroke", feature.color());
                         });
 
+                - name : distribute
+                  path : feature
+                  args : callback
+                  class : interface method
+                  desc : distributes the elements to display in the track
+                  full : Distributes the elements to display in the track. Accepts a callback that is called with a <a href="https://github.com/mbostock/d3/wiki/Selections">d3 selection</a> containing the elements displayed in the track. Inside the callback, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method returns the current value.
+                  example : |
+                    var feature = tnt.board.track.feature()
+                        .distribute (function (sel) {
+                            sel
+                                .select("rect")
+                                .transition()
+                                .duration(500)
+                                .attr("y", function (d) {
+                                    return (feature.layout().gene_slot().slot_height * d.slot);
+                                })
+                                .attr("height", feature.layout().gene_slot().gene_height);
+                        })
+
                 - name : move
                   path : feature
                   args : callback
-                  desc : specifies how the elements are <i>moved</i> when the board is dragged
-                  full : Specifies how the elements are <i>moved</i> when the board is dragged. Accepts a callback that is called with the current elements in the track. Inside of the callback, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method returns the current value.
+                  class : interface method
+                  desc : specifies how the existing elements are moved when the board is panned or zoomed
+                  full : Specifies how the existing elements are moved when the board is panned or zoomed. Accepts a callback that is called with a the <a href="https://github.com/mbostock/d3/wiki/Selections">d3 selection</a> containing the current elements in the track. Inside of the callback, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method returns the current value.
                   examples : |
                     var vline_feature = function () {
                         var feature = tnt.board.track.feature();
@@ -541,51 +570,38 @@ api :
                                 })
                         });
 
-                - name : distribute
-                  path : feature
-                  args : callback
-                  class : interface method
-                  desc : distributes (vertically) the elements to display
-                  full : Distributes (vertically) the elements to display in the track. Accepts a callback that is called with a d3.selection containing the elements displayed in the track. Inside the callback, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method returns the current value.
-                  example : |
-                    var feature = tnt.board.track.feature()
-                        .distribute (function (sel) {
-                            sel
-                                .select("rect")
-                                .transition()
-                                .duration(500)
-                                .attr("y", function (d) {
-                                    return (feature.layout().gene_slot().slot_height * d.slot);
-                                })
-                                .attr("height", feature.layout().gene_slot().gene_height);
-                        })
-
-                - name : update
-                  path : feature
-                  args : obj
-                  desc : updates the track to the new location
-
 
                 - name : fixed
                   path : feature
                   args : callback
                   class : interface method
                   desc : sets a callback to display non-scaled elements in the <a href="#Display">display</a>
-                  full : Sets a callback to display non-scaled elements in the <a href="#Display">display</a>. There are cases where the <a href="#Track">track</a> needs to dispay non-scaled visual elements (rulers, baselines, etc). The method specified with this callback is called on <a href="#Display">display</a> initialisation passing the <a href="#Board">board</a>'s <a href="#width">width</a> as its argument. In this function, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method return the current <i>guider</i> function.
+                  full : Sets a callback to display non-scaled elements in the <a href="#Display">display</a>. There are cases where the <a href="#Track">track</a> needs to dispay non-scaled visual elements (fixed while panning or zomming) like rulers, baselines, etc. The method specified with this callback is called on <a href="#Display">display</a> initialisation passing the <a href="#Board">board</a>'s <a href="#width">width</a> as its argument. In this function, <i>this</i> is set to the current <a href="#Track">track</a>. When called without arguments this method return the current <i>guider</i> function.
 
+                - name : update
+                  path : feature
+                  args : null
+                  desc : updates the track with the current data elements.
+                  full : Updates the track with the current data elements. This is called automatically with every data update but can be called at any point. This is useful to update <i>manually</i> a track individually. This method expects to have <i>this</i> set to the <a href="#Track">track</a> it belongs to.
+
+                - name : reset
+                  path : feature
+                  args : null
+                  desc : resets the visualisation of a track
+                  full : Resets the visualisation of a track. This method expects to have <i>this</i> set to the <a href="#Track">track</a> it belongs to.
 
                 - name : index
                   path : feature
                   args : callback
                   desc : specifies an <i>index</i> function to link elements between successive track updates
-                  full : Specifies an <i>index</i> function to link elements between successive track updates. When a <a href="#Track">track</a> is updated and the new <a href="#Data">data</a> is retrieved, the <a href="#Display">display</a> needs to know which elements are new, which have dissapeared and which are currently in the display. These <i>binding</i> of elements is made before the new data is displayed and is based on this function. This function is called on every (new & old) element passing the element object as its argument. Elements for which the <i>index</i> function returns the same value are linked or bound together. By default data are linked based on their position in the data array.
+                  full : Specifies an <i>index</i> function to link elements between successive track updates. When a <a href="#Track">track</a> is updated and the new <a href="#Data">data</a> is retrieved, the <a href="#Display">display</a> needs to know which elements are new, which have dissapeared and which are currently in the display. This <i>binding</i> of elements is made before the new data is displayed and is based on this function. This function is called on every (new & old) element passing the elements as its argument. Elements for which the <i>index</i> function returns the same value are linked or bound together. By default data are linked based on their position in the data array.
                   example : |
                     // Data track
                     var pin_track = tnt.board.track()
                         .height(60)
                         .color("white")
                         .display (tnt.board.track.feature.pin()
-                            // Elements having the same "pos" attribute are linked between data updates
+                            // Elements differentiate from one another based on their pos property
                             .index (function (d) {
                                 return d.pos;
                             })
