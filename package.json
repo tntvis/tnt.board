@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/emepyc/tnt.board"
+    "url": "https://github.com/tntvis/tnt.board"
   },
   "keywords": [
     "tnt",
@@ -22,9 +22,9 @@
   "author": "Miguel Pignatelli",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/emepyc/tnt.board/issues"
+    "url": "https://github.com/tntvis/tnt.board/issues"
   },
-  "homepage": "https://github.com/emepyc/tnt.board",
+  "homepage": "https://github.com/tntvis/tnt.board",
   "devDependencies": {
     "browserify": "^12.0.1",
     "chai": "^3.4.1",
@@ -50,11 +50,11 @@
   "sniper": {
     "js": [
       "http://d3js.org/d3.v3.min.js",
-      "/build/tnt.board.js",
+      "http://tntvis.github.io/tnt.board/build/tnt.board.min.js",
       "/snippets/data/data.js"
     ],
     "css": [
-      "/build/tnt.board.css"
+      "http://tntvis.github.io/tnt.board/build/tnt.board.css"
     ],
     "snippets": [
       "snippets"

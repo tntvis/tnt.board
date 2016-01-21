@@ -80,3 +80,5 @@
 	- updated lib included
 0.1.5
 	- biojs keyword and snippets added
+0.1.6
+	- Fixed biojs examples config
