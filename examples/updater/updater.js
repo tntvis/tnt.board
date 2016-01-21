@@ -61,7 +61,6 @@ var updater_theme = function () {
                         }
                     }
                     return new Promise (function (resolve, reject) {
-                        // console.log(block_track.data().elements());
                         resolve (elems);
                     });
                 })

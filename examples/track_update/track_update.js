@@ -54,7 +54,7 @@ var track_update_theme = function () {
 
     	board(div);
 
-        // Add 1 more track
+        // update track
         d3.select(div)
     	    .append("button")
     	    .text("update track")
