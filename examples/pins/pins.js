@@ -21,11 +21,10 @@ var pins_theme = function () {
                      console.log("mouseover");
                  })
                  .layout(tnt.board.track.layout()
-                    .elements (function (elems, xScale) {
-                        joinClose (elems, xScale);
+                    .elements (function (elems) {
+                        joinClose (elems, this.display().scale());
                     })
                 )
-
              )
     	    .data(tnt.board.track.data.sync()
                 .retriever (function () {
