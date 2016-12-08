@@ -179,9 +179,11 @@ tnt_feature.composite = function () {
 
     var reset = function () {
     	var track = this;
-    	for (var i=0; i<displays.length; i++) {
-    	    displays[i].reset.call(track);
-    	}
+        for (var display in displays) {
+            if (displays.hasOwnProperty(display)) {
+                displays[display].reset.call(track);
+            }
+        }
     };
 
     var init = function (width) {
