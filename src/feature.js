@@ -823,6 +823,8 @@ tnt_feature.location = function () {
     feature.plot = function () {};
     feature.init = function () {
         row = undefined;
+        var track = this;
+        track.g.select("text").remove();
     };
     feature.mover = function() {
     	var domain = xScale.domain();
