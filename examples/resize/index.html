@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="../../build/tnt.board.css" type="text/css"/>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="../../build/tnt.board.js"></script>
+    <script src="resize.js"></script>
+
+    <style>
+        #size-select {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<select id="size-select">
+    <option value="500">500px</option>
+    <option value="700">700px</option>
+    <option value="900">900px</option>
+</select>
+
+<div id="mydiv"></div>
+<script>
+    var myBoard = tnt.board().from(20).to(500).max(500).width(500);
+    var theme = features_theme();
+    theme(myBoard, document.getElementById("mydiv"));
+</script>
+</body>

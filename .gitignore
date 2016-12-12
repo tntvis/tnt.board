@@ -4,3 +4,4 @@ node_modules
 *~
 coverage/lcov.info
 _site
+.idea
