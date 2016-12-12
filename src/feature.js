@@ -28,6 +28,7 @@ var tnt_feature = function () {
     	var track = this;
     	track.g.selectAll(".tnt_elem").remove();
         track.g.selectAll(".tnt_guider").remove();
+        track.g.selectAll(".tnt_fixed").remove();
     };
 
     var init = function (width) {
@@ -35,6 +36,7 @@ var tnt_feature = function () {
 
         track.g
             .append ("text")
+            .attr ("class", "tnt_fixed")
             .attr ("x", 5)
             .attr ("y", 12)
             .attr ("font-size", 11)
@@ -428,7 +430,7 @@ tnt_feature.ensembl = function () {
 
     	track.g
     	    .append("line")
-    	    .attr("class", "tnt_guider")
+    	    .attr("class", "tnt_guider tnt_fixed")
     	    .attr("x1", 0)
     	    .attr("x2", width)
     	    .attr("y1", height_offset)
@@ -438,7 +440,7 @@ tnt_feature.ensembl = function () {
 
     	track.g
     	    .append("line")
-    	    .attr("class", "tnt_guider")
+    	    .attr("class", "tnt_guider tnt_fixed")
     	    .attr("x1", 0)
     	    .attr("x2", width)
     	    .attr("y1", track.height() - height_offset)
@@ -684,6 +686,7 @@ tnt_feature.pin = function () {
         var track = this;
         track.g
             .append("line")
+            .attr("class", "tnt_fixed")
             .attr("x1", 0)
             .attr("x2", width)
             .attr("y1", track.height())
