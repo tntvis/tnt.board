@@ -588,7 +588,7 @@ api :
                   path : feature
                   args : null
                   desc : resets the visualisation of a track
-                  full : Resets the visualisation of a track. This method expects to have <i>this</i> set to the <a href="#Track">track</a> it belongs to.
+                  full : Resets the visualisation of a track. This method expects to have <i>this</i> set to the <a href="#Track">track</a> it belongs to. In the resetting process all the SVG elements with classes <i>tnt_elem</i>, <i>tnt_guider</i> and <i>tnt_guider</i> are removed.
 
                 - name : index
                   path : feature
