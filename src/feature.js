@@ -179,9 +179,11 @@ tnt_feature.composite = function () {
 
     var reset = function () {
     	var track = this;
-    	for (var i=0; i<displays.length; i++) {
-    	    displays[i].reset.call(track);
-    	}
+        for (var display in displays) {
+            if (displays.hasOwnProperty(display)) {
+                displays[display].reset.call(track);
+            }
+        }
     };
 
     var init = function (width) {
@@ -766,7 +768,6 @@ tnt_feature.axis = function () {
     feature.reset = function () {
     	xAxis = undefined;
     	var track = this;
-    	track.g.selectAll("rect").remove();
     	track.g.selectAll(".tick").remove();
     };
     feature.plot = function () {};
@@ -823,6 +824,8 @@ tnt_feature.location = function () {
     feature.plot = function () {};
     feature.init = function () {
         row = undefined;
+        var track = this;
+        track.g.select("text").remove();
     };
     feature.mover = function() {
     	var domain = xScale.domain();
