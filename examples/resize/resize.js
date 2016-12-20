@@ -6,7 +6,7 @@ var features_theme = function () {
         d3.select("#size-select")
             .on ("change", function () {
                 console.log("current size is " + this.value);
-                board.width(this.value);
+                board.width(~~this.value);
             });
 
 
@@ -109,7 +109,14 @@ var features_theme = function () {
             );
 
     	board
-            .add_track([axis_track, pin_track, block_track, line_track, area_track, composite_track]);
+            .add_track([
+                axis_track,
+                pin_track,
+                block_track,
+                line_track,
+                area_track,
+                composite_track
+            ]);
 
     	board(div);
 
