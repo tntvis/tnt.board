@@ -1,8 +1,8 @@
 node_modules
 .sass-cache
-.coveralls.yml
 *~
-coverage/lcov.info
+*.map
+Gemfile.lock
 _site
+npm-debug.log
 .idea
-build/
