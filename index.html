@@ -18,7 +18,7 @@ theme : features
 <h3>Boards</h3>
 <p>In TnT Board, a <a href="{{ site.baseurl }}/api/board/index.html#Board">board</a> is an interactive container for <a href="{{ site.baseurl }}/api/board/index.html#Track">tracks</a>. Each panning or zoom event in the <a href="{{ site.baseurl }}/api/board/index.html#Board">board</a> triggers new data and visualisation updates in the attached tracks. New boards are created using the tnt.<a href="{{ site.baseurl }}/api/board/index.html#tnt.board">board</a> method. Once it is created new tracks can be attached using the board.<a href="{{ site.baseurl }}/api/board/index.html#board.add_track">add_track</a> method. Boards are configured via several methods that are fully explained in the <a href="{{ site.baseurl }}/api/">API page</a>.</p>
 
-{% highlight javascript linenos %}
+{% highlight javascript %}
 var myBoard = tnt.board()
     .from(0)
     .to(1000)
@@ -46,7 +46,7 @@ myBoard.start();
 
 <h2><a name="example" href="#example">#</a>Example</h2>
 <p>Examples are a fundamental part of TnT documentation. Check more in the <a href="{{ site.baseurl }}/examples/">examples page</a></p>
-  {% highlight javascript linenos %}
+  {% highlight javascript %}
   var myBoard = tnt.board().from(0).to(500).left(0).right(500);
 
   var axisTrack = tnt.board.track()
@@ -91,7 +91,7 @@ myBoard.start();
 <h2><a name="installation" href="#installation">#</a>Installation</h2>
 <p>TnT Board can be linked directly from the github repo. It depends on <a href="http://d3js.org">d3js</a> and this library needs to be linked before tnt.board</p>
 
-{% highlight html linenos %}
+{% highlight html %}
 <link rel="stylesheet" href="http://tntvis.github.io/tnt/build/tnt.board.css" type="text/css" />
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="http://tntvis.github.io/tnt/build/tnt.board.js" charset="utf-8"></script>
