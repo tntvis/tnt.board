@@ -7,7 +7,7 @@ var scroll_theme = function () {
     	    .text("<")
             .style("margin", "10px")
     	    .on("click", function () {
-                board.scroll(-0.5);
+                board.scroll(-0.2);
     	    });
 
         // Scroll right button
@@ -16,7 +16,7 @@ var scroll_theme = function () {
             .text(">")
             .style("margin", "10px")
             .on("click", function () {
-                board.scroll(0.5);
+                board.scroll(0.2);
             });
 
         // Zoom in button

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="../../build/tnt.board.css" type="text/css" />
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+
+    <!-- es6 promise only needed to "fake" async load of data -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/3.2.2/es6-promise.min.js"></script>
+
+    <script src="../../build/tnt.board.js"></script>
+    <script src="layout.js"></script>
+    <script src="overlaps.js"></script>
+    <script src="display.js"></script>
+</head>
+
+<body>
+    <div id="mydiv"></div>
+    <script>
+        var myBoard = tnt.board().from(20).to(500).max(500);
+        render (myBoard, document.getElementById("mydiv"));
+    </script>
+</body>

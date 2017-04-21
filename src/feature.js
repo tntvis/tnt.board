@@ -1,5 +1,6 @@
 var apijs = require ("tnt.api");
 var layout = require("./layout.js");
+var utils = require('tnt.utils');
 
 // FEATURE VIS
 // var board = {};
@@ -51,25 +52,25 @@ var tnt_feature = function () {
             if (d3.event.defaultPrevented) {
                 return;
             }
-            dispatch.click.call(this, d, i);
+            dispatch.call("click", this, d, i);
         });
         new_elems.on("mouseover", function (d, i) {
             if (d3.event.defaultPrevented) {
                 return;
             }
-            dispatch.mouseover.call(this, d, i);
+            dispatch.call("mouseover", this, d, i);
         });
         new_elems.on("dblclick", function (d, i) {
             if (d3.event.defaultPrevented) {
                 return;
             }
-            dispatch.dblclick.call(this, d, i);
+            dispatch.call("dblclick", this, d, i);
         });
         new_elems.on("mouseout", function (d, i) {
             if (d3.event.defaultPrevented) {
                 return;
             }
-            dispatch.mouseout.call(this, d, i);
+            dispatch.call("mouseout", this, d, i);
         });
         // new_elem is a g element the feature is inserted
         config.create.call(track, new_elems, xScale);
@@ -112,7 +113,7 @@ var tnt_feature = function () {
                 .data(data_elems);
         }
 
-        config.distribute.call(track, vis_elems, config.scale);
+        // config.distribute.call(track, vis_elems, config.scale);
 
     	var new_elem = vis_elems
     	    .enter();
@@ -170,7 +171,12 @@ var tnt_feature = function () {
     	    move_to_front : move_to_front
     	});
 
-    return d3.rebind(feature, dispatch, "on");
+    // return d3.rebind(feature, dispatch, "on");
+    feature.on = function () {
+        var value = dispatch.on.apply(dispatch, arguments);
+        return value === dispatch ? feature : value;
+    };
+    return feature;
 };
 
 tnt_feature.composite = function () {
@@ -178,6 +184,7 @@ tnt_feature.composite = function () {
     var display_order = [];
 
     var features = {};
+    var xScale;
 
     var reset = function () {
     	var track = this;
@@ -234,10 +241,24 @@ tnt_feature.composite = function () {
     	return ds;
     };
 
+    var scale = function (scale) {
+        if (!arguments.length) {
+            return xScale;
+        }
+        // Setting a new xScale...
+        for (var display in displays) {
+            if (displays.hasOwnProperty(display)) {
+                displays[display].scale(scale);
+            }
+        }
+        xScale = scale;
+        return this;
+    };
+
     // API
     apijs (features)
-        .getset("scale")
     	.method ({
+            scale  : scale,
     	    reset  : reset,
     	    update : update,
     	    mover   : mover,
@@ -253,9 +274,8 @@ tnt_feature.area = function () {
     var feature = tnt_feature.line();
     var line = feature.line();
 
-    var area = d3.svg.area()
-    	.interpolate(line.interpolate())
-    	.tension(feature.tension());
+    var area = d3.area()
+    	.curve(line.curve());
 
     var data_points;
 
@@ -292,7 +312,8 @@ tnt_feature.area = function () {
     feature.move (function (path) {
     	var track = this;
         var xScale = feature.scale();
-    	line_move.call(track, path, xScale);
+        newScale = d3.event.transform.rescaleX(xScale);
+    	line_move.call(track, path, newScale);
 
     	area.x(line.x());
     	track.g
@@ -315,9 +336,9 @@ tnt_feature.line = function () {
         return d.val;
     };
     var tension = 0.7;
-    var yScale = d3.scale.linear();
-    var line = d3.svg.line()
-        .interpolate("basis");
+    var yScale = d3.scaleLinear();
+    var line = d3.line()
+        .curve(d3.curveCardinal);
 
     // line getter. TODO: Setter?
     feature.line = function () {
@@ -340,14 +361,6 @@ tnt_feature.line = function () {
     	return feature;
     };
 
-    feature.tension = function (t) {
-    	if (!arguments.length) {
-    	    return tension;
-    	}
-    	tension = t;
-    	return feature;
-    };
-
     var data_points;
 
     // For now, create is a one-off event
@@ -362,7 +375,6 @@ tnt_feature.line = function () {
     	}
 
     	line
-    	    .tension(tension)
     	    .x(function (d) {
                 return xScale(x(d));
     	    })
@@ -462,8 +474,6 @@ tnt_feature.ensembl = function () {
                 return xScale (d.start);
     	    })
     	    .attr("y", height_offset)
-    // 	    .attr("rx", 3)
-    // 	    .attr("ry", 3)
     	    .attr("width", function (d) {
                 return (xScale(d.end) - xScale(d.start));
     	    })
@@ -563,13 +573,13 @@ tnt_feature.pin = function () {
     // 'Inherit' from board.track.feature
     var feature = tnt_feature();
 
-    var yScale = d3.scale.linear()
+    var yScale = d3.scaleLinear()
     	.domain([0,0])
     	.range([0,0]);
 
     var opts = {
-        pos : d3.functor("pos"),
-        val : d3.functor("val"),
+        pos : utils.functor("pos"),
+        val : utils.functor("val"),
         domain : [0,0]
     };
 
@@ -602,7 +612,7 @@ tnt_feature.pin = function () {
     	    	return track.height() - yScale(d[opts.val(d, i)]);
     	    })
     	    .attr("stroke", function (d) {
-                return d3.functor(feature.color())(d);
+                return utils.functor(feature.color())(d);
             });
 
     	new_pins
@@ -615,7 +625,7 @@ tnt_feature.pin = function () {
     	    })
     	    .attr("r", pin_ball_r)
     	    .attr("fill", function (d) {
-                return d3.functor(feature.color())(d);
+                return utils.functor(feature.color())(d);
             });
 
         new_pins
@@ -738,22 +748,32 @@ tnt_feature.block = function () {
 
     feature.distribute(function (elems) {
         var xScale = feature.scale();
+        var newScale = xScale;
+
+        if (d3.event) {
+            newScale = d3.event.transform.rescaleX(xScale);
+        }
+
     	elems
     	    .select("rect")
     	    .attr("width", function (d) {
-        		return (xScale(d.end) - xScale(d.start));
+        		return (newScale(d.end) - newScale(d.start));
     	    });
     });
 
     feature.move(function (blocks) {
         var xScale = feature.scale();
+        var transform = d3.event.transform;
+        // var newScale = transform.rescaleX(xScale);
+        newScale = xScale;
+
     	blocks
     	    .select("rect")
     	    .attr("x", function (d) {
-        		return xScale(d.start);
+        		return newScale(d.start);
     	    })
     	    .attr("width", function (d) {
-        		return (xScale(d.end) - xScale(d.start));
+        		return (newScale(d.end) - newScale(d.start));
     	    });
     });
 
@@ -777,7 +797,14 @@ tnt_feature.axis = function () {
     feature.mover = function () {
     	var track = this;
     	var svg_g = track.g;
-    	svg_g.call(xAxis);
+
+        // var t = d3.event.transform;
+        // if (t && xAxis) {
+        //     svg_g.call(xAxis.scale(t.rescaleX(xScale)));
+        // }
+        if (xAxis) {
+            svg_g.call(xAxis.scale(xScale));
+        }
     };
 
     feature.init = function () {
@@ -787,9 +814,16 @@ tnt_feature.axis = function () {
     feature.update = function () {
     	// Create Axis if it doesn't exist
         if (xAxis === undefined) {
-            xAxis = d3.svg.axis()
-                .scale(xScale)
-                .orient(orientation);
+            if (orientation === "top") {
+                xAxis = d3.axisTop(xScale);
+            } else if (orientation === "bottom") {
+                xAxis = d3.axisBottom(xScale);
+            } else {
+                console.error("axis orientation '" + orientation + "' is not recognised: use 'top' or 'bottom'");
+            }
+            // xAxis = d3.svg.axis()
+            //     .scale(xScale)
+            //     .orient(orientation);
         }
 
     	var track = this;
@@ -831,6 +865,7 @@ tnt_feature.location = function () {
         track.g.select("text").remove();
     };
     feature.mover = function() {
+        if (!row) return;
     	var domain = xScale.domain();
     	row.select("text")
     	    .text("Location: " + ~~domain[0] + "-" + ~~domain[1]);

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="http://tntvis.github.io/tnt.board/build/tnt.board.css" type="text/css"/>
+    <style>
+        #mydiv {
+            margin-top: 200px;
+        }
+    </style>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="../../build/tnt.board.js"></script>
+    <script src="width.js"></script>
+</head>
+
+<body>
+    <select id="size-select">
+        <option value="500">500px</option>
+        <option value="700">700px</option>
+        <option value="900">900px</option>
+    </select>
+    <div id="mydiv"></div>
+    <script>
+        width(document.getElementById("mydiv"));
+    </script>
+</body>

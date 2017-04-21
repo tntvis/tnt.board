@@ -13,10 +13,10 @@ var board = function() {
     var width     = 920;
     var height_offset = 20;
     var loc = {
-	species  : undefined,
-	chr      : undefined,
-        from     : 0,
-        to       : 500
+        species: undefined,
+        chr: undefined,
+        from: 0,
+        to: 500
     };
 
     // Limit caps
@@ -33,7 +33,9 @@ var board = function() {
     var pane; // Draggable pane
     var svg_g;
     var xScale;
-    var zoomEventHandler = d3.behavior.zoom();
+    var curr_transform;
+    var zoom = d3.zoom();
+
     var limits = {
         min : 0,
         max : 1000,
@@ -42,9 +44,10 @@ var board = function() {
     };
     var dur = 500;
     var drag_allowed = true;
+    var started = false;
 
     var exports = {
-        ease          : d3.ease("cubic-in-out"),
+        ease          : d3.easeCubicInOut,
         extend_canvas : {
             left : 0,
             right : 0
@@ -113,21 +116,6 @@ var board = function() {
     	    .attr("width", width)
     	    .attr("height", height)
     	    .style("fill", bgColor);
-
-    	// ** TODO: Wouldn't be better to have these messages by track?
-    	// var tooWide_text = svg_g
-    	//     .append("text")
-    	//     .attr("class", "tnt_wideOK_text")
-    	//     .attr("id", "tnt_" + div_id + "_tooWide")
-    	//     .attr("fill", bgColor)
-    	//     .text("Region too wide");
-
-    	// TODO: I don't know if this is the best way (and portable) way
-    	// of centering the text in the text area
-    	// var bb = tooWide_text[0][0].getBBox();
-    	// tooWide_text
-    	//     .attr("x", ~~(width/2 - bb.width/2))
-    	//     .attr("y", ~~(height/2 - bb.height/2));
     };
 
     // API
@@ -179,6 +167,7 @@ var board = function() {
         };
 
         cont();
+        started = true;
     });
 
     api.method ('update', function () {
@@ -202,22 +191,34 @@ var board = function() {
     };
 
     var plot = function() {
-    	xScale = d3.scale.linear()
-    	    .domain([loc.from, loc.to])
-    	    .range([0, width]);
+        // Initially xScale is set to the max scale we can have
+        xScale = d3.scaleLinear()
+            .domain([limits.min, limits.max])
+            .range([0, width]);
 
-    	if (drag_allowed) {
-    	    svg_g.call( zoomEventHandler
-    		       .x(xScale)
-    		       .scaleExtent([(loc.to-loc.from)/(limits.zoom_out-1), (loc.to-loc.from)/limits.zoom_in])
-    		       .on("zoom", _move)
-    		     );
-    	}
+        zoom.extent([[0, 20], [width, 20]])
+            .translateExtent([[0, 20], [width, 20]])
+            .scaleExtent([1, (limits.zoom_out - 1), (loc.to - loc.from) / limits.zoom_in])
+            .on("zoom", _move);
+
+
+        // Then we "zoom" to the initial position ([loc.from, loc.to])
+        // var k = (xScale(limits.max) - xScale(limits.min)) / (xScale(loc.to) - xScale(loc.from));
+        // var tx = 0 - (k * xScale(loc.from));
+        // var t = d3.zoomIdentity.translate(tx, 0).scale(k);
+        //
+        // svg_g.call(zoom.transform, t);
+        jump([loc.from, loc.to]);
+
+        svg_g.call(zoom.on("zoom", _move));
+
     };
 
     var _reorder = function (new_tracks) {
         // TODO: This is defining a new height, but the global height is used to define the size of several
         // parts. We should do this dynamically
+
+        var newScale = curr_transform.rescaleX(xScale);
 
         var found_indexes = [];
         for (var j=0; j<new_tracks.length; j++) {
@@ -232,9 +233,11 @@ var board = function() {
             }
             if (!found) {
                 _init_track(new_tracks[j]);
+                new_tracks[j].display().scale(newScale);
                 _update_track(new_tracks[j], {from : loc.from, to : loc.to});
             }
         }
+
 
         for (var x=0; x<tracks.length; x++) {
             if (!found_indexes[x]) {
@@ -317,9 +320,10 @@ var board = function() {
             xScale.range([0, width]);
 
     	    plot();
+
     	    for (var i=0; i<tracks.length; i++) {
         		tracks[i].g.select("rect").attr("width", w);
-                tracks[i].display().scale(xScale);
+                //tracks[i].display().scale(xScale);
         		tracks[i].display().reset.call(tracks[i]);
                 tracks[i].display().init.call(tracks[i], w);
         		tracks[i].display().update.call(tracks[i], loc);
@@ -338,15 +342,26 @@ var board = function() {
         if (drag_allowed) {
             // When this method is called on the object before starting the simulation, we don't have defined xScale
             if (xScale !== undefined) {
-                svg_g.call( zoomEventHandler.x(xScale)
-                    // .xExtent([0, limits.right])
-                    .scaleExtent([(loc.to-loc.from)/(limits.zoom_out-1), (loc.to-loc.from)/limits.zoom_in])
-                    .on("zoom", _move) );
+                svg_g.call(zoom.transform, curr_transform);
+                svg_g.call(zoom.on("zoom", _move));
+
+
+                // svg_g.call( zoom.x(xScale)
+                //     .scaleExtent([(loc.to-loc.from)/(limits.zoom_out-1), (loc.to-loc.from)/limits.zoom_in])
+                //     .on("zoom", _move) );
             }
         } else {
+            // We freeze the transform...
+            // var t = d3.event.transform;
+            // var newScale = t.rescaleX(xScale);
+
+            // And disable calling the zoom callback on zoom
+            svg_g.call(zoom.on("zoom", null));
+
+
             // We create a new dummy scale in x to avoid dragging the previous one
             // TODO: There may be a cheaper way of doing this?
-            zoomEventHandler.x(d3.scale.linear()).on("zoom", null);
+            // zoom.x(d3.scaleLinear()).on("zoom", null);
         }
         return track_vis;
     });
@@ -359,10 +374,10 @@ var board = function() {
                 track.g
                     .transition()
                     .duration(dur)
-                    .attr("transform", "translate(" + exports.extend_canvas.left + "," + h + ")");
+                    .attr("transform", "translate(" + exports.extend_canvas.left + "," + h++ + ")");
             } else {
                 track.g
-                    .attr("transform", "translate(" + exports.extend_canvas.left + "," + h + ")");
+                    .attr("transform", "translate(" + exports.extend_canvas.left + "," + h++ + ")");
             }
 
             h += track.height();
@@ -378,13 +393,13 @@ var board = function() {
         // caps
         d3.select("#tnt_" + div_id + "_5pcap")
             .attr("height", h)
-            .each(function (d) {
+            .each(function () {
                 move_to_front(this);
             });
 
         d3.select("#tnt_" + div_id + "_3pcap")
             .attr("height", h)
-            .each (function (d) {
+            .each (function () {
                 move_to_front(this);
             });
 
@@ -413,64 +428,86 @@ var board = function() {
 
     	if (track.display()) {
     	    track.display()
-                .scale(xScale)
+                //.scale(xScale)
                 .init.call(track, width);
     	}
 
     	return track_vis;
     };
 
+    function jump (range) {
+        var r1 = range[0];
+        var r2 = range[1];
+        var k = (xScale(limits.max) - xScale(limits.min)) / (xScale(r2) - xScale(r1));
+
+        var tx = 0 - (k * xScale(r1));
+        var t = d3.zoomIdentity.translate(tx, 0).scale(k);
+
+        // This is jumping without transition
+
+        svg_g
+            .call(zoom.transform, t);
+    }
+
     var _manual_move = function (factor, direction) {
-        var oldDomain = xScale.domain();
+        var newScale = curr_transform.rescaleX(xScale);
 
-    	var span = oldDomain[1] - oldDomain[0];
-    	var offset = (span * factor) - span;
+        var minX = newScale.invert(0);
+        var maxX = newScale.invert(width);
+        var span = maxX - minX;
+        var totalOffset = (span * factor);
+        if (direction === 0 && factor > 1) {
+            totalOffset = - totalOffset;
+        }
 
-    	var newDomain;
-    	switch (direction) {
-            case 1 :
-            newDomain = [(~~oldDomain[0] - offset), ~~(oldDomain[1] - offset)];
-    	    break;
-        	case -1 :
-        	    newDomain = [(~~oldDomain[0] + offset), ~~(oldDomain[1] - offset)];
-        	    break;
-        	case 0 :
-        	    newDomain = [oldDomain[0] - ~~(offset/2), oldDomain[1] + (~~offset/2)];
-    	}
+        var duration = 1000;
 
-    	var interpolator = d3.interpolateNumber(oldDomain[0], newDomain[0]);
-    	var ease = exports.ease;
+        var i = d3.interpolateNumber(0, totalOffset);
+        var timer = d3.timer (function (ellapsed) {
+            if (ellapsed > duration) {
+                timer.stop();
+            }
+            var part = i(ellapsed/duration);
 
-    	var x = 0;
-    	d3.timer(function() {
-    	    var curr_start = interpolator(ease(x));
-    	    var curr_end;
-    	    switch (direction) {
-        	    case -1 :
-        		curr_end = curr_start + span;
-        		break;
-        	    case 1 :
-        		curr_end = curr_start + span;
-        		break;
-        	    case 0 :
-        		curr_end = oldDomain[1] + oldDomain[0] - curr_start;
-        		break;
-    	    }
+            var newMinX, newMaxX;
+            switch (direction) {
+                case 1 :
+                    newMinX = minX + part;
+                    newMaxX = maxX + part;
+                    if (newMinX>=limits.min && newMaxX<=limits.max) {
+                        jump([newMinX, newMaxX]);
+                    } else {
+                        timer.stop();
+                    }
+                    break;
+                case -1 :
+                    newMinX = minX - part;
+                    newMaxX = maxX - part;
+                    if (newMinX>=limits.min && newMaxX<=limits.max) {
+                        jump([newMinX, newMaxX]);
+                    } else {
+                        timer.stop();
+                    }
 
-    	    var currDomain = [curr_start, curr_end];
-    	    xScale.domain(currDomain);
-    	    _move(xScale);
-    	    x+=0.02;
-    	    return x>1;
-    	});
+                    break;
+                case 0 :
+                    newMinX = minX + part/2;
+                    newMaxX = maxX - part/2;
+                    if (newMinX < limits.min) {
+                        newMinX = limits.min;
+                    }
+                    if (newMaxX > limits.max) {
+                        newMaxX = limits.max;
+                    }
+
+                    jump([newMinX, newMaxX]);
+            }
+
+            _move_cbak();
+        });
     };
 
-
     var _move_cbak = function () {
-        var currDomain = xScale.domain();
-    	track_vis.from(~~currDomain[0]);
-    	track_vis.to(~~currDomain[1]);
-
     	for (var i = 0; i < tracks.length; i++) {
     	    var track = tracks[i];
     	    _update_track(track, loc);
@@ -483,43 +520,71 @@ var board = function() {
     // 	_move();
     // });
 
-    var _move = function (new_xScale) {
-    	if (new_xScale !== undefined && drag_allowed) {
-    	    zoomEventHandler.x(new_xScale);
-    	}
+    var _move = function () {
+        var t = d3.event.transform;
+        curr_transform = t;
 
-    	// Show the red bars at the limits
-    	var domain = xScale.domain();
-    	if (domain[0] <= (limits.min + 5)) {
-    	    d3.select("#tnt_" + div_id + "_5pcap")
-    		.attr("width", cap_width)
-    		.transition()
-    		.duration(200)
-    		.attr("width", 0);
-    	}
+        var newScale = t.rescaleX(xScale);
 
-    	if (domain[1] >= (limits.max)-5) {
-    	    d3.select("#tnt_" + div_id + "_3pcap")
-    		.attr("width", cap_width)
-    		.transition()
-    		.duration(200)
-    		.attr("width", 0);
-    	}
+        for (var i = 0; i < tracks.length; i++) {
+            tracks[i].display().scale(newScale);
+        }
 
+        // Show the red bars at the limits
+        var newMinX = newScale.invert(0);
+        var newMaxX = newScale.invert(width);
+        track_vis.from(newMinX);
+        track_vis.to(newMaxX);
+
+        if (newMinX <= (limits.min + 5)) {
+            d3.select("#tnt_" + div_id + "_5pcap")
+                .attr("width", cap_width)
+                .transition()
+                .duration(200)
+                .attr("width", 0);
+        }
+
+        if (newMaxX >= (limits.max - 5)) {
+            d3.select("#tnt_" + div_id + "_3pcap")
+                .attr("width", cap_width)
+                .transition()
+                .duration(200)
+                .attr("width", 0);
+        }
+
+    	// var domain = xScale.domain();
+    	// if (domain[0] <= (limits.min + 5)) {
+    	//     d3.select("#tnt_" + div_id + "_5pcap")
+    	// 	.attr("width", cap_width)
+    	// 	.transition()
+    	// 	.duration(200)
+    	// 	.attr("width", 0);
+    	// }
+        //
+    	// if (domain[1] >= (limits.max)-5) {
+    	//     d3.select("#tnt_" + div_id + "_3pcap")
+    	// 	.attr("width", cap_width)
+    	// 	.transition()
+    	// 	.duration(200)
+    	// 	.attr("width", 0);
+    	// }
 
     	// Avoid moving past the limits
-    	if (domain[0] < limits.min) {
-    	    zoomEventHandler.translate([zoomEventHandler.translate()[0] - xScale(limits.min) + xScale.range()[0], zoomEventHandler.translate()[1]]);
-    	} else if (domain[1] > limits.max) {
-    	    zoomEventHandler.translate([zoomEventHandler.translate()[0] - xScale(limits.max) + xScale.range()[1], zoomEventHandler.translate()[1]]);
-    	}
+    	// if (domain[0] < limits.min) {
+    	//     zoomEventHandler.translate([zoomEventHandler.translate()[0] - xScale(limits.min) + xScale.range()[0], zoomEventHandler.translate()[1]]);
+    	// } else if (domain[1] > limits.max) {
+    	//     zoomEventHandler.translate([zoomEventHandler.translate()[0] - xScale(limits.max) + xScale.range()[1], zoomEventHandler.translate()[1]]);
+    	// }
 
     	_deferred();
 
-    	for (var i = 0; i < tracks.length; i++) {
-    	    var track = tracks[i];
-    	    track.display().mover.call(track);
-    	}
+        if (started) {
+            for (var i = 0; i < tracks.length; i++) {
+                var track = tracks[i];
+                track.display().mover.call(track);
+            }
+        }
+
     };
 
     // api.method({

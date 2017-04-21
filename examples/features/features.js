@@ -72,6 +72,20 @@ var features_theme = function () {
                 })
             );
 
+    	var vline_track = tnt.board.track()
+            .height(20)
+            .color("white")
+            .display (tnt.board.track.feature.vline()
+                .color("#d44fd3")
+                .index(function (d) {
+                    return d;
+                })
+            )
+            .data (tnt.board.track.data.sync()
+                .retriever (function () {
+                    return [250];
+                })
+            );
 
         var composite_track = tnt.board.track()
             .height(20)
@@ -99,8 +113,15 @@ var features_theme = function () {
                 })
             );
 
-    	board
-            .add_track([axis_track, pin_track, block_track, line_track, area_track, composite_track]);
+        board.add_track([
+            axis_track,
+            pin_track,
+            block_track,
+            line_track,
+            area_track,
+            composite_track,
+            vline_track
+        ]);
 
     	board(div);
 
