@@ -196,9 +196,13 @@ var board = function() {
             .domain([limits.min, limits.max])
             .range([0, width]);
 
+        var minScale = (limits.max + 100 - limits.min) / limits.zoom_out;
+        var maxScale = (limits.max - limits.min) / limits.zoom_in;
+
         zoom.extent([[0, 20], [width, 20]])
             .translateExtent([[0, 20], [width, 20]])
-            .scaleExtent([1, (limits.zoom_out - 1), (loc.to - loc.from) / limits.zoom_in])
+            // .scaleExtent([1, (limits.zoom_out - 1), (loc.to - loc.from) / limits.zoom_in])
+            .scaleExtent([minScale, maxScale])
             .on("zoom", _move);
 
 
@@ -552,23 +556,6 @@ var board = function() {
                 .attr("width", 0);
         }
 
-    	// var domain = xScale.domain();
-    	// if (domain[0] <= (limits.min + 5)) {
-    	//     d3.select("#tnt_" + div_id + "_5pcap")
-    	// 	.attr("width", cap_width)
-    	// 	.transition()
-    	// 	.duration(200)
-    	// 	.attr("width", 0);
-    	// }
-        //
-    	// if (domain[1] >= (limits.max)-5) {
-    	//     d3.select("#tnt_" + div_id + "_3pcap")
-    	// 	.attr("width", cap_width)
-    	// 	.transition()
-    	// 	.duration(200)
-    	// 	.attr("width", 0);
-    	// }
-
     	// Avoid moving past the limits
     	// if (domain[0] < limits.min) {
     	//     zoomEventHandler.translate([zoomEventHandler.translate()[0] - xScale(limits.min) + xScale.range()[0], zoomEventHandler.translate()[1]]);
@@ -579,8 +566,8 @@ var board = function() {
     	_deferred();
 
         if (started) {
-            for (var i = 0; i < tracks.length; i++) {
-                var track = tracks[i];
+            for (var j = 0; j < tracks.length; j++) {
+                var track = tracks[j];
                 track.display().mover.call(track);
             }
         }

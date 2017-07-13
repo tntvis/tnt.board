@@ -113,7 +113,7 @@ var tnt_feature = function () {
                 .data(data_elems);
         }
 
-        // config.distribute.call(track, vis_elems, config.scale);
+        config.distribute.call(track, vis_elems, config.scale);
 
     	var new_elem = vis_elems
     	    .enter();
