@@ -628,6 +628,9 @@ tnt_feature.pin = function () {
                 return 10;
             })
             .style("text-anchor", "middle")
+            .style("fill", function (d) {
+                return d3.functor(feature.color())(d);
+            })
             .text(function (d) {
                 return d.label || "";
             });
