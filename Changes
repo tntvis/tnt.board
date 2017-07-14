@@ -86,3 +86,5 @@
 	- bugfix: removed features on resize (thanks Maciej Korzepa)
 0.1.8
         - bugfix: avoid duplications after resetting features
+0.1.9
+	- pin feature color is now the same color of the feature
