@@ -689,7 +689,7 @@ api :
                   full : Creates a new pin-based feature for a track. This feature expects the data as an array of objects containing numerical <i>pos</i> and <i>val</i> properties, although the name of the properties is configurable. The <i>pos</i> property refers to its x-position in the track and the <i>val</i> property refers to the height of the pin in the <a href="#Track">track</a> and expects a number in the <i>y</i> <a href="#domain">domain</a> (by default, between 0 and 1).
                   example : |
                     var pin_track = tnt.board.track()
-                        .display (tnt.board.trac.feature.pin())
+                        .display (tnt.board.track.feature.pin())
                         .data (tnt.board.track.data.sync()
                             .retriever (function () {
                                 return [
