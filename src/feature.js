@@ -570,7 +570,7 @@ tnt_feature.pin = function () {
     var opts = {
         pos : d3.functor("pos"),
         val : d3.functor("val"),
-        domain : [0,0]
+        domain : [0,1]
     };
 
     var pin_ball_r = 5; // the radius of the circle in the pin
