@@ -580,7 +580,7 @@ tnt_feature.pin = function () {
     var opts = {
         pos : utils.functor("pos"),
         val : utils.functor("val"),
-        domain : [0,0]
+        domain : [0,1]
     };
 
     var pin_ball_r = 5; // the radius of the circle in the pin
