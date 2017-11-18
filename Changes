@@ -88,3 +88,5 @@
         - bugfix: avoid duplications after resetting features
 0.1.9
 	- pin feature color is now the same color of the feature
+0.1.10
+	- css cleanup and improvement
