@@ -10,7 +10,7 @@ api_toplevel : board
 
 <p>Each new <a href="#Track">track</a> needs to know how to get the data to display (either <i>synchonously</i> or <i>asynchronously</i>). A new call to get new data is performed everytime the board changes its state (while panning / zooming or programmatically). Each track should also define how to represent each of the features to display. TnT offers predefined common displays (like <a href="#tnt.board.track.feature.block">rectangles</a>, <a href="#tnt.board.track.feature.line">lines</a>, <a href="#tnt.board.track.feature.area">areas</a>, <a href="#tnt.board.track.feature.pin">pins</a>) ready to use. New displays can also be created using <a href="#tnt.board.track.feature">display interface</a>. <a href="#tnt.board.track.feature.composite">Composite displays</a> (ie, displays made of combinations fo different simple displays) are also allowed and a very powerful tool for displaying complex data. Examples of how to create different visualizations can be seen in the <a href="{{ site.baseurl }}/examples/">examples page</a>.</p>
 
-  {% highlight javascript linenos %}
+  {% highlight javascript %}
   var myBoard = tnt.board()
       .from(0)
       .to(500)
