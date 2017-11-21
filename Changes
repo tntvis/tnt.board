@@ -90,3 +90,5 @@
 	- pin feature color is now the same color of the feature
 0.1.10
 	- css cleanup and improvement
+0.1.11
+	- removed crispEdges in css
