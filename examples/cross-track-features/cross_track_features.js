@@ -29,7 +29,6 @@ var custom_feature_theme = function () {
                         var path2 = 'L' + to2 + ',' + 0;
                         var path3 = 'C' + to2 + ',' + (y / 2) + ' ' + from + ',' + (y / 2) + ' ' + from + ',' + y;
                         var path4 = 'Z';
-                        // var path3 = 'M' + from + ',' + y + ' C' + from + ',' + (y / 2) + ' ' + to2 + ',' + (y / 2) + ' ' + to2 + ',' + 0;
                         return [path1, path2, path3, path4].join(' ');
                     });
             })
