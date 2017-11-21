@@ -11,8 +11,7 @@ svg text {
 .tnt_track line {
   fill: none;
   stroke: grey;
-  stroke-width: 1;
-  shape-rendering: crispEdges; }
+  stroke-width: 1; }
 
 .tick text {
   font-size: 0.7em; }
