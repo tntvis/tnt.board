@@ -1,7 +1,7 @@
 var apijs = require ("tnt.api");
 var spinner = require ("./spinner.js")();
 
-tnt_data = {};
+var tnt_data = {};
 
 tnt_data.sync = function() {
     var update_track = function(obj) {

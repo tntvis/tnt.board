@@ -92,3 +92,5 @@
 	- css cleanup and improvement
 0.1.11
 	- removed crispEdges in css
+0.1.12
+	- bugfix: tnt_data was not defined in data.js
