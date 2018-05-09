@@ -308,9 +308,9 @@ api :
 
            - name : Data
              preamble : |
-                Tracks need data to display. TnT Board provides two generic methods to fetch it: tnt.board.data.<a href="#sync">sync</a>, which pulls data into the track <i>synchronously</i> and  tnt.board.data.<a href="#async">async</a>, which relies on <i>ES2015 Promises</i> to fetch the data <i>asynchronously</i>. Both methods offer the same interface and share the same configuration methods.
+                Tracks need data to display. TnT Board provides two generic methods to fetch it: tnt.board.track.data.<a href="#sync">sync</a>, which pulls data into the track <i>synchronously</i> and  tnt.board.track.data.<a href="#async">async</a>, which relies on <i>ES2015 Promises</i> to fetch the data <i>asynchronously</i>. Both methods offer the same interface and share the same configuration methods.
              example : |
-               var dataSync = tnt.board.data.sync()
+               var dataSync = tnt.board.track.data.sync()
                     .retriever (function () {
                         return [
                             {
@@ -321,7 +321,7 @@ api :
                     });
 
                // Assumes that a Promise library is available
-                var dataAsync = tnt.board.data.async()
+                var dataAsync = tnt.board.track.data.async()
                     .retriever (function () {
                         return new Promise (function (resolve, reject) {
                             resolve ([
@@ -355,7 +355,7 @@ api :
                   desc : specifies a synchronous data retriever
                   full : Specifies a synchronous data retriever.
                   example : |
-                    var dataSync = tnt.board.data.sync()
+                    var dataSync = tnt.board.track.data.sync()
                         .retriever (function () {
                             return [
                                 {
@@ -372,7 +372,7 @@ api :
                   full : Specifies an asynchronous data retriever.
                   example : |
                     // Assumes that a Promise library is available
-                    var dataAsync = tnt.board.data.async()
+                    var dataAsync = tnt.board.track.data.async()
                         .retriever (function () {
                             return new Promise (function (resolve, reject) {
                                 resolve ([
@@ -399,7 +399,7 @@ api :
                   desc : sets a callback that retrieves the data to visualise in the track
                   full : Sets a callback that retrieves the data to visualise in the track. This callback is called passing the location object as its argument to allow positional data retrievals. This location object has the <i>from</i> and <i>to</i> properties. Inside of the callback, <i>this</i> is set to the current track. The callback is expected to return an array of objects (if the <a href="#track.data">data</a> is <a href="#data.sync">sync</a>) or a <i>Promise</i> that resolves to an array of objects (if the <a href="#track.data">data</a> is <a href="#data.async">async</a>). These returned objects represent the elements to be <a href="#Display">displayed</a> in each update of the <a href="#Board">board</a>
                   example : |
-                    var dataSync = tnt.board.data.sync()
+                    var dataSync = tnt.board.track.data.sync()
                         .retriever (function () {
                             return [
                                 {
@@ -769,3 +769,4 @@ api :
                                 return [{pos: 15}, {pos: 30}, {pos: 100}];
                             })
                         ));
+
